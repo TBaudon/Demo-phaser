@@ -3,7 +3,9 @@
         constructor() {
             super(800, 480, Phaser.AUTO, 'content', null);
 
-            var hero: Hero = new Hero();
+            this.state.add('Boot', Boot, false);
+
+            this.state.start('Boot');
         }
     }
 }

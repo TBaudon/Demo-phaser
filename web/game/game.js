@@ -9,8 +9,47 @@ var Demo;
     var Boot = (function (_super) {
         __extends(Boot, _super);
         function Boot() {
-            _super.call(this);
+            _super.apply(this, arguments);
         }
+        Boot.prototype.preload = function () {
+            this.load.image('planets', 'game/assets/test.png');
+        };
+
+        Boot.prototype.create = function () {
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = false;
+
+            this.scale.minWidth = 800;
+            this.scale.minHeight = 480;
+            this.scale.pageAlignHorizontally = true;
+            this.scale.pageAlignVertically = true;
+            this.scale.setScreenSize(true);
+
+            this.scale.scaleMode = 2; //Phaser.ScaleManager.SHOW_ALL;
+
+            this.scale.hasResized.add(this.gameResized, this);
+
+            if (this.game.device.desktop) {
+                this.scale.maxWidth = 800;
+                this.scale.maxHeight = 480;
+            } else {
+                this.scale.maxWidth = 2400;
+                this.scale.maxHeight = 1440;
+                this.scale.forceOrientation(true, false);
+                this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
+                this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOriontation, this);
+            }
+        };
+
+        Boot.prototype.gameResized = function (width, height) {
+        };
+
+        Boot.prototype.enterIncorrectOrientation = function () {
+            alert("please hold you device in landscape mode");
+        };
+
+        Boot.prototype.leaveIncorrectOriontation = function () {
+        };
         return Boot;
     })(Phaser.State);
     Demo.Boot = Boot;
@@ -22,7 +61,9 @@ var Demo;
         function Game() {
             _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
 
-            var hero = new Demo.Hero();
+            this.state.add('Boot', Demo.Boot, false);
+
+            this.state.start('Boot');
         }
         return Game;
     })(Phaser.Game);
@@ -32,14 +73,3 @@ var Demo;
 window.onload = function () {
     var game = new Demo.Game();
 };
-var Demo;
-(function (Demo) {
-    var Hero = (function () {
-        function Hero() {
-            alert("test");
-            var test;
-        }
-        return Hero;
-    })();
-    Demo.Hero = Hero;
-})(Demo || (Demo = {}));

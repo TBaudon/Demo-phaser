@@ -1,5 +1,7 @@
 ﻿body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'arial', sans-serif;
+    margin: 0px 0px 1px 0px;
+    background: #ffffff;
 }
 
 span {

@@ -1959,7 +1959,7 @@ declare module Phaser {
         createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
         destroy(destroyChildren?: boolean, soft?:boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
-        forEach(callback: Function, callbackContext: Object, checkExists: boolean): void;
+        forEach(callback: Function, callbackContext: Object, checkExists?: boolean): void;
         forEachAlive(callback: Function, callbackContext: Object): void;
         forEachDead(callback: Function, callbackContext: Object): void;
         forEachExists(callback: Function, callbackContext: Object): void;
@@ -3346,7 +3346,7 @@ declare module Phaser {
         remove(plugin: Phaser.Plugin): void;
         removeAll(): void;
         render(): void;
-        update(); void;
+        update(): void;
 
     }
 
@@ -4516,6 +4516,7 @@ declare module Phaser {
         width: number;
 
         boot(): void;
+        setBounds(x: number, y: number, width: number, height: number): void;
         shutdown(): void;
 
     }
