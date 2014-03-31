@@ -14,6 +14,7 @@ module Demo {
         }
 
         onButtonPressed() {
+            this.game.state.start('Game', true);
         }
 
     }

@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
+    <TypeScriptCompile Include="src\objects\Planet.ts" />
+    <TypeScriptCompile Include="src\objects\Player.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />

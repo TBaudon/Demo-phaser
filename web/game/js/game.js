@@ -6,26 +6,38 @@
 };
 var Demo;
 (function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+    var Planet = (function (_super) {
+        __extends(Planet, _super);
+        function Planet(game, x, y, radius, angularVelocity) {
+            _super.call(this, game, x, y, 'planet');
+            this.anchor.set(0.5, 0.5);
+            this.radius = radius;
+            this.angularVelocity = angularVelocity;
 
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('Game', Demo.GameState, false);
-
-            this.state.start('Boot');
+            var scale = radius / (this.width / 2);
+            this.scale.x = scale;
+            this.scale.y = scale;
         }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
+        Planet.prototype.update = function () {
+            this.rotation += this.angularVelocity;
+        };
+        return Planet;
+    })(Phaser.Sprite);
+    Demo.Planet = Planet;
 })(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Player = (function (_super) {
+        __extends(Player, _super);
+        function Player(game, x, y) {
+            _super.call(this, game, x, y, 'player');
 
-window.onload = function () {
-    var game = new Demo.Game();
-};
+            this.anchor.setTo(0.5, 0.5);
+        }
+        return Player;
+    })(Phaser.Sprite);
+    Demo.Player = Player;
+})(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
     var Boot = (function (_super) {
@@ -79,15 +91,49 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('Game', Demo.GameState, false);
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
+var Demo;
+(function (Demo) {
     var GameState = (function (_super) {
         __extends(GameState, _super);
         function GameState() {
             _super.apply(this, arguments);
         }
-        GameState.prototype.preload = function () {
-        };
-
         GameState.prototype.create = function () {
+            this.player = new Demo.Player(this.game, this.game.world.centerX, this.game.world.centerY);
+            this.add.existing(this.player);
+
+            this.planets = new Array();
+            for (var i = 0; i < 3; ++i) {
+                var posX = Math.random() * 800;
+                var posY = Math.random() * 480;
+                var radius = Math.random() * 50 + 10;
+                var speed = Math.random() / 10 - 0.05;
+                var planet = new Demo.Planet(this.game, posX, posY, radius, speed);
+                this.add.existing(planet);
+            }
+
+            var style = { font: '10px Lucida Console', fill: '#ffffff' };
+            var text = this.add.text(0, 0, 'Oui c\'est sale, se sont des place holders...', style);
         };
 
         GameState.prototype.update = function () {
@@ -113,6 +159,7 @@ var Demo;
         };
 
         Menu.prototype.onButtonPressed = function () {
+            this.game.state.start('Game', true);
         };
         return Menu;
     })(Phaser.State);
@@ -130,6 +177,10 @@ var Demo;
             // Data
             this.load.audio('bgm', 'game/assets/music/musique.ogg', true);
             this.load.spritesheet('button', 'game/assets/img/button_sprite_sheet.png', 193, 71);
+            this.load.image('player', 'game/assets/img/player.jpg');
+            this.load.image('planet', 'game/assets/img/planet.jpg');
+
+            // progress Event
             this.load.onFileComplete.add(this.updateBar, this);
 
             // Draw

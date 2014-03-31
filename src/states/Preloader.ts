@@ -9,6 +9,10 @@ module Demo {
             // Data
             this.load.audio('bgm', 'game/assets/music/musique.ogg', true);
             this.load.spritesheet('button', 'game/assets/img/button_sprite_sheet.png', 193, 71);
+            this.load.image('player', 'game/assets/img/player.jpg');
+            this.load.image('planet', 'game/assets/img/planet.jpg');
+
+            // progress Event
             this.load.onFileComplete.add(this.updateBar, this);
 
             // Draw
