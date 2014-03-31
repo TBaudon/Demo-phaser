@@ -999,45 +999,6 @@ declare function hex2rgb(hex: number): number[];
 declare function hitText(displayObject: any): boolean;
 declare function rgb2hex(rgb: number[]): number;
 
-declare class Phaser {
-
-    static VERSION: string;
-    static DEV_VERSION: string;
-    static GAMES: Phaser.Game[];
-
-    static AUTO: number;
-    static CANVAS: number;
-    static WEBGL: number;
-    static HEADLESS: number;
-
-    static BITMAPDATA: number;
-    static BITMAPTEXT: number;
-    static BUTTON: number;
-    static CANVAS_FILTER: number;
-    static ELLIPSE: number;
-    static EMITTER: number;
-    static GRAPHICS: number;
-    static GROUP: number;
-    static IMAGE: number;
-    static POLYGON: number;
-    static RENDERTEXTURE: number;
-    static RETROFONT: number;
-    static SPRITE: number;
-    static SPRITEBATCH: number;
-    static TEXT: number;
-    static TILEMAP: number;
-    static TILEMAPLAYER: number;
-    static TILESPRITE: number;
-    static WEBGL_FILTER: number;
-
-    static NONE: number;
-    static LEFT: number;
-    static RIGHT: number;
-    static UP: number;
-    static DOWN: number;
-
-}
-
 declare module Phaser {
 
     class Animation {
@@ -2329,6 +2290,7 @@ declare module Phaser {
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
         clearCaptures(): void;
+        destroy(): void;
         isDown(keycode: number): boolean;
         justPressed(keycode: number, duration?: number): boolean;
         justReleased(keycode: number, duration?: number): boolean;
@@ -2784,6 +2746,7 @@ declare module Phaser {
                 offset: Phaser.Point;
                 overlapX: number;
                 overlapY: number;
+                phase: number;
                 position: Phaser.Point;
                 preRotation: number;
                 prev: Phaser.Point;
@@ -3825,6 +3788,7 @@ declare module Phaser {
         drawPolygon(): void;
         kill(): Phaser.Sprite;
         loadTexture(key: any, frame: any): void;
+        overlap(displayObject: any): boolean;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
@@ -4222,7 +4186,7 @@ declare module Phaser {
 
     class Tileset {
 
-        constructor(name: string, firstgid: number, width: number, height: number, margin: number, spacing: number, properties: Object);
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: Object);
 
         columns: number;
         firstgid: number;
@@ -4418,7 +4382,7 @@ declare module Phaser {
         resume(): void;
         start(): Phaser.Tween;
         stop(): Phaser.Tween;
-        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: boolean, yoyo?: boolean): Phaser.Tween;
+        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         update(time: number): boolean;
         yoyo(yoyo: boolean): Phaser.Tween;
 
@@ -4520,4 +4484,43 @@ declare module Phaser {
         shutdown(): void;
 
     }
+}
+
+declare class Phaser {
+
+    static VERSION: string;
+    static DEV_VERSION: string;
+    static GAMES: Phaser.Game[];
+
+    static AUTO: number;
+    static CANVAS: number;
+    static WEBGL: number;
+    static HEADLESS: number;
+
+    static BITMAPDATA: number;
+    static BITMAPTEXT: number;
+    static BUTTON: number;
+    static CANVAS_FILTER: number;
+    static ELLIPSE: number;
+    static EMITTER: number;
+    static GRAPHICS: number;
+    static GROUP: number;
+    static IMAGE: number;
+    static POLYGON: number;
+    static RENDERTEXTURE: number;
+    static RETROFONT: number;
+    static SPRITE: number;
+    static SPRITEBATCH: number;
+    static TEXT: number;
+    static TILEMAP: number;
+    static TILEMAPLAYER: number;
+    static TILESPRITE: number;
+    static WEBGL_FILTER: number;
+
+    static NONE: number;
+    static LEFT: number;
+    static RIGHT: number;
+    static UP: number;
+    static DOWN: number;
+
 }

@@ -17,8 +17,9 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="web\game\app.css" />
-    <Content Include="web\game\apple-touch-icon.png" />
+    <Content Include="web\game\css\app.css" />
+    <Content Include="web\game\assets\img\button_sprite_sheet.png" />
+    <Content Include="web\game\icons\apple-touch-icon.png" />
     <Content Include="web\game\icons\app_icon_1024x1024.png" />
     <Content Include="web\game\icons\app_icon_114x114.png" />
     <Content Include="web\game\icons\app_icon_120x120.png" />
@@ -30,7 +31,9 @@
     <Content Include="web\game\icons\app_icon_60x60.png" />
     <Content Include="web\game\icons\app_icon_72x72.png" />
     <Content Include="web\game\icons\app_icon_76x76.png" />
-    <Content Include="web\game\phaser.min.js" />
+    <Content Include="web\game\css\orientation.jpg" />
+    <Content Include="web\game\js\phaser.js" />
+    <Content Include="web\game\js\phaser.min.js" />
     <Content Include="web\index.html" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -38,6 +41,9 @@
     <TypeScriptCompile Include="lib\phaser.d.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
+    <TypeScriptCompile Include="src\states\Game.ts" />
+    <TypeScriptCompile Include="src\states\Menu.ts" />
+    <TypeScriptCompile Include="src\states\Preloader.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -46,10 +52,10 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+    <Content Include="web\game\assets\music\musique.ogg" />
+    <Content Include="web\game\js\phaser.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="web\game\assets\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -81,7 +87,7 @@
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>False</TypeScriptSourceMap>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
-    <TypeScriptOutFile>web/game/game.js</TypeScriptOutFile>
+    <TypeScriptOutFile>web/game/js/game.js</TypeScriptOutFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
