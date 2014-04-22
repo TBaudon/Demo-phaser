@@ -103,7 +103,7 @@ declare module PIXI {
 
     export interface ILoader {
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load();
     }
@@ -163,10 +163,10 @@ declare module PIXI {
     export class AssetLoader extends EventTarget {
 
         assetURLs: string[];
-        crossorigin: boolean;
+        crossorigin: any;
         loadersByType: { [key: string]: ILoader };
 
-        constructor(assetURLs: string[], crossorigin: boolean);
+        constructor(assetURLs: string[], crossorigin: any);
 
         load(): void;
 
@@ -176,10 +176,10 @@ declare module PIXI {
 
         url: string;
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load(): void;
 
@@ -200,7 +200,7 @@ declare module PIXI {
         destroy(): void;
         updateSourceImage(newSrc: string): void;
 
-        static fromImage(imageUrl: string, crossorigin: boolean, scaleMode: scaleModes): BaseTexture;
+        static fromImage(imageUrl: string, crossorigin: any, scaleMode: scaleModes): BaseTexture;
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode: scaleModes): BaseTexture;
 
     }
@@ -208,11 +208,11 @@ declare module PIXI {
     export class BitmapFontLoader extends EventTarget {
 
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         texture: Texture;
         url: string;
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load(): void;
 
@@ -469,6 +469,7 @@ declare module PIXI {
         drawRect(x: number, y: number, width: number, height: number): void;
         endFill(): void;
         generateTexture(): Texture;
+        generateTexture(renderer: PIXI.IPixiRenderer): RenderTexture;
         getBounds(): Rectangle;
         lineStyle(lineWidth: number, color: number, alpha: number): void;
         lineTo(x: number, y: number): void;
@@ -487,7 +488,7 @@ declare module PIXI {
 
         texture: Texture;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
         load(): void;
         loadFramedSpriteSheet(frameWidth: number, frameHeight: number, textureName: string): void;
 
@@ -527,11 +528,11 @@ declare module PIXI {
     export class JsonLoader extends EventTarget {
 
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
         url: string;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load(): void;
 
@@ -707,7 +708,7 @@ declare module PIXI {
     export class Spine {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
         constructor(url: string);
@@ -720,10 +721,10 @@ declare module PIXI {
     export class SpineLoader extends EventTarget {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load(): void;
 
@@ -758,12 +759,12 @@ declare module PIXI {
     export class SpriteSheetLoader extends EventTarget {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         baseUrl: string;
         texture: Texture;
         frames: Object;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load();
     }
@@ -825,7 +826,7 @@ declare module PIXI {
         setFrame(frame: Rectangle): void;
         render(displayObject: DisplayObject, position: Point, clear: boolean): void;
 
-        static fromImage(imageUrl: string, crossorigin: boolean, scaleMode: scaleModes): Texture;
+        static fromImage(imageUrl: string, crossorigin: any, scaleMode: scaleModes): Texture;
         static fromFrame(frameId: string): Texture;
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode: scaleModes): Texture;
         static addTextureToCache(texture: Texture, id: string): void;
@@ -999,6 +1000,45 @@ declare function hex2rgb(hex: number): number[];
 declare function hitText(displayObject: any): boolean;
 declare function rgb2hex(rgb: number[]): number;
 
+declare class Phaser {
+
+    static VERSION: string;
+    static DEV_VERSION: string;
+    static GAMES: Phaser.Game[];
+
+    static AUTO: number;
+    static CANVAS: number;
+    static WEBGL: number;
+    static HEADLESS: number;
+
+    static BITMAPDATA: number;
+    static BITMAPTEXT: number;
+    static BUTTON: number;
+    static CANVAS_FILTER: number;
+    static ELLIPSE: number;
+    static EMITTER: number;
+    static GRAPHICS: number;
+    static GROUP: number;
+    static IMAGE: number;
+    static POLYGON: number;
+    static RENDERTEXTURE: number;
+    static RETROFONT: number;
+    static SPRITE: number;
+    static SPRITEBATCH: number;
+    static TEXT: number;
+    static TILEMAP: number;
+    static TILEMAPLAYER: number;
+    static TILESPRITE: number;
+    static WEBGL_FILTER: number;
+
+    static NONE: number;
+    static LEFT: number;
+    static RIGHT: number;
+    static UP: number;
+    static DOWN: number;
+
+}
+
 declare module Phaser {
 
     class Animation {
@@ -1025,7 +1065,7 @@ declare module Phaser {
 
         complete(): void;
         destroy(): void;
-        generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): void;
+        static generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
         onPause(): void;
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
@@ -1090,7 +1130,7 @@ declare module Phaser {
         width: number;
 
         add(object: any): void;
-        alphaMask(source: any, mask: any): void
+        alphaMask(source: any, mask: any): void;
         clear(): void;
         copyPixels(source: any, area: Phaser.Rectangle, destX: number, destY: number): void;
         draw(source: any, destX: number, destY: number): void;
@@ -1215,9 +1255,9 @@ declare module Phaser {
         getFrameByName(key: string, frame: string): Phaser.Frame;
         getFrameData(key: string): Phaser.FrameData;
         getImage(key: string): Object;
-        getJSON(key:string): Object
+        getJSON(key:string): Object;
         getKeys(array: string[]): string[];
-        getPhysicsData(key: string, object?: string): Object;
+        getPhysicsData(key: string, object?: string, fixtureKey?: string): Object;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): Object;
         getText(key: string): Object;
@@ -1379,6 +1419,7 @@ declare module Phaser {
         chrome: boolean;
         chromeOS: boolean;
         cocoonJS: boolean;
+        crosswalk: boolean;
         css3D: boolean;
         desktop: boolean;
         ejecta: boolean;
@@ -1596,7 +1637,7 @@ declare module Phaser {
         rotationDirection: string;
         sourceSizeH: number;
         sourceSizeW: number;
-        spriteSourcesizeH: number;
+        spriteSourceSizeH: number;
         spriteSourceSizeW: number;
         spriteSourceSizeX: number;
         spriteSourceSizeY: number;
@@ -1619,7 +1660,7 @@ declare module Phaser {
         checkFrameName(name: string): boolean;
         getFrame(index: number): Phaser.Frame;
         getFrameByName(name: string): Phaser.Frame;
-        getFrameIndexes(frames: number[], useNumericIndex?: boolean, output?: number[]): number[]
+        getFrameIndexes(frames: number[], useNumericIndex?: boolean, output?: number[]): number[];
         getFrameRange(start: number, end: number, output: Phaser.Frame[]): Phaser.Frame[];
         getFrames(frames: number[], useNumericIndex?: boolean, output?: Phaser.Frame[]): Phaser.Frame[];
 
@@ -1741,7 +1782,7 @@ declare module Phaser {
         sprite(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Sprite;
         spriteBatch(parent: any, name?: string, addToStage?: boolean): Phaser.Group;
         text(x: number, y: number, text: string, style: any, group?: Phaser.Group): Phaser.Text;
-        tilemap(key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
+        tilemap(key?: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.TileSprite;
         tween(obj: Object): Phaser.Tween;
 
@@ -1918,7 +1959,8 @@ declare module Phaser {
         countLiving(): number;
         create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
         createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
-        destroy(destroyChildren?: boolean, soft?:boolean): void;
+        customSort(sortHandler: Function, context: Object): void;
+        destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: Object, checkExists?: boolean): void;
         forEachAlive(callback: Function, callbackContext: Object): void;
@@ -1940,9 +1982,9 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         previous(): void;
-        remove(child: any): boolean;
-        removeAll(): void;
-        removeBetween(startIndex: number, endIndex: number): void;
+        remove(child: any, destroy?: boolean): boolean;
+        removeAll(destroy?: boolean): void;
+        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean): void;
         replace(oldChild: any, newChild: any): any;
         reverse(): void;
         sendToBack(child: any): any;
@@ -2050,6 +2092,7 @@ declare module Phaser {
         recordLimit: number;
         recordPointerHistory: boolean;
         recordRate: number;
+        resetLocked: boolean;
         scale: Phaser.Point;
         speed: Phaser.Point;
         tapRate: number;
@@ -2147,7 +2190,7 @@ declare module Phaser {
 
     class Key {
 
-        constructor(game: Phaser.Game, keycode: number)
+        constructor(game: Phaser.Game, keycode: number);
 
         altKey: boolean;
         ctrlKey: boolean;
@@ -2170,7 +2213,7 @@ declare module Phaser {
         justReleased(duration?: number): boolean;
         processKeyDown(event: KeyboardEvent): void;
         processKeyUp(event: KeyboardEvent): void;
-        reset(): void;
+        reset(hard?: boolean): void;
         update(): void;
 
     }
@@ -2298,7 +2341,7 @@ declare module Phaser {
         processKeyUp(event: KeyboardEvent): void;
         removeKey(keycode: number): void;
         removeKeyCapture(keycode: number): void;
-        reset(): void;
+        reset(hard?: boolean): void;
         start(): void;
         stop(): void;
         update(): void;
@@ -2361,16 +2404,18 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
-        static PHYSICS_LIME_CORONA: number;
+        static PHYSICS_LIME_CORONA_JSON: number;
+        static PHYSICS_PHASER_JSON: number;
         static TEXTURE_ATLAS_JSON_ARRAY: number;
         static TEXTURE_ATLAS_JSON_HASH: number;
         static TEXTURE_ATLAS_XML_STARLING: number;
 
         baseURL: string;
-        crossOrigin: boolean;
+        crossOrigin: any;
         game: Phaser.Game;
         hasLoaded: boolean;
         isLoading: boolean;
+        onFileStart: Phaser.Signal;
         onFileComplete: Phaser.Signal;
         onFileError: Phaser.Signal;
         onLoadComplete: Phaser.Signal;
@@ -2495,7 +2540,7 @@ declare module Phaser {
 
     class Mouse {
 
-        constructor(game: Phaser.Game)
+        constructor(game: Phaser.Game);
 
         static LEFT_BUTTON: number;
         static MIDDLE_BUTTON: number;
@@ -2558,6 +2603,18 @@ declare module Phaser {
 
     }
 
+    class Particle extends Phaser.Sprite {
+
+        constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
+
+        onEmit(): void;
+        reset(x: number, y: number, health?: number): Phaser.Particle;
+        setAlphaData(data: any[]): void;
+        setScaleData(data: any[]): void;
+        update(): void;
+
+    }
+
     class Particles {
 
         constructor(game: Phaser.Game);
@@ -2579,7 +2636,10 @@ declare module Phaser {
             class Emitter extends Phaser.Group {
 
                 constructor(game: Phaser.Game, x?: number, y?: number, maxParticles?: number);
- 
+
+                alphaData: any[];
+                autoAlpha: boolean;
+                autoScale: boolean;
                 angle: number;
                 angularDrag: number;
                 bottom: number;
@@ -2593,7 +2653,7 @@ declare module Phaser {
                 height: number;
                 left: number;
                 lifespan: number;
-                maxParticles: number;//
+                maxParticles: number;
                 maxParticleScale: number;
                 maxParticleSpeed: Phaser.Point;
                 maxRotation: number;
@@ -2602,10 +2662,13 @@ declare module Phaser {
                 minRotation: number;
                 name: string;
                 on: boolean;
+                particleBringToTop: boolean;
+                particleSendToBack: boolean;
                 particleClass: Phaser.Sprite;
                 particleDrag: Phaser.Point;
                 position: Phaser.Point;
                 right: number;
+                scaleData: any[];
                 top: number;
                 type: number;
                 width: number;
@@ -2616,7 +2679,10 @@ declare module Phaser {
                 emitParticle(): void;
                 kill(): void;
                 makeParticles(keys: any, frames: any, quantity: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
+                reset(x: number, y: number, health?: number): Phaser.Particles;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
                 setRotation(min?: number, max?: number): void;
+                setScale(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
                 setSize(width: number, height: number): void;
                 setXSpeed(min: number, max: number): void;
                 setYSpeed(min: number, max: number): void;
@@ -2773,6 +2839,7 @@ declare module Phaser {
                 deltaAbsX(): void;
                 deltaAbsY(): void;
                 destroy(): void;
+                hitTest(x: number, y: number): boolean;
                 onFloor(): void;
                 onWall(): void;
                 preUpdate(): void;
@@ -2978,8 +3045,11 @@ declare module Phaser {
             applyGravity: boolean;
             applySpringForced: boolean;
             bounds: Phaser.Physics.P2.Body;
+            boundsCollidesWith: Phaser.Physics.P2.Body[];
+            contactMaterial: Phaser.Physics.P2.ContactMaterial;
             emitImpactEvent: boolean;
             enableBodySleeping: boolean;
+            everythingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             frameRate: number;
             friction: number;
             game: Phaser.Game;
@@ -3189,6 +3259,23 @@ declare module Phaser {
 
             }
 
+            class FixtureList {
+
+                constructor(list: any[]);
+
+                flatten(array: any[]): any[];
+                getFixtures(keys: string): any[];
+                getFixtureByKey(key: string): any[];
+                getGroup(groupID: number): any[];
+                init(): void;
+                parse(): void;
+                setCategory(bit: number, fictureKey: string): void;
+                setMask(bit: number, fixtureKey: string): void;
+                setMaterial(material: Object, fixtureKey: string): void;
+                setSensor(value: boolean, fixtureKey: string): void;
+
+            }
+
             class GearConstraint {
 
                 constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, angle?: number, ratio?: number);
@@ -3321,11 +3408,12 @@ declare module Phaser {
         y: number;
 
         static add(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        static centroid(points: Phaser.Point[], out?: Phaser.Point): Phaser.Point;
         static distance(a: Phaser.Point, b: Phaser.Point, round?: boolean): number;
         static divide(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static equals(a: Phaser.Point, b: Phaser.Point): boolean;
         static multiply(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
-        static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: boolean, distance: boolean): Phaser.Point;
+        static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: boolean, distance?: number): Phaser.Point;
         static subtract(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
 
         add(x: number, y: number): Phaser.Point;
@@ -3346,8 +3434,8 @@ declare module Phaser {
         multiply(x: number, y: number): Phaser.Point;
         normalise(): Phaser.Point;
         rotate(x: number, y: number, angle: number, asDegrees: boolean, distance?: number): Phaser.Point;
-        set(x: number, y: number): Phaser.Point;
-        setTo(x: number, y: number): Phaser.Point;
+        set(x: number, y?: number): Phaser.Point;
+        setTo(x: number, y?: number): Phaser.Point;
         subtract(x: number, y: number): Phaser.Point;
         toString(): string;
 
@@ -3372,6 +3460,7 @@ declare module Phaser {
         pageY: number;
         position: Phaser.Point;
         positionDown: Phaser.Point;
+        positionUp: Phaser.Point;
         previousTapTime: number;
         screenX: number;
         screenY: number;
@@ -3668,6 +3757,7 @@ declare module Phaser {
         context: any;
         currentMarker: string;
         currentTime: number;
+        destroy(remove?: boolean): void;
         duration: number;
         externalNode: Object;
         game: Phaser.Game;
@@ -3699,7 +3789,7 @@ declare module Phaser {
         usingWebAudio: boolean;
         volume: number;
 
-        addMarker(name: string, start: number, stop: number, volume?: number, loop?: boolean): void;
+        destroy(): void;
         pause(): void;
         play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
         removeMarker(name: string): void;
@@ -3732,6 +3822,8 @@ declare module Phaser {
         decode(key: string, sound?: Phaser.Sound): void;
         pauseAll(): void;
         play(key: string, volume?: number, loop?: boolean): Phaser.Sound;
+        remove(sound: Phaser.Sound): boolean;
+        removeByKey(key: string): number;
         resumeAll(): void;
         stopAll(): void;
         unlock(): void;
@@ -3961,6 +4053,7 @@ declare module Phaser {
         render(): void;
         remove(key: string): void;
         resume(): void;
+        restart(clearWorld?: boolean, clearCache?: boolean): void;
         start(key: string, clearWorld?: boolean, clearCache?: boolean, ...args:any[]): void;
         update(): void;
 
@@ -4089,7 +4182,7 @@ declare module Phaser {
         addTilesetImage(tileset: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number): Phaser.Tileset;
         calculateFaces(layer: number): void;
         copy(x: number, y: number, width: number, height: number, layer?: any): Phaser.Tile[];
-        create(name: string, width: number, height: number, tileWidth:number, tileHeight:number): Phaser.Tilemap;
+        create(name: string, width: number, height: number, tileWidth:number, tileHeight:number): Phaser.TilemapLayer;
         createBlankLayer(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createFromObjects(name: string, gid: any, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: Object, adjustY?:boolean): void;
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;
@@ -4301,6 +4394,7 @@ declare module Phaser {
         seconds: number;
 
         add(delay: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
+        clearPendingEvents(): void;
         destroy(): void;
         loop(delay: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
         order(): void;
@@ -4309,7 +4403,7 @@ declare module Phaser {
         repeat(delay: number, repeatCount: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
         resume(): void;
         sortHandler(a: any, b: any): number;
-        start(): void;
+        start(startDelay?: number): void;
         stop(): void;
         update(time: number): boolean;
 
@@ -4484,43 +4578,4 @@ declare module Phaser {
         shutdown(): void;
 
     }
-}
-
-declare class Phaser {
-
-    static VERSION: string;
-    static DEV_VERSION: string;
-    static GAMES: Phaser.Game[];
-
-    static AUTO: number;
-    static CANVAS: number;
-    static WEBGL: number;
-    static HEADLESS: number;
-
-    static BITMAPDATA: number;
-    static BITMAPTEXT: number;
-    static BUTTON: number;
-    static CANVAS_FILTER: number;
-    static ELLIPSE: number;
-    static EMITTER: number;
-    static GRAPHICS: number;
-    static GROUP: number;
-    static IMAGE: number;
-    static POLYGON: number;
-    static RENDERTEXTURE: number;
-    static RETROFONT: number;
-    static SPRITE: number;
-    static SPRITEBATCH: number;
-    static TEXT: number;
-    static TILEMAP: number;
-    static TILEMAPLAYER: number;
-    static TILESPRITE: number;
-    static WEBGL_FILTER: number;
-
-    static NONE: number;
-    static LEFT: number;
-    static RIGHT: number;
-    static UP: number;
-    static DOWN: number;
-
 }

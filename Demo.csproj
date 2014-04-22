@@ -9,7 +9,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>0.9</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -17,6 +16,10 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="arts\Spritesheets\planets.png" />
+    <Content Include="arts\Spritesheets\planets.xml" />
+    <Content Include="web\game\assets\img\planets.png" />
+    <Content Include="web\game\assets\img\planets.xml" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />
     <Content Include="web\game\icons\apple-touch-icon.png" />
@@ -50,6 +53,7 @@
   <ItemGroup>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>

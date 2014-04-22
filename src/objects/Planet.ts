@@ -5,7 +5,8 @@ module Demo {
         angularVelocity: number;
 
         constructor(game: Phaser.Game, x: number, y: number, radius:number, angularVelocity: number) {
-            super(game, x, y, 'planet');
+            super(game, x, y, 'planets', 'gas_1');
+            
             this.anchor.set(0.5, 0.5);
             this.radius = radius;
             this.angularVelocity = angularVelocity;

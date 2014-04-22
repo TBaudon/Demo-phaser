@@ -9,10 +9,13 @@ module Demo {
             // Data
             this.load.audio('bgm', 'game/assets/music/musique.ogg', true);
             this.load.spritesheet('button', 'game/assets/img/button_sprite_sheet.png', 193, 71);
-            this.load.image('player', 'game/assets/img/player.jpg');
-            this.load.image('planet', 'game/assets/img/planet.jpg');
+            this.load.atlasXML('planets', 'game/assets/img/planets.png', 'game/assets/img/planets.xml');
+            this.load.atlasXML('robot_wait', 'game/assets/img/robot_wait.png', 'game/assets/img/robot_wait.xml');
+            this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
+            this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
+            this.load.image('background', 'game/assets/img/fond.jpg');
 
-            // progress Event
+            // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);
 
             // Draw

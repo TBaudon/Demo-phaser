@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:0f314861f526ccdc675260c75b98c17d$ -->
+<TextureAtlas imagePath="robot_wait.png">
+    <SubTexture name="robot_anim_finale0001" x="0" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0002" x="75" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0003" x="150" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0004" x="225" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0005" x="300" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0006" x="375" y="0" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0007" x="0" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0008" x="75" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0009" x="150" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0010" x="225" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0011" x="300" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0012" x="375" y="90" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0013" x="0" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0014" x="75" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0015" x="150" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0016" x="225" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0017" x="300" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0018" x="375" y="180" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0019" x="0" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0020" x="75" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0021" x="150" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0022" x="225" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0023" x="300" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0024" x="375" y="270" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0025" x="0" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0026" x="75" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0027" x="150" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0028" x="225" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0029" x="300" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0030" x="375" y="360" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0031" x="0" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0032" x="75" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0033" x="150" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0034" x="225" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0035" x="300" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0036" x="375" y="450" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0037" x="0" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0038" x="75" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0039" x="150" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0040" x="225" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0041" x="300" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0042" x="375" y="540" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0043" x="0" y="630" width="75" height="90"/>
+    <SubTexture name="robot_anim_finale0044" x="75" y="630" width="75" height="90"/>
+</TextureAtlas>

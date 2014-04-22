@@ -9,7 +9,8 @@ var Demo;
     var Planet = (function (_super) {
         __extends(Planet, _super);
         function Planet(game, x, y, radius, angularVelocity) {
-            _super.call(this, game, x, y, 'planet');
+            _super.call(this, game, x, y, 'planets', 'gas_1');
+
             this.anchor.set(0.5, 0.5);
             this.radius = radius;
             this.angularVelocity = angularVelocity;
@@ -30,10 +31,65 @@ var Demo;
     var Player = (function (_super) {
         __extends(Player, _super);
         function Player(game, x, y) {
-            _super.call(this, game, x, y, 'player');
+            _super.call(this, game, x, y, 'robot_wait');
+            this.GRAVITY = 0.5;
 
             this.anchor.setTo(0.5, 0.5);
+
+            this.animations.add('idle');
+            this.animations.play('idle', 60, true);
+
+            game.input.onDown.add(this.jump, this);
+
+            this.vitX = 0;
+            this.vitY = 0;
+            this.landed = false;
+            this.opened = false;
         }
+        Player.prototype.jump = function () {
+            if (this.landed) {
+                this.landed = false;
+                this.opened = false;
+                this.loadTexture('robot_jump', 0);
+                this.animations.add('jump');
+                this.animations.play('jump', 60);
+                this.vitY = -10;
+            }
+        };
+
+        Player.prototype.openLegs = function () {
+            if (!this.opened) {
+                this.opened = true;
+                this.loadTexture('robot_land', 0);
+                this.animations.add('open', Phaser.Animation.generateFrameNames('robot_anim_finale00', 60, 72));
+                this.animations.play('open', 60);
+            }
+        };
+
+        Player.prototype.land = function () {
+            if (!this.landed) {
+                this.landed = true;
+                this.loadTexture('robot_land', 0);
+                this.animations.add('land', Phaser.Animation.generateFrameNames('robot_anim_finale00', 73, 88));
+                this.animations.play('land', 60);
+            }
+        };
+
+        Player.prototype.update = function () {
+            this.vitY += this.GRAVITY;
+
+            this.x += this.vitX;
+            this.y += this.vitY;
+
+            if (this.vitY >= 0)
+                this.openLegs();
+
+            if (this.y + this.height / 2 + this.vitY >= this.game.height) {
+                this.y = this.game.height - this.height / 2;
+                this.vitY = 0;
+                this.land();
+            }
+        };
         return Player;
     })(Phaser.Sprite);
     Demo.Player = Player;
@@ -119,21 +175,23 @@ var Demo;
             _super.apply(this, arguments);
         }
         GameState.prototype.create = function () {
-            this.player = new Demo.Player(this.game, this.game.world.centerX, this.game.world.centerY);
-            this.add.existing(this.player);
+            this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
             for (var i = 0; i < 3; ++i) {
                 var posX = Math.random() * 800;
                 var posY = Math.random() * 480;
-                var radius = Math.random() * 50 + 10;
+                var radius = Math.random() * 200 + 50;
                 var speed = Math.random() / 10 - 0.05;
                 var planet = new Demo.Planet(this.game, posX, posY, radius, speed);
                 this.add.existing(planet);
             }
 
+            this.player = new Demo.Player(this.game, this.game.world.centerX, this.game.world.centerY);
+            this.add.existing(this.player);
+
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
-            var text = this.add.text(0, 0, 'Oui c\'est sale, se sont des place holders...', style);
+            var text = this.add.text(0, 0, 'Demo html5...', style);
         };
 
         GameState.prototype.update = function () {
@@ -177,10 +235,13 @@ var Demo;
             // Data
             this.load.audio('bgm', 'game/assets/music/musique.ogg', true);
             this.load.spritesheet('button', 'game/assets/img/button_sprite_sheet.png', 193, 71);
-            this.load.image('player', 'game/assets/img/player.jpg');
-            this.load.image('planet', 'game/assets/img/planet.jpg');
+            this.load.atlasXML('planets', 'game/assets/img/planets.png', 'game/assets/img/planets.xml');
+            this.load.atlasXML('robot_wait', 'game/assets/img/robot_wait.png', 'game/assets/img/robot_wait.xml');
+            this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
+            this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
+            this.load.image('background', 'game/assets/img/fond.jpg');
 
-            // progress Event
+            // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);
 
             // Draw
