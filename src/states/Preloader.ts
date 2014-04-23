@@ -14,6 +14,7 @@ module Demo {
             this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
             this.load.image('background', 'game/assets/img/fond.jpg');
+            this.load.text('level_1', 'game/assets/levels/level_1.json');
 
             // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);

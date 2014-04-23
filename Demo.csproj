@@ -19,7 +19,10 @@
     <Content Include="arts\Spritesheets\planets.png" />
     <Content Include="arts\Spritesheets\planets.xml" />
     <Content Include="web\game\assets\img\planets.png" />
-    <Content Include="web\game\assets\img\planets.xml" />
+    <Content Include="web\game\assets\img\planets.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="web\game\assets\levels\level_1.json" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />
     <Content Include="web\game\icons\apple-touch-icon.png" />
@@ -44,9 +47,11 @@
     <TypeScriptCompile Include="lib\phaser.d.ts" />
     <TypeScriptCompile Include="src\objects\Planet.ts" />
     <TypeScriptCompile Include="src\objects\Player.ts" />
+    <TypeScriptCompile Include="src\objects\Vector2D.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />
+    <TypeScriptCompile Include="src\objects\Level.ts" />
     <TypeScriptCompile Include="src\states\Menu.ts" />
     <TypeScriptCompile Include="src\states\Preloader.ts" />
   </ItemGroup>

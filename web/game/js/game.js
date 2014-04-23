@@ -6,21 +6,76 @@
 };
 var Demo;
 (function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('Game', Demo.GameState, false);
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
+var Demo;
+(function (Demo) {
+    var Level = (function () {
+        function Level() {
+        }
+        return Level;
+    })();
+    Demo.Level = Level;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
-        function Planet(game, x, y, radius, angularVelocity) {
-            _super.call(this, game, x, y, 'planets', 'gas_1');
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY) {
+            _super.call(this, game, x, y, 'planets', element);
+            this.BASE_RADIUS = 180;
+
+            if (radius == 0)
+                radius = this.BASE_RADIUS;
+
+            this.cameraX = cameraX;
+            this.cameraY = cameraY;
 
             this.anchor.set(0.5, 0.5);
-            this.radius = radius;
-            this.angularVelocity = angularVelocity;
+            this.radius = this.BASE_RADIUS * (radius / this.BASE_RADIUS);
+            this.rotSpeed = rotSpeed;
 
-            var scale = radius / (this.width / 2);
+            var scale = radius / this.BASE_RADIUS;
             this.scale.x = scale;
             this.scale.y = scale;
         }
+        Planet.initFromLvl = function (game, planet) {
+            var camX = 400;
+            var camY = 240;
+            var elem = "planet_earth";
+
+            if (planet.cameraX != undefined)
+                camX = planet.cameraX;
+            if (planet.cameraY != undefined)
+                camY = planet.cameraY;
+            if (planet.element != undefined)
+                elem = planet.element;
+
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY);
+
+            return nPlanet;
+        };
+
         Planet.prototype.update = function () {
-            this.rotation += this.angularVelocity;
+            this.rotation += this.rotSpeed;
         };
         return Planet;
     })(Phaser.Sprite);
@@ -28,11 +83,20 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    (function (PlayerState) {
+        PlayerState[PlayerState["FLYING"] = 0] = "FLYING";
+        PlayerState[PlayerState["LANDED"] = 1] = "LANDED";
+        PlayerState[PlayerState["DEAD"] = 2] = "DEAD";
+    })(Demo.PlayerState || (Demo.PlayerState = {}));
+    var PlayerState = Demo.PlayerState;
+
     var Player = (function (_super) {
         __extends(Player, _super);
-        function Player(game, x, y) {
+        function Player(game, x, y, planets, gravity, jumpStrength) {
             _super.call(this, game, x, y, 'robot_wait');
-            this.GRAVITY = 0.5;
+
+            this.jumpStrength = jumpStrength;
+            this.gravity = gravity;
 
             this.anchor.setTo(0.5, 0.5);
 
@@ -41,24 +105,31 @@ var Demo;
 
             game.input.onDown.add(this.jump, this);
 
+            this.planets = planets;
             this.vitX = 0;
             this.vitY = 0;
             this.landed = false;
             this.opened = false;
+            this.currentPlanet = null;
+            this.state = 0 /* FLYING */;
         }
         Player.prototype.jump = function () {
-            if (this.landed) {
-                this.landed = false;
+            if (this.state == 1 /* LANDED */) {
+                this.state = 0 /* FLYING */;
                 this.opened = false;
                 this.loadTexture('robot_jump', 0);
                 this.animations.add('jump');
                 this.animations.play('jump', 60);
-                this.vitY = -10;
+
+                var rot = this.rotation - Math.PI / 2;
+
+                this.vitX = Math.cos(rot) * this.jumpStrength;
+                this.vitY = Math.sin(rot) * this.jumpStrength;
             }
         };
 
         Player.prototype.openLegs = function () {
-            if (!this.opened) {
+            if (!this.opened && this.state == 0 /* FLYING */) {
                 this.opened = true;
                 this.loadTexture('robot_land', 0);
                 this.animations.add('open', Phaser.Animation.generateFrameNames('robot_anim_finale00', 60, 72));
@@ -66,33 +137,72 @@ var Demo;
             }
         };
 
-        Player.prototype.land = function () {
-            if (!this.landed) {
-                this.landed = true;
+        Player.prototype.land = function (planet) {
+            if (this.state == 0 /* FLYING */) {
+                this.currentPlanet = planet;
+                this.rotation = Math.atan2(this.y - planet.y, this.x - planet.x) + Math.PI / 2;
+                this.state = 1 /* LANDED */;
                 this.loadTexture('robot_land', 0);
                 this.animations.add('land', Phaser.Animation.generateFrameNames('robot_anim_finale00', 73, 88));
                 this.animations.play('land', 60);
             }
         };
 
-        Player.prototype.update = function () {
-            this.vitY += this.GRAVITY;
+        Player.prototype.fly = function () {
+            this.vitX += this.gravity.x;
+            this.vitY += this.gravity.y;
 
             this.x += this.vitX;
             this.y += this.vitY;
 
+            var nextX = this.x + this.vitX;
+            var nextY = this.y + this.vitY;
+
             if (this.vitY >= 0)
                 this.openLegs();
 
-            if (this.y + this.height / 2 + this.vitY >= this.game.height) {
-                this.y = this.game.height - this.height / 2;
-                this.vitY = 0;
-                this.land();
+            this.rotation = Math.atan2(this.vitY, this.vitX) + Math.PI / 2;
+
+            for (var i = 0; i < this.planets.length; ++i) {
+                var planet = this.planets[i];
+                var diffX = nextX - planet.x;
+                var diffY = nextY - planet.y;
+                var diff = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                if (diff <= planet.radius)
+                    this.land(planet);
+            }
+        };
+
+        Player.prototype.updateOnPlanet = function () {
+            this.rotation += this.currentPlanet.rotSpeed;
+            var radius = this.currentPlanet.radius + (this.height / 2);
+            this.x = this.currentPlanet.x + Math.cos(this.rotation - Math.PI / 2) * radius;
+            this.y = this.currentPlanet.y + Math.sin(this.rotation - Math.PI / 2) * radius;
+        };
+
+        Player.prototype.update = function () {
+            switch (this.state) {
+                case 0 /* FLYING */:
+                    this.fly();
+                    break;
+                case 1 /* LANDED */:
+                    this.updateOnPlanet();
+                    break;
             }
         };
         return Player;
     })(Phaser.Sprite);
     Demo.Player = Player;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Vector2D = (function () {
+        function Vector2D() {
+        }
+        return Vector2D;
+    })();
+    Demo.Vector2D = Vector2D;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -147,54 +257,89 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
-
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('Game', Demo.GameState, false);
-
-            this.state.start('Boot');
-        }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
-})(Demo || (Demo = {}));
-
-window.onload = function () {
-    var game = new Demo.Game();
-};
-var Demo;
-(function (Demo) {
     var GameState = (function (_super) {
         __extends(GameState, _super);
         function GameState() {
             _super.apply(this, arguments);
+            this.worldMinX = 1000;
+            this.worldMinY = 1000;
+            this.worldMaxX = -1000;
+            this.worldMaxY = -1000;
+            this.cameraPadding = 150;
         }
         GameState.prototype.create = function () {
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
-            for (var i = 0; i < 3; ++i) {
-                var posX = Math.random() * 800;
-                var posY = Math.random() * 480;
-                var radius = Math.random() * 200 + 50;
-                var speed = Math.random() / 10 - 0.05;
-                var planet = new Demo.Planet(this.game, posX, posY, radius, speed);
-                this.add.existing(planet);
+
+            // world group for camera movement
+            this.gameWorld = this.add.group(this, 'gameWorld', true);
+
+            // parse level
+            var levelString = (String)(this.game.cache.getText("level_" + GameState.currentLevel));
+            this.level = JSON.parse(levelString);
+
+            for (var i in this.level.planets) {
+                var planet = Demo.Planet.initFromLvl(this.game, this.level.planets[i]);
+                this.planets.push(planet);
+                this.gameWorld.add(planet);
+
+                if (planet.x < this.worldMinX)
+                    this.worldMinX = planet.x - 1000;
+                if (planet.y < this.worldMinY)
+                    this.worldMinY = planet.y - 1000;
+                if (planet.x > this.worldMaxX)
+                    this.worldMaxX = planet.x + 1000;
+                if (planet.y > this.worldMaxY)
+                    this.worldMaxY = planet.y + 1000;
             }
 
-            this.player = new Demo.Player(this.game, this.game.world.centerX, this.game.world.centerY);
+            // add player
+            this.player = new Demo.Player(this.game, this.level.startPos.x, this.level.startPos.y, this.planets, this.level.gravity, this.level.jumpStrength);
             this.add.existing(this.player);
+            this.gameWorld.add(this.player);
 
+            // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
-            var text = this.add.text(0, 0, 'Demo html5...', style);
+            var text = this.add.text(0, 0, 'Space Hop Demo Dev', style);
         };
 
         GameState.prototype.update = function () {
+            // Move the camera
+            if (this.player.state == 1 /* LANDED */) {
+                var planet = this.player.currentPlanet;
+                this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
+                this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+            }
+
+            // Check if player is out of the level
+            if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
+                this.player.x = this.level.startPos.x;
+                this.player.y = this.level.startPos.y;
+                this.player.vitX = 0;
+                this.player.vitY = 0;
+            }
+
+            // Camera follow
+            var globalPlayerX = this.gameWorld.x + this.player.x;
+            var globalPlayerY = this.gameWorld.y + this.player.y;
+
+            var maxCamX = this.game.width - this.cameraPadding;
+            var maxCamY = this.game.height - this.cameraPadding;
+            var minCamX = 0 + this.cameraPadding;
+            var minCamY = 0 + this.cameraPadding;
+
+            if (this.player.state == 0 /* FLYING */) {
+                if (globalPlayerX > maxCamX)
+                    this.gameWorld.x -= globalPlayerX - maxCamX;
+                else if (globalPlayerX < minCamX)
+                    this.gameWorld.x += minCamX - globalPlayerX;
+
+                if (globalPlayerY > maxCamY)
+                    this.gameWorld.y -= globalPlayerY - maxCamY;
+                else if (globalPlayerY < minCamY)
+                    this.gameWorld.y += minCamY - globalPlayerY;
+            }
         };
         return GameState;
     })(Phaser.State);
@@ -217,6 +362,7 @@ var Demo;
         };
 
         Menu.prototype.onButtonPressed = function () {
+            Demo.GameState.currentLevel = 1;
             this.game.state.start('Game', true);
         };
         return Menu;
@@ -240,6 +386,7 @@ var Demo;
             this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
             this.load.image('background', 'game/assets/img/fond.jpg');
+            this.load.text('level_1', 'game/assets/levels/level_1.json');
 
             // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);

@@ -14,6 +14,7 @@ module Demo {
         }
 
         onButtonPressed() {
+            GameState.currentLevel = 1;
             this.game.state.start('Game', true);
         }
 
