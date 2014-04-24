@@ -67,7 +67,7 @@ var Demo;
             }
         }
         CheckPoint.prototype.update = function () {
-            var rotationSpeed = 0.01;
+            var rotationSpeed = 0.03;
 
             for (var i = 0; i <= 4; i += 2)
                 this.circles[i].rotation -= rotationSpeed * (i + 1);
@@ -238,6 +238,7 @@ var Demo;
             this.landed = false;
             this.opened = false;
             this.currentPlanet = null;
+            this.previousPlanet = null;
             this.state = 0 /* FLYING */;
             this.canJump = true;
         }
@@ -253,6 +254,8 @@ var Demo;
 
                 this.vitX = Math.cos(rot) * this.jumpStrength;
                 this.vitY = Math.sin(rot) * this.jumpStrength;
+
+                this.previousPlanet = this.currentPlanet;
             }
         };
 
@@ -492,26 +495,39 @@ var Demo;
             this.checkBounds();
 
             // When landing
-            if (this.player.state == 1 /* LANDED */)
+            if (this.player.state == 1 /* LANDED */ && this.previousPlayerState == 0 /* FLYING */)
                 this.onLanding();
+
+            // While landed
+            if (this.player.state == 1 /* LANDED */)
+                this.whileLanded();
 
             // Camera follow
             this.updateCamera();
+
+            this.previousPlayerState = this.player.state;
         };
 
-        GameState.prototype.onLanding = function () {
+        GameState.prototype.whileLanded = function () {
             // Move the camera
             var planet = this.player.currentPlanet;
             this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
             this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+        };
+
+        GameState.prototype.onLanding = function () {
+            var planet = this.player.currentPlanet;
 
             // set checkPoint if any
             if (planet.checkPoint) {
                 this.lastCheckpoint = planet;
-                if (!planet.checked) {
-                    this.nbcheckPointChecked++;
+
+                if (planet != this.player.previousPlanet)
                     this.showCheckPoint(planet);
-                }
+
+                if (!planet.checked)
+                    this.nbcheckPointChecked++;
+
                 planet.checked = true;
             }
 
@@ -521,8 +537,8 @@ var Demo;
                 planet.cameraX = this.game.width / 2;
                 planet.cameraY = this.game.height / 2;
                 this.player.canJump = false;
-                if (planet.beacon.fullyOpened)
-                    this.gotoNextLevel();
+
+                this.game.time.events.add(Phaser.Timer.SECOND * 2, this.gotoNextLevel, this);
             }
         };
 

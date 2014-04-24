@@ -32,7 +32,7 @@
 
         update() {
 
-            var rotationSpeed = 0.01;
+            var rotationSpeed = 0.03;
 
             for (var i = 0; i <= 4; i += 2)
                 this.circles[i].rotation -= rotationSpeed * (i+1);

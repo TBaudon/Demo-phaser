@@ -20,6 +20,7 @@ module Demo {
         planets: Array<Planet>;
         canJump: boolean;
 
+        previousPlanet: Planet;
         currentPlanet: Planet;
 
         state: PlayerState;
@@ -46,6 +47,7 @@ module Demo {
             this.landed = false;
             this.opened = false;
             this.currentPlanet = null;
+            this.previousPlanet = null;
             this.state = PlayerState.FLYING;
             this.canJump = true;
         }
@@ -62,6 +64,8 @@ module Demo {
 
                 this.vitX = Math.cos(rot) * this.jumpStrength;
                 this.vitY = Math.sin(rot) * this.jumpStrength;
+
+                this.previousPlanet = this.currentPlanet;
             }
         }
 

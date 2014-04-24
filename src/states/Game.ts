@@ -2,6 +2,7 @@ module Demo {
     export class GameState extends Phaser.State {
 
         player: Player;
+        previousPlayerState: PlayerState;
         planets: Array<Planet>;
         gameWorld: Phaser.Group;
         level: Level;
@@ -96,26 +97,38 @@ module Demo {
             this.checkBounds();
 
             // When landing
-            if (this.player.state == PlayerState.LANDED)
+            if (this.player.state == PlayerState.LANDED && this.previousPlayerState == PlayerState.FLYING)
                 this.onLanding();
+
+            // While landed
+            if (this.player.state == PlayerState.LANDED) this.whileLanded();
 
             // Camera follow
             this.updateCamera();
+
+            this.previousPlayerState = this.player.state;
         }
 
-        onLanding() {
+        whileLanded() {
             // Move the camera
             var planet: Planet = this.player.currentPlanet;
             this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
             this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+        }
+
+        onLanding() {
+            var planet = this.player.currentPlanet;
 
             // set checkPoint if any
             if (planet.checkPoint) {
                 this.lastCheckpoint = planet;
-                if (!planet.checked) {
-                    this.nbcheckPointChecked++;
+
+                if(planet != this.player.previousPlanet)
                     this.showCheckPoint(planet);
-                }
+
+                if (!planet.checked)
+                    this.nbcheckPointChecked++;
+               
                 planet.checked = true;
             }
 
@@ -125,8 +138,8 @@ module Demo {
                 planet.cameraX = this.game.width / 2;
                 planet.cameraY = this.game.height / 2;
                 this.player.canJump = false;
-                if (planet.beacon.fullyOpened)
-                    this.gotoNextLevel();
+
+                this.game.time.events.add(Phaser.Timer.SECOND * 2, this.gotoNextLevel, this);
             }
         }
 
