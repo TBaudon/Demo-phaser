@@ -5,7 +5,8 @@ module Demo {
         planets: Array<Planet>;
         gameWorld: Phaser.Group;
         level: Level;
-        destArrow: DestArrow;
+        arrows: Array<DestArrow>;
+        checks: Array<CheckPoint>;
 
         nbcheckPoint: number;
         nbcheckPointChecked: number;
@@ -25,6 +26,8 @@ module Demo {
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array<Planet>();
+            this.arrows = new Array<DestArrow>();
+            this.checks = new Array<CheckPoint>();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -58,16 +61,17 @@ module Demo {
                 }
 
                 // add checkpoint
-                if (planet.checkPoint)
+                if (planet.checkPoint) {
                     this.nbcheckPoint++;
+                    if (this.mustCheckAll) this.addArrow(planet);
+                }
 
                 // add beacon
                 if (planet.end) {
                     var beacon: Beacon = new Beacon(this.game, planet);
                     this.gameWorld.add(beacon);
                     planet.beacon = beacon;
-                    this.destArrow = new DestArrow(this.game, planet);
-                    this.game.add.existing(this.destArrow);
+                    this.addArrow(planet);
                 }
 
                 if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
@@ -79,6 +83,12 @@ module Demo {
             // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text: Phaser.Text = this.add.text(0, 0, 'Space Hop Demo Dev', style);
+        }
+
+        addArrow(planet: Planet) {
+            var arrow = new DestArrow(this.game, planet);
+            this.game.add.existing(arrow);
+            this.arrows.push(arrow);
         }
 
         update() {
@@ -102,8 +112,10 @@ module Demo {
             // set checkPoint if any
             if (planet.checkPoint) {
                 this.lastCheckpoint = planet;
-                if(!planet.checked)
+                if (!planet.checked) {
                     this.nbcheckPointChecked++;
+                    this.showCheckPoint(planet);
+                }
                 planet.checked = true;
             }
 
@@ -116,6 +128,21 @@ module Demo {
                 if (planet.beacon.fullyOpened)
                     this.gotoNextLevel();
             }
+        }
+
+        showCheckPoint(planet: Planet) {
+            var check: CheckPoint = new CheckPoint(this.game, planet, planet.radius);
+            this.game.add.existing(check);
+            this.gameWorld.add(check);
+            this.game.add.tween(check.scale).to({ x:2, y:2 }, 500, Phaser.Easing.Cubic.Out, true);
+            var tween = this.game.add.tween(check).to({ alpha: 0 }, 500, Phaser.Easing.Cubic.Out, true);
+            tween.onComplete.add(this.removeCheck, this);
+            this.checks.push(check);
+        }
+
+        removeCheck() {
+            var check = this.checks.shift();
+            check.destroy();
         }
 
         checkBounds() {
@@ -136,7 +163,8 @@ module Demo {
 
         shutdown() {
             this.gameWorld.destroy(true);
-            this.destArrow.destroy();
+            for (var i in this.arrows)
+                this.arrows[i].destroy();
         }
 
         updateCamera() {

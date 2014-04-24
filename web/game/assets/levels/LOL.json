@@ -1,7 +1,7 @@
 ﻿{
     "name": "First level!",
     "description": "blablablablabghl&a",
-    "mustCheckAll": true,
+    "mustCheckAll": false,
 
     "gravity": {
         "x": 0,

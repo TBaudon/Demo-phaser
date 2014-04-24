@@ -42,9 +42,39 @@ var Demo;
 (function (Demo) {
     var CheckPoint = (function (_super) {
         __extends(CheckPoint, _super);
-        function CheckPoint(game, planet) {
+        function CheckPoint(game, planet, radius) {
             _super.call(this, game, 0, 0);
+            this.BASE_RADIUS = 70;
+
+            this.anchor.x = 0.5;
+            this.anchor.y = 0.5;
+
+            var scale = radius / this.BASE_RADIUS;
+
+            this.x = planet.x;
+            this.y = planet.y;
+
+            this.circles = new Array();
+
+            for (var i = 0; i < 5; ++i) {
+                var circle = new Phaser.Sprite(game, 0, 0, 'gui', 'load' + (i + 1));
+                circle.anchor.x = 0.5;
+                circle.anchor.y = 0.5;
+                this.addChild(circle);
+                this.circles.push(circle);
+                circle.scale.x = scale;
+                circle.scale.y = scale;
+            }
         }
+        CheckPoint.prototype.update = function () {
+            var rotationSpeed = 0.01;
+
+            for (var i = 0; i <= 4; i += 2)
+                this.circles[i].rotation -= rotationSpeed * (i + 1);
+
+            for (var i = 1; i <= 4; i += 2)
+                this.circles[i].rotation += rotationSpeed * (i + 1);
+        };
         return CheckPoint;
     })(Phaser.Sprite);
     Demo.CheckPoint = CheckPoint;
@@ -391,6 +421,8 @@ var Demo;
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
+            this.arrows = new Array();
+            this.checks = new Array();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -420,16 +452,18 @@ var Demo;
                 }
 
                 // add checkpoint
-                if (planet.checkPoint)
+                if (planet.checkPoint) {
                     this.nbcheckPoint++;
+                    if (this.mustCheckAll)
+                        this.addArrow(planet);
+                }
 
                 // add beacon
                 if (planet.end) {
                     var beacon = new Demo.Beacon(this.game, planet);
                     this.gameWorld.add(beacon);
                     planet.beacon = beacon;
-                    this.destArrow = new Demo.DestArrow(this.game, planet);
-                    this.game.add.existing(this.destArrow);
+                    this.addArrow(planet);
                 }
 
                 if (planet.x < this.worldMinX)
@@ -445,6 +479,12 @@ var Demo;
             // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text = this.add.text(0, 0, 'Space Hop Demo Dev', style);
+        };
+
+        GameState.prototype.addArrow = function (planet) {
+            var arrow = new Demo.DestArrow(this.game, planet);
+            this.game.add.existing(arrow);
+            this.arrows.push(arrow);
         };
 
         GameState.prototype.update = function () {
@@ -468,8 +508,10 @@ var Demo;
             // set checkPoint if any
             if (planet.checkPoint) {
                 this.lastCheckpoint = planet;
-                if (!planet.checked)
+                if (!planet.checked) {
                     this.nbcheckPointChecked++;
+                    this.showCheckPoint(planet);
+                }
                 planet.checked = true;
             }
 
@@ -482,6 +524,21 @@ var Demo;
                 if (planet.beacon.fullyOpened)
                     this.gotoNextLevel();
             }
+        };
+
+        GameState.prototype.showCheckPoint = function (planet) {
+            var check = new Demo.CheckPoint(this.game, planet, planet.radius);
+            this.game.add.existing(check);
+            this.gameWorld.add(check);
+            this.game.add.tween(check.scale).to({ x: 2, y: 2 }, 500, Phaser.Easing.Cubic.Out, true);
+            var tween = this.game.add.tween(check).to({ alpha: 0 }, 500, Phaser.Easing.Cubic.Out, true);
+            tween.onComplete.add(this.removeCheck, this);
+            this.checks.push(check);
+        };
+
+        GameState.prototype.removeCheck = function () {
+            var check = this.checks.shift();
+            check.destroy();
         };
 
         GameState.prototype.checkBounds = function () {
@@ -499,7 +556,8 @@ var Demo;
 
         GameState.prototype.shutdown = function () {
             this.gameWorld.destroy(true);
-            this.destArrow.destroy();
+            for (var i in this.arrows)
+                this.arrows[i].destroy();
         };
 
         GameState.prototype.updateCamera = function () {
@@ -593,8 +651,6 @@ var Demo;
                 this.load.text('level_' + i, 'game/assets/levels/' + list[i]);
                 Demo.GameState.max_lvl++;
             }
-
-            console.log(Demo.GameState.max_lvl);
 
             // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);

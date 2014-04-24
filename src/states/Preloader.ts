@@ -27,8 +27,6 @@ module Demo {
                 this.load.text('level_' + i, 'game/assets/levels/' + list[i]);
                 GameState.max_lvl++;
             }
-
-            console.log(GameState.max_lvl);
            
             // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);

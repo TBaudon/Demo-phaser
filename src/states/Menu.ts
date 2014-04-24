@@ -10,7 +10,7 @@ module Demo {
 
             this.button = this.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPressed, this, 2, 1, 0);
             this.button.x -= this.button.width / 2;
-            this.button.y -= this.button.height / 2;
+            this.button.y -= this.button.height / 2
         }
 
         onButtonPressed() {
