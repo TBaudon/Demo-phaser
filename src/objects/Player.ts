@@ -24,11 +24,10 @@ module Demo {
         state: PlayerState;
 
         constructor(game: Phaser.Game,
-            x: number, y: number,
             planets: Array<Planet>,
             gravity: Vector2D,
             jumpStrength: number) {
-            super(game, x, y, 'robot_wait');
+            super(game, 0, 0, 'robot_wait');
 
             this.jumpStrength = jumpStrength;
             this.gravity = gravity;

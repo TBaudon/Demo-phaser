@@ -22,6 +22,8 @@
     <Content Include="web\game\assets\img\planets.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="web\game\assets\levels\level_2.json" />
+    <Content Include="web\game\assets\levels\list.json" />
     <None Include="web\game\assets\levels\level_1.json" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />
@@ -45,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
+    <TypeScriptCompile Include="src\objects\Beacon.ts" />
     <TypeScriptCompile Include="src\objects\Planet.ts" />
     <TypeScriptCompile Include="src\objects\Player.ts" />
     <TypeScriptCompile Include="src\objects\Vector2D.ts" />

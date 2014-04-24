@@ -6,41 +6,45 @@
 };
 var Demo;
 (function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+    var Beacon = (function (_super) {
+        __extends(Beacon, _super);
+        function Beacon(game, planet) {
+            _super.call(this, game, planet.x, planet.y, 'beacon', [0]);
 
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('Game', Demo.GameState, false);
+            this.planet = planet;
+            this.anchor.x = 0.5;
+            this.anchor.y = 0.5;
+            this.opened = false;
+            this.fullyOpened = false;
 
-            this.state.start('Boot');
+            this.animations.add('open', Phaser.Animation.generateFrameNames('beacon', 1, 34));
         }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
-})(Demo || (Demo = {}));
+        Beacon.prototype.open = function () {
+            if (!this.opened)
+                this.animations.play('open', 60, false);
+            this.opened = true;
+        };
 
-window.onload = function () {
-    var game = new Demo.Game();
-};
-var Demo;
-(function (Demo) {
-    var Level = (function () {
-        function Level() {
-        }
-        return Level;
-    })();
-    Demo.Level = Level;
+        Beacon.prototype.update = function () {
+            this.rotation = this.planet.rotation;
+
+            this.x = this.planet.x + Math.cos(this.rotation - Math.PI / 2) * (this.planet.radius + this.height / 2 - 200 / this.planet.radius);
+            this.y = this.planet.y + Math.sin(this.rotation - Math.PI / 2) * (this.planet.radius + this.height / 2 - 200 / this.planet.radius);
+
+            if (this.animations.currentFrame.index == 33)
+                this.fullyOpened = true;
+        };
+        return Beacon;
+    })(Phaser.Sprite);
+    Demo.Beacon = Beacon;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY) {
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, start, checkPoint, end) {
             _super.call(this, game, x, y, 'planets', element);
+            // radius of the assets
             this.BASE_RADIUS = 180;
 
             if (radius == 0)
@@ -56,11 +60,19 @@ var Demo;
             var scale = radius / this.BASE_RADIUS;
             this.scale.x = scale;
             this.scale.y = scale;
+
+            this.start = start;
+            this.checkPoint = checkPoint;
+            this.end = end;
         }
+        // load a planet from json
         Planet.initFromLvl = function (game, planet) {
             var camX = 400;
             var camY = 240;
             var elem = "planet_earth";
+            var start = false;
+            var checkPoint = false;
+            var end = false;
 
             if (planet.cameraX != undefined)
                 camX = planet.cameraX;
@@ -68,8 +80,14 @@ var Demo;
                 camY = planet.cameraY;
             if (planet.element != undefined)
                 elem = planet.element;
+            if (planet.start)
+                start = planet.start;
+            if (planet.checkPoint)
+                checkPoint = planet.checkPoint;
+            if (planet.end)
+                end = planet.end;
 
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY);
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, start, checkPoint, end);
 
             return nPlanet;
         };
@@ -92,8 +110,8 @@ var Demo;
 
     var Player = (function (_super) {
         __extends(Player, _super);
-        function Player(game, x, y, planets, gravity, jumpStrength) {
-            _super.call(this, game, x, y, 'robot_wait');
+        function Player(game, planets, gravity, jumpStrength) {
+            _super.call(this, game, 0, 0, 'robot_wait');
 
             this.jumpStrength = jumpStrength;
             this.gravity = gravity;
@@ -213,6 +231,7 @@ var Demo;
         }
         // Load data needed for preloader screen.
         Boot.prototype.preload = function () {
+            this.load.text('levelList', 'game/assets/levels/list.json');
         };
 
         Boot.prototype.create = function () {
@@ -257,6 +276,28 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('Game', Demo.GameState, false);
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
+var Demo;
+(function (Demo) {
     var GameState = (function (_super) {
         __extends(GameState, _super);
         function GameState() {
@@ -265,7 +306,6 @@ var Demo;
             this.worldMinY = 1000;
             this.worldMaxX = -1000;
             this.worldMaxY = -1000;
-            this.cameraPadding = 150;
         }
         GameState.prototype.create = function () {
             this.add.sprite(0, 0, 'background');
@@ -279,10 +319,27 @@ var Demo;
             var levelString = (String)(this.game.cache.getText("level_" + GameState.currentLevel));
             this.level = JSON.parse(levelString);
 
+            // add player
+            this.player = new Demo.Player(this.game, this.planets, this.level.gravity, this.level.jumpStrength);
+            this.gameWorld.add(this.player);
+
             for (var i in this.level.planets) {
                 var planet = Demo.Planet.initFromLvl(this.game, this.level.planets[i]);
                 this.planets.push(planet);
                 this.gameWorld.add(planet);
+
+                // set first checkpoint
+                if (planet.start) {
+                    this.player.land(planet);
+                    this.lastCheckpoint = planet;
+                }
+
+                // add beacon
+                if (planet.end) {
+                    var beacon = new Demo.Beacon(this.game, planet);
+                    this.gameWorld.add(beacon);
+                    planet.beacon = beacon;
+                }
 
                 if (planet.x < this.worldMinX)
                     this.worldMinX = planet.x - 1000;
@@ -294,56 +351,81 @@ var Demo;
                     this.worldMaxY = planet.y + 1000;
             }
 
-            // add player
-            this.player = new Demo.Player(this.game, this.level.startPos.x, this.level.startPos.y, this.planets, this.level.gravity, this.level.jumpStrength);
-            this.add.existing(this.player);
-            this.gameWorld.add(this.player);
-
             // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text = this.add.text(0, 0, 'Space Hop Demo Dev', style);
         };
 
         GameState.prototype.update = function () {
-            // Move the camera
+            // Check if player is out of the level
+            if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
+                this.player.land(this.lastCheckpoint);
+            }
+
+            // When landing
             if (this.player.state == 1 /* LANDED */) {
+                // Move the camera
                 var planet = this.player.currentPlanet;
                 this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
                 this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
-            }
 
-            // Check if player is out of the level
-            if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
-                this.player.x = this.level.startPos.x;
-                this.player.y = this.level.startPos.y;
-                this.player.vitX = 0;
-                this.player.vitY = 0;
+                // set checkPoint if any
+                if (planet.checkPoint)
+                    this.lastCheckpoint = planet;
+
+                // Check if we reached the end
+                if (planet.end) {
+                    planet.beacon.open();
+                    if (planet.beacon.fullyOpened)
+                        this.gotoNextLevel();
+                }
             }
 
             // Camera follow
             var globalPlayerX = this.gameWorld.x + this.player.x;
             var globalPlayerY = this.gameWorld.y + this.player.y;
 
-            var maxCamX = this.game.width - this.cameraPadding;
-            var maxCamY = this.game.height - this.cameraPadding;
-            var minCamX = 0 + this.cameraPadding;
-            var minCamY = 0 + this.cameraPadding;
+            var cameraPadding = 150;
+            var followCoef = 3;
+
+            var maxCamX = this.game.width - cameraPadding;
+            var maxCamY = this.game.height - cameraPadding;
+            var minCamX = 0 + cameraPadding;
+            var minCamY = 0 + cameraPadding;
 
             if (this.player.state == 0 /* FLYING */) {
                 if (globalPlayerX > maxCamX)
-                    this.gameWorld.x -= globalPlayerX - maxCamX;
+                    this.gameWorld.x -= (globalPlayerX - maxCamX) / followCoef;
                 else if (globalPlayerX < minCamX)
-                    this.gameWorld.x += minCamX - globalPlayerX;
+                    this.gameWorld.x += (minCamX - globalPlayerX) / followCoef;
 
                 if (globalPlayerY > maxCamY)
-                    this.gameWorld.y -= globalPlayerY - maxCamY;
+                    this.gameWorld.y -= (globalPlayerY - maxCamY) / followCoef;
                 else if (globalPlayerY < minCamY)
-                    this.gameWorld.y += minCamY - globalPlayerY;
+                    this.gameWorld.y += (minCamY - globalPlayerY) / followCoef;
             }
         };
+
+        GameState.prototype.gotoNextLevel = function () {
+            this.gameWorld.destroy(true);
+            GameState.currentLevel++;
+            if (GameState.currentLevel > GameState.max_lvl)
+                GameState.currentLevel = 1;
+            this.game.state.restart();
+        };
+        GameState.max_lvl = 0;
         return GameState;
     })(Phaser.State);
     Demo.GameState = GameState;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Level = (function () {
+        function Level() {
+        }
+        return Level;
+    })();
+    Demo.Level = Level;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -385,8 +467,19 @@ var Demo;
             this.load.atlasXML('robot_wait', 'game/assets/img/robot_wait.png', 'game/assets/img/robot_wait.xml');
             this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
+            this.load.atlasXML('beacon', 'game/assets/img/beacon.png', 'game/assets/img/beacon.xml');
             this.load.image('background', 'game/assets/img/fond.jpg');
-            this.load.text('level_1', 'game/assets/levels/level_1.json');
+
+            // load levels
+            var levelListString = (String)(this.game.cache.getText('levelList'));
+            var list = JSON.parse(levelListString);
+
+            for (var i in list) {
+                this.load.text('level_' + i, 'game/assets/levels/' + list[i]);
+                Demo.GameState.max_lvl++;
+            }
+
+            console.log(Demo.GameState.max_lvl);
 
             // Progress Event
             this.load.onFileComplete.add(this.updateBar, this);

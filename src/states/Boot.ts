@@ -3,7 +3,7 @@ module Demo {
 
         // Load data needed for preloader screen.
         preload() {
-
+            this.load.text('levelList', 'game/assets/levels/list.json');
         }
 
         create() {

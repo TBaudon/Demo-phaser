@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:cf60d35c57ddc7749a44b0518297bde1$ -->
+<TextureAtlas imagePath="beacon.png">
+    <SubTexture name="beacon1" x="0" y="0" width="130" height="130"/>
+    <SubTexture name="beacon2" x="130" y="0" width="130" height="130"/>
+    <SubTexture name="beacon3" x="260" y="0" width="130" height="130"/>
+    <SubTexture name="beacon4" x="390" y="0" width="130" height="130"/>
+    <SubTexture name="beacon5" x="520" y="0" width="130" height="130"/>
+    <SubTexture name="beacon6" x="650" y="0" width="130" height="130"/>
+    <SubTexture name="beacon7" x="780" y="0" width="130" height="130"/>
+    <SubTexture name="beacon8" x="0" y="130" width="130" height="130"/>
+    <SubTexture name="beacon9" x="130" y="130" width="130" height="130"/>
+    <SubTexture name="beacon10" x="260" y="130" width="130" height="130"/>
+    <SubTexture name="beacon11" x="390" y="130" width="130" height="130"/>
+    <SubTexture name="beacon12" x="520" y="130" width="130" height="130"/>
+    <SubTexture name="beacon13" x="650" y="130" width="130" height="130"/>
+    <SubTexture name="beacon14" x="780" y="130" width="130" height="130"/>
+    <SubTexture name="beacon15" x="0" y="260" width="130" height="130"/>
+    <SubTexture name="beacon16" x="130" y="260" width="130" height="130"/>
+    <SubTexture name="beacon17" x="260" y="260" width="130" height="130"/>
+    <SubTexture name="beacon18" x="390" y="260" width="130" height="130"/>
+    <SubTexture name="beacon19" x="520" y="260" width="130" height="130"/>
+    <SubTexture name="beacon20" x="650" y="260" width="130" height="130"/>
+    <SubTexture name="beacon21" x="780" y="260" width="130" height="130"/>
+    <SubTexture name="beacon22" x="0" y="390" width="130" height="130"/>
+    <SubTexture name="beacon23" x="130" y="390" width="130" height="130"/>
+    <SubTexture name="beacon24" x="260" y="390" width="130" height="130"/>
+    <SubTexture name="beacon25" x="390" y="390" width="130" height="130"/>
+    <SubTexture name="beacon26" x="520" y="390" width="130" height="130"/>
+    <SubTexture name="beacon27" x="650" y="390" width="130" height="130"/>
+    <SubTexture name="beacon28" x="780" y="390" width="130" height="130"/>
+    <SubTexture name="beacon29" x="0" y="520" width="130" height="130"/>
+    <SubTexture name="beacon30" x="130" y="520" width="130" height="130"/>
+    <SubTexture name="beacon31" x="260" y="520" width="130" height="130"/>
+    <SubTexture name="beacon32" x="390" y="520" width="130" height="130"/>
+    <SubTexture name="beacon33" x="520" y="520" width="130" height="130"/>
+    <SubTexture name="beacon34" x="650" y="520" width="130" height="130"/>
+    <SubTexture name="particle_light" x="780" y="520" width="48" height="49"/>
+</TextureAtlas>

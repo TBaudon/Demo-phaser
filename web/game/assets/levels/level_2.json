@@ -3,20 +3,20 @@
     "description": "blablablablabghl&a",
 
     "gravity": {
-        "x": 0,
-        "y": 1
+        "x": 1,
+        "y": 0
     },
 
     "jumpStrength" : 20,
 
     "planets": {
         "Terre":{
-            "x": 175,
-			"y": 240,
+            "x": 0,
+			"y": 0,
             "rotSpeed": 0.025,
-            "radius": 75,
-            "cameraX": 75,
-            "cameraY": 380,
+            "radius": 100,
+            "cameraX": 150,
+            "cameraY": 100,
             "start": true
         },
 		"1":{
