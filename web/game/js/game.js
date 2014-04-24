@@ -40,9 +40,20 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var CheckPointArrow = (function (_super) {
-        __extends(CheckPointArrow, _super);
-        function CheckPointArrow(game, target) {
+    var CheckPoint = (function (_super) {
+        __extends(CheckPoint, _super);
+        function CheckPoint(game, planet) {
+            _super.call(this, game, 0, 0);
+        }
+        return CheckPoint;
+    })(Phaser.Sprite);
+    Demo.CheckPoint = CheckPoint;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var DestArrow = (function (_super) {
+        __extends(DestArrow, _super);
+        function DestArrow(game, target) {
             _super.call(this, game, 0, 0, 'gui', 'arrow');
 
             this.target = target;
@@ -53,7 +64,7 @@ var Demo;
             this.scale.x = 0.5;
             this.scale.y = 0.5;
         }
-        CheckPointArrow.prototype.update = function () {
+        DestArrow.prototype.update = function () {
             this.visible = false;
 
             if (this.target.checked)
@@ -101,9 +112,9 @@ var Demo;
                     this.x = margin;
             }
         };
-        return CheckPointArrow;
+        return DestArrow;
     })(Phaser.Sprite);
-    Demo.CheckPointArrow = CheckPointArrow;
+    Demo.DestArrow = DestArrow;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -380,7 +391,6 @@ var Demo;
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
-            this.arrows = new Array();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -396,6 +406,8 @@ var Demo;
             this.player = new Demo.Player(this.game, this.planets, this.level.gravity, this.level.jumpStrength);
             this.gameWorld.add(this.player);
 
+            this.mustCheckAll = this.level.mustCheckAll;
+
             for (var i in this.level.planets) {
                 var planet = Demo.Planet.initFromLvl(this.game, this.level.planets[i]);
                 this.planets.push(planet);
@@ -408,18 +420,16 @@ var Demo;
                 }
 
                 // add checkpoint
-                if (planet.checkPoint) {
-                    var arrow = new Demo.CheckPointArrow(this.game, planet);
-                    this.add.existing(arrow);
-                    this.arrows.push(arrow);
+                if (planet.checkPoint)
                     this.nbcheckPoint++;
-                }
 
                 // add beacon
                 if (planet.end) {
                     var beacon = new Demo.Beacon(this.game, planet);
                     this.gameWorld.add(beacon);
                     planet.beacon = beacon;
+                    this.destArrow = new Demo.DestArrow(this.game, planet);
+                    this.game.add.existing(this.destArrow);
                 }
 
                 if (planet.x < this.worldMinX)
@@ -464,7 +474,7 @@ var Demo;
             }
 
             // Check if we reached the end
-            if (planet.end && this.nbcheckPointChecked == this.nbcheckPoint) {
+            if (planet.end && ((this.nbcheckPointChecked == this.nbcheckPoint && this.mustCheckAll) || !this.mustCheckAll)) {
                 planet.beacon.open();
                 planet.cameraX = this.game.width / 2;
                 planet.cameraY = this.game.height / 2;
@@ -489,9 +499,7 @@ var Demo;
 
         GameState.prototype.shutdown = function () {
             this.gameWorld.destroy(true);
-
-            for (var i in this.arrows)
-                this.arrows[i].destroy();
+            this.destArrow.destroy();
         };
 
         GameState.prototype.updateCamera = function () {

@@ -1,5 +1,5 @@
 ﻿module Demo {
-    export class CheckPointArrow extends Phaser.Sprite{
+    export class DestArrow extends Phaser.Sprite{
 
         target: Planet;
         

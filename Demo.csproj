@@ -48,6 +48,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
     <TypeScriptCompile Include="src\objects\Beacon.ts" />
+    <TypeScriptCompile Include="src\objects\CheckPoint.ts" />
     <TypeScriptCompile Include="src\objects\CheckPointArrow.ts" />
     <TypeScriptCompile Include="src\objects\Planet.ts" />
     <TypeScriptCompile Include="src\objects\Player.ts" />

@@ -6,6 +6,7 @@
         startPos: Vector2D;
         gravity: Vector2D;
         jumpStrength: number;
+        mustCheckAll: boolean;
 
     }
 } 

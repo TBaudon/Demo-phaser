@@ -5,10 +5,11 @@ module Demo {
         planets: Array<Planet>;
         gameWorld: Phaser.Group;
         level: Level;
-        arrows: Array<CheckPointArrow>;
+        destArrow: DestArrow;
 
         nbcheckPoint: number;
         nbcheckPointChecked: number;
+        mustCheckAll: boolean;
 
         worldMinX: number = 1000;
         worldMinY: number = 1000;
@@ -24,7 +25,6 @@ module Demo {
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array<Planet>();
-            this.arrows = new Array<CheckPointArrow>();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -43,6 +43,8 @@ module Demo {
                 this.level.jumpStrength);
             this.gameWorld.add(this.player);
 
+            this.mustCheckAll = this.level.mustCheckAll;
+
             // add planets
             for (var i in this.level.planets) {
                 var planet: Planet = Planet.initFromLvl(this.game, this.level.planets[i]);
@@ -56,18 +58,16 @@ module Demo {
                 }
 
                 // add checkpoint
-                if (planet.checkPoint) {
-                    var arrow: CheckPointArrow = new CheckPointArrow(this.game, planet);
-                    this.add.existing(arrow);
-                    this.arrows.push(arrow);
+                if (planet.checkPoint)
                     this.nbcheckPoint++;
-                }
 
                 // add beacon
                 if (planet.end) {
                     var beacon: Beacon = new Beacon(this.game, planet);
                     this.gameWorld.add(beacon);
                     planet.beacon = beacon;
+                    this.destArrow = new DestArrow(this.game, planet);
+                    this.game.add.existing(this.destArrow);
                 }
 
                 if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
@@ -108,7 +108,7 @@ module Demo {
             }
 
             // Check if we reached the end
-            if (planet.end && this.nbcheckPointChecked == this.nbcheckPoint) {
+            if (planet.end && ((this.nbcheckPointChecked == this.nbcheckPoint && this.mustCheckAll) || !this.mustCheckAll)) {
                 planet.beacon.open();
                 planet.cameraX = this.game.width / 2;
                 planet.cameraY = this.game.height / 2;
@@ -136,9 +136,7 @@ module Demo {
 
         shutdown() {
             this.gameWorld.destroy(true);
-
-            for (var i in this.arrows)
-                this.arrows[i].destroy();
+            this.destArrow.destroy();
         }
 
         updateCamera() {
