@@ -8,6 +8,7 @@ module Demo {
         element: string;
         start: boolean;
         checkPoint: boolean;
+        checked: boolean;
         end: boolean;
         beacon: Beacon;
 
@@ -67,6 +68,7 @@ module Demo {
             this.start = start;
             this.checkPoint = checkPoint;
             this.end = end;
+            this.checked = false;
         }
 
         update() {

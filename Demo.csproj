@@ -24,7 +24,7 @@
     </Content>
     <Content Include="web\game\assets\levels\level_2.json" />
     <Content Include="web\game\assets\levels\list.json" />
-    <None Include="web\game\assets\levels\level_1.json" />
+    <None Include="web\game\assets\levels\LOL.json" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />
     <Content Include="web\game\icons\apple-touch-icon.png" />
@@ -48,6 +48,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
     <TypeScriptCompile Include="src\objects\Beacon.ts" />
+    <TypeScriptCompile Include="src\objects\CheckPointArrow.ts" />
     <TypeScriptCompile Include="src\objects\Planet.ts" />
     <TypeScriptCompile Include="src\objects\Player.ts" />
     <TypeScriptCompile Include="src\objects\Vector2D.ts" />

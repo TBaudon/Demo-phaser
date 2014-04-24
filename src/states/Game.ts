@@ -5,6 +5,10 @@ module Demo {
         planets: Array<Planet>;
         gameWorld: Phaser.Group;
         level: Level;
+        arrows: Array<CheckPointArrow>;
+
+        nbcheckPoint: number;
+        nbcheckPointChecked: number;
 
         worldMinX: number = 1000;
         worldMinY: number = 1000;
@@ -20,6 +24,10 @@ module Demo {
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array<Planet>();
+            this.arrows = new Array<CheckPointArrow>();
+
+            this.nbcheckPoint = 0;
+            this.nbcheckPointChecked = 0;
 
             // world group for camera movement
             this.gameWorld = this.add.group(this, 'gameWorld', true);
@@ -47,6 +55,14 @@ module Demo {
                     this.lastCheckpoint = planet;
                 }
 
+                // add checkpoint
+                if (planet.checkPoint) {
+                    var arrow: CheckPointArrow = new CheckPointArrow(this.game, planet);
+                    this.add.existing(arrow);
+                    this.arrows.push(arrow);
+                    this.nbcheckPoint++;
+                }
+
                 // add beacon
                 if (planet.end) {
                     var beacon: Beacon = new Beacon(this.game, planet);
@@ -67,33 +83,65 @@ module Demo {
 
         update() {
             // Check if player is out of the level
+            this.checkBounds();
+
+            // When landing
+            if (this.player.state == PlayerState.LANDED)
+                this.onLanding();
+
+            // Camera follow
+            this.updateCamera();
+        }
+
+        onLanding() {
+            // Move the camera
+            var planet: Planet = this.player.currentPlanet;
+            this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
+            this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+
+            // set checkPoint if any
+            if (planet.checkPoint) {
+                this.lastCheckpoint = planet;
+                if(!planet.checked)
+                    this.nbcheckPointChecked++;
+                planet.checked = true;
+            }
+
+            // Check if we reached the end
+            if (planet.end && this.nbcheckPointChecked == this.nbcheckPoint) {
+                planet.beacon.open();
+                planet.cameraX = this.game.width / 2;
+                planet.cameraY = this.game.height / 2;
+                this.player.canJump = false;
+                if (planet.beacon.fullyOpened)
+                    this.gotoNextLevel();
+            }
+        }
+
+        checkBounds() {
             if (this.player.x < this.worldMinX ||
                 this.player.x > this.worldMaxX ||
                 this.player.y < this.worldMinY ||
                 this.player.y > this.worldMaxY) {
-
                 this.player.land(this.lastCheckpoint);
             }
+        }
 
-            // When landing
-            if (this.player.state == PlayerState.LANDED) {
-                // Move the camera
-                var planet: Planet = this.player.currentPlanet;
-                this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
-                this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+        gotoNextLevel() {
+            GameState.currentLevel++;
+            if (GameState.currentLevel > GameState.max_lvl)
+                GameState.currentLevel = 1;
+            this.game.state.restart();
+        }
 
-                // set checkPoint if any
-                if (planet.checkPoint) this.lastCheckpoint = planet;
+        shutdown() {
+            this.gameWorld.destroy(true);
 
-                // Check if we reached the end
-                if (planet.end) {
-                    planet.beacon.open();
-                    if (planet.beacon.fullyOpened) 
-                        this.gotoNextLevel();
-                }
-            }
+            for (var i in this.arrows)
+                this.arrows[i].destroy();
+        }
 
-            // Camera follow
+        updateCamera() {
             var globalPlayerX = this.gameWorld.x + this.player.x;
             var globalPlayerY = this.gameWorld.y + this.player.y;
 
@@ -114,12 +162,5 @@ module Demo {
             }
         }
 
-        gotoNextLevel() {
-            this.gameWorld.destroy(true);
-            GameState.currentLevel++;
-            if (GameState.currentLevel > GameState.max_lvl)
-                GameState.currentLevel = 1;
-            this.game.state.restart();
-        }
     }
 } 

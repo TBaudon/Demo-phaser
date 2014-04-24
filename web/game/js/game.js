@@ -40,6 +40,73 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var CheckPointArrow = (function (_super) {
+        __extends(CheckPointArrow, _super);
+        function CheckPointArrow(game, target) {
+            _super.call(this, game, 0, 0, 'gui', 'arrow');
+
+            this.target = target;
+
+            this.anchor.x = 0.5;
+            this.anchor.y = 0.5;
+
+            this.scale.x = 0.5;
+            this.scale.y = 0.5;
+        }
+        CheckPointArrow.prototype.update = function () {
+            this.visible = false;
+
+            if (this.target.checked)
+                return;
+
+            var relativTargetX = this.target.parent.x + this.target.x;
+            var relativTargetY = this.target.parent.y + this.target.y;
+
+            var diffX = relativTargetX - this.x;
+            var diffY = relativTargetY - this.y;
+
+            this.rotation = Math.atan2(diffY, diffX) + Math.PI / 2;
+
+            var margin = 20;
+
+            if (relativTargetX >= this.game.width) {
+                this.visible = true;
+                this.y = relativTargetY;
+                this.x = this.game.width - margin;
+                if (this.y >= this.game.height - margin)
+                    this.y = this.game.height - margin;
+            }
+
+            if (relativTargetX <= 0) {
+                this.visible = true;
+                this.y = relativTargetY;
+                this.x = margin;
+                if (this.y <= margin)
+                    this.y = margin;
+            }
+
+            if (relativTargetY >= this.game.height) {
+                this.visible = true;
+                this.x = relativTargetX;
+                this.y = this.game.height - margin;
+                if (this.x >= this.game.width - margin)
+                    this.x = this.game.width - margin;
+            }
+
+            if (relativTargetY <= 0) {
+                this.visible = true;
+                this.x = relativTargetX;
+                this.y = margin;
+                if (this.x <= margin)
+                    this.x = margin;
+            }
+        };
+        return CheckPointArrow;
+    })(Phaser.Sprite);
+    Demo.CheckPointArrow = CheckPointArrow;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
         function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, start, checkPoint, end) {
@@ -64,6 +131,7 @@ var Demo;
             this.start = start;
             this.checkPoint = checkPoint;
             this.end = end;
+            this.checked = false;
         }
         // load a planet from json
         Planet.initFromLvl = function (game, planet) {
@@ -130,9 +198,10 @@ var Demo;
             this.opened = false;
             this.currentPlanet = null;
             this.state = 0 /* FLYING */;
+            this.canJump = true;
         }
         Player.prototype.jump = function () {
-            if (this.state == 1 /* LANDED */) {
+            if (this.state == 1 /* LANDED */ && this.canJump) {
                 this.state = 0 /* FLYING */;
                 this.opened = false;
                 this.loadTexture('robot_jump', 0);
@@ -311,6 +380,10 @@ var Demo;
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
+            this.arrows = new Array();
+
+            this.nbcheckPoint = 0;
+            this.nbcheckPointChecked = 0;
 
             // world group for camera movement
             this.gameWorld = this.add.group(this, 'gameWorld', true);
@@ -332,6 +405,14 @@ var Demo;
                 if (planet.start) {
                     this.player.land(planet);
                     this.lastCheckpoint = planet;
+                }
+
+                // add checkpoint
+                if (planet.checkPoint) {
+                    var arrow = new Demo.CheckPointArrow(this.game, planet);
+                    this.add.existing(arrow);
+                    this.arrows.push(arrow);
+                    this.nbcheckPoint++;
                 }
 
                 // add beacon
@@ -358,30 +439,62 @@ var Demo;
 
         GameState.prototype.update = function () {
             // Check if player is out of the level
+            this.checkBounds();
+
+            // When landing
+            if (this.player.state == 1 /* LANDED */)
+                this.onLanding();
+
+            // Camera follow
+            this.updateCamera();
+        };
+
+        GameState.prototype.onLanding = function () {
+            // Move the camera
+            var planet = this.player.currentPlanet;
+            this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
+            this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+
+            // set checkPoint if any
+            if (planet.checkPoint) {
+                this.lastCheckpoint = planet;
+                if (!planet.checked)
+                    this.nbcheckPointChecked++;
+                planet.checked = true;
+            }
+
+            // Check if we reached the end
+            if (planet.end && this.nbcheckPointChecked == this.nbcheckPoint) {
+                planet.beacon.open();
+                planet.cameraX = this.game.width / 2;
+                planet.cameraY = this.game.height / 2;
+                this.player.canJump = false;
+                if (planet.beacon.fullyOpened)
+                    this.gotoNextLevel();
+            }
+        };
+
+        GameState.prototype.checkBounds = function () {
             if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
                 this.player.land(this.lastCheckpoint);
             }
+        };
 
-            // When landing
-            if (this.player.state == 1 /* LANDED */) {
-                // Move the camera
-                var planet = this.player.currentPlanet;
-                this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
-                this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+        GameState.prototype.gotoNextLevel = function () {
+            GameState.currentLevel++;
+            if (GameState.currentLevel > GameState.max_lvl)
+                GameState.currentLevel = 1;
+            this.game.state.restart();
+        };
 
-                // set checkPoint if any
-                if (planet.checkPoint)
-                    this.lastCheckpoint = planet;
+        GameState.prototype.shutdown = function () {
+            this.gameWorld.destroy(true);
 
-                // Check if we reached the end
-                if (planet.end) {
-                    planet.beacon.open();
-                    if (planet.beacon.fullyOpened)
-                        this.gotoNextLevel();
-                }
-            }
+            for (var i in this.arrows)
+                this.arrows[i].destroy();
+        };
 
-            // Camera follow
+        GameState.prototype.updateCamera = function () {
             var globalPlayerX = this.gameWorld.x + this.player.x;
             var globalPlayerY = this.gameWorld.y + this.player.y;
 
@@ -404,14 +517,6 @@ var Demo;
                 else if (globalPlayerY < minCamY)
                     this.gameWorld.y += (minCamY - globalPlayerY) / followCoef;
             }
-        };
-
-        GameState.prototype.gotoNextLevel = function () {
-            this.gameWorld.destroy(true);
-            GameState.currentLevel++;
-            if (GameState.currentLevel > GameState.max_lvl)
-                GameState.currentLevel = 1;
-            this.game.state.restart();
         };
         GameState.max_lvl = 0;
         return GameState;
@@ -468,6 +573,8 @@ var Demo;
             this.load.atlasXML('robot_jump', 'game/assets/img/robot_jump.png', 'game/assets/img/robot_jump.xml');
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
             this.load.atlasXML('beacon', 'game/assets/img/beacon.png', 'game/assets/img/beacon.xml');
+            this.load.atlasXML('gui', 'game/assets/img/gui.png', 'game/assets/img/gui.xml');
+
             this.load.image('background', 'game/assets/img/fond.jpg');
 
             // load levels

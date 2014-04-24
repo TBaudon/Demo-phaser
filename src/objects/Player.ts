@@ -18,6 +18,7 @@ module Demo {
         opened: boolean;
         landingAngle: number;
         planets: Array<Planet>;
+        canJump: boolean;
 
         currentPlanet: Planet;
 
@@ -46,10 +47,11 @@ module Demo {
             this.opened = false;
             this.currentPlanet = null;
             this.state = PlayerState.FLYING;
+            this.canJump = true;
         }
 
         jump() {
-            if (this.state == PlayerState.LANDED) {
+            if (this.state == PlayerState.LANDED && this.canJump) {
                 this.state = PlayerState.FLYING;
                 this.opened = false;
                 this.loadTexture('robot_jump', 0);

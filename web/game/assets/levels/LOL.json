@@ -26,7 +26,8 @@
             "radius": 50,
             "element": "moon_ice", 
             "cameraX": 100,
-            "cameraY": 100
+            "cameraY": 100,
+            "checkPoint": true
 		},
         "2":{
 			"x": 1000,
@@ -35,13 +36,14 @@
             "radius": 100,
             "element": "moon_black", 
             "cameraX": 625,
-            "cameraY": 100
+            "cameraY": 100,
+            "checkPoint": true
 		},
         "3":{
 			"x": 600,
 			"y": 480,
             "rotSpeed": 0.01,
-            "radius": 30,
+            "radius": 100,
             "element": "planet_forest", 
             "cameraX": 10,
             "cameraY": 100,
