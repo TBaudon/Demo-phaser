@@ -179,6 +179,8 @@ var Demo;
                 this.x = this.game.width - margin;
                 if (this.y >= this.game.height - margin)
                     this.y = this.game.height - margin;
+                if (this.y <= margin)
+                    this.y = margin;
             }
 
             if (relativTargetX <= 0) {
@@ -187,6 +189,8 @@ var Demo;
                 this.x = margin;
                 if (this.y <= margin)
                     this.y = margin;
+                if (this.y >= this.game.height - margin)
+                    this.y = this.game.height - margin;
             }
 
             if (relativTargetY >= this.game.height) {
@@ -195,6 +199,8 @@ var Demo;
                 this.y = this.game.height - margin;
                 if (this.x >= this.game.width - margin)
                     this.x = this.game.width - margin;
+                if (this.x <= margin)
+                    this.x = margin;
             }
 
             if (relativTargetY <= 0) {
@@ -203,6 +209,8 @@ var Demo;
                 this.y = margin;
                 if (this.x <= margin)
                     this.x = margin;
+                if (this.x >= this.game.width - margin)
+                    this.x = this.game.width - margin;
             }
         };
         return DestArrow;
@@ -495,10 +503,11 @@ var Demo;
         __extends(GameState, _super);
         function GameState() {
             _super.apply(this, arguments);
-            this.worldMinX = 1000;
-            this.worldMinY = 1000;
-            this.worldMaxX = -1000;
-            this.worldMaxY = -1000;
+            this.worldMargin = 2500;
+            this.worldMinX = this.worldMargin;
+            this.worldMinY = this.worldMargin;
+            this.worldMaxX = -this.worldMargin;
+            this.worldMaxY = -this.worldMargin;
         }
         GameState.prototype.create = function () {
             this.add.sprite(0, 0, 'background');
@@ -596,6 +605,9 @@ var Demo;
             // Check if player is out of the level
             this.checkBounds();
 
+            // Check colisions with asteroids
+            this.checkAsteroids();
+
             // When landing
             if (this.player.state == 1 /* LANDED */ && this.previousPlayerState == 0 /* FLYING */)
                 this.onLanding();
@@ -663,17 +675,30 @@ var Demo;
             check.destroy();
         };
 
+        GameState.prototype.checkAsteroids = function () {
+            for (var i in this.asteroids) {
+                var current = this.asteroids[i];
+
+                var diffX = this.player.x - current.x;
+                var diffY = this.player.y - current.y;
+                var diff = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                if (diff <= current.radius)
+                    this.player.land(this.lastCheckpoint);
+            }
+        };
+
         GameState.prototype.checkBounds = function () {
             for (var i in this.planets) {
                 var planet = this.planets[i];
-                if (planet.x < this.worldMinX)
-                    this.worldMinX = planet.x - 1000;
-                if (planet.y < this.worldMinY)
-                    this.worldMinY = planet.y - 1000;
-                if (planet.x > this.worldMaxX)
-                    this.worldMaxX = planet.x + 1000;
-                if (planet.y > this.worldMaxY)
-                    this.worldMaxY = planet.y + 1000;
+                if (planet.x < this.worldMinX + this.worldMargin)
+                    this.worldMinX = planet.x - this.worldMargin;
+                if (planet.y < this.worldMinY + this.worldMargin)
+                    this.worldMinY = planet.y - this.worldMargin;
+                if (planet.x > this.worldMaxX - this.worldMargin)
+                    this.worldMaxX = planet.x + this.worldMargin;
+                if (planet.y > this.worldMaxY - this.worldMargin)
+                    this.worldMaxY = planet.y + this.worldMargin;
             }
 
             if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
@@ -693,10 +718,6 @@ var Demo;
             this.gameWorld.destroy(true);
             for (var i in this.arrows)
                 this.arrows[i].destroy();
-        };
-
-        GameState.prototype.render = function () {
-            this.game.debug.geom(new Phaser.Rectangle(0 + this.gameWorld.x + this.worldMinX, 0 + this.gameWorld.y + this.worldMinY, this.worldMaxX - this.worldMinX, this.worldMaxY - this.worldMinY), "0xffffff", false);
         };
 
         GameState.prototype.updateCamera = function () {

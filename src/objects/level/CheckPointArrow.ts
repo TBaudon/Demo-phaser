@@ -36,6 +36,8 @@
                 this.x = this.game.width - margin;
                 if (this.y >= this.game.height - margin)
                     this.y = this.game.height - margin;
+                if (this.y <= margin)
+                    this.y = margin;
             }
 
             if (relativTargetX <= 0) {
@@ -44,6 +46,8 @@
                 this.x = margin;
                 if (this.y <= margin)
                     this.y = margin;
+                if (this.y >= this.game.height - margin)
+                    this.y = this.game.height - margin;
             }
 
             if (relativTargetY >= this.game.height) {
@@ -52,6 +56,8 @@
                 this.y = this.game.height - margin;
                 if (this.x >= this.game.width - margin)
                     this.x = this.game.width - margin;
+                if (this.x <= margin)
+                    this.x = margin;
             }
 
             if (relativTargetY <= 0) {
@@ -60,6 +66,8 @@
                 this.y = margin;
                 if (this.x <= margin)
                     this.x = margin;
+                if (this.x >= this.game.width - margin)
+                    this.x = this.game.width - margin;
             }
 
         }

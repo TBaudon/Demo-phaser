@@ -15,10 +15,12 @@ module Demo {
         nbcheckPointChecked: number;
         mustCheckAll: boolean;
 
-        worldMinX: number = 1000;
-        worldMinY: number = 1000;
-        worldMaxX: number = -1000;
-        worldMaxY: number = -1000;
+        worldMargin: number = 2500;
+
+        worldMinX: number =   this.worldMargin;
+        worldMinY: number =   this.worldMargin;
+        worldMaxX: number = - this.worldMargin;
+        worldMaxY: number = - this.worldMargin;
 
         lastCheckpoint: Planet;
 
@@ -125,6 +127,9 @@ module Demo {
             // Check if player is out of the level
             this.checkBounds();
 
+            // Check colisions with asteroids
+            this.checkAsteroids();
+
             // When landing
             if (this.player.state == PlayerState.LANDED && this.previousPlayerState == PlayerState.FLYING)
                 this.onLanding();
@@ -191,15 +196,33 @@ module Demo {
             check.destroy();
         }
 
+        checkAsteroids() {
+            for (var i in this.asteroids) {
+                var current: Asteroid = this.asteroids[i];
+
+                var diffX : number = this.player.x - current.x;
+                var diffY : number = this.player.y - current.y;
+                var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                if (diff <= current.radius)
+                    this.player.land(this.lastCheckpoint);
+            }
+        }
+
         checkBounds() {
 
             for (var i in this.planets) {
                 var planet = this.planets[i];
-                if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
-                if (planet.y < this.worldMinY) this.worldMinY = planet.y - 1000;
-                if (planet.x > this.worldMaxX) this.worldMaxX = planet.x + 1000;
-                if (planet.y > this.worldMaxY) this.worldMaxY = planet.y + 1000;
+                if (planet.x < this.worldMinX + this.worldMargin)
+                    this.worldMinX = planet.x - this.worldMargin;
+                if (planet.y < this.worldMinY + this.worldMargin)
+                    this.worldMinY = planet.y - this.worldMargin;
+                if (planet.x > this.worldMaxX - this.worldMargin)
+                    this.worldMaxX = planet.x + this.worldMargin;
+                if (planet.y > this.worldMaxY - this.worldMargin)
+                    this.worldMaxY = planet.y + this.worldMargin;
             }
+
 
             if (this.player.x < this.worldMinX ||
                 this.player.x > this.worldMaxX ||
@@ -221,14 +244,6 @@ module Demo {
             this.gameWorld.destroy(true);
             for (var i in this.arrows)
                 this.arrows[i].destroy();
-        }
-
-        render() {
-            this.game.debug.geom(new Phaser.Rectangle(
-                0 + this.gameWorld.x + this.worldMinX,
-                0 + this.gameWorld.y + this.worldMinY,
-                this.worldMaxX - this.worldMinX,
-                this.worldMaxY - this.worldMinY), "0xffffff", false);
         }
 
         updateCamera() {
