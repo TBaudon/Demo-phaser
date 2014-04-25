@@ -84,11 +84,6 @@ module Demo {
                 // add orbit if any
                 if (planet.orbit != null)
                     this.orbits.push(planet.orbit);
-
-                if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
-                if (planet.y < this.worldMinY) this.worldMinY = planet.y - 1000;
-                if (planet.x > this.worldMaxX) this.worldMaxX = planet.x + 1000;
-                if (planet.y > this.worldMaxY) this.worldMaxY = planet.y + 1000;
             }
 
             // add asteroids
@@ -146,8 +141,12 @@ module Demo {
         whileLanded() {
             // Move the camera
             var planet: Planet = this.player.currentPlanet;
-            this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
-            this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+
+            this.gameWorld.x += (planet.cameraX - planet.x * this.gameWorld.scale.x - this.gameWorld.x) /10;
+            this.gameWorld.y += (planet.cameraY - planet.y * this.gameWorld.scale.y - this.gameWorld.y) /10;
+
+            this.gameWorld.scale.x += (planet.cameraZ - this.gameWorld.scale.x) / 25;
+            this.gameWorld.scale.y += (planet.cameraZ - this.gameWorld.scale.y) / 25;
         }
 
         onLanding() {
@@ -173,7 +172,7 @@ module Demo {
                 planet.cameraY = this.game.height / 2;
                 this.player.canJump = false;
 
-                this.game.time.events.add(Phaser.Timer.SECOND * 2, this.gotoNextLevel, this);
+                this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
             }
         }
 
@@ -193,6 +192,15 @@ module Demo {
         }
 
         checkBounds() {
+
+            for (var i in this.planets) {
+                var planet = this.planets[i];
+                if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
+                if (planet.y < this.worldMinY) this.worldMinY = planet.y - 1000;
+                if (planet.x > this.worldMaxX) this.worldMaxX = planet.x + 1000;
+                if (planet.y > this.worldMaxY) this.worldMaxY = planet.y + 1000;
+            }
+
             if (this.player.x < this.worldMinX ||
                 this.player.x > this.worldMaxX ||
                 this.player.y < this.worldMinY ||
@@ -215,17 +223,25 @@ module Demo {
                 this.arrows[i].destroy();
         }
 
+        render() {
+            this.game.debug.geom(new Phaser.Rectangle(
+                0 + this.gameWorld.x + this.worldMinX,
+                0 + this.gameWorld.y + this.worldMinY,
+                this.worldMaxX - this.worldMinX,
+                this.worldMaxY - this.worldMinY), "0xffffff", false);
+        }
+
         updateCamera() {
-            var globalPlayerX = this.gameWorld.x + this.player.x;
-            var globalPlayerY = this.gameWorld.y + this.player.y;
+            var globalPlayerX = (this.gameWorld.x + this.player.x * this.gameWorld.scale.x) ;
+            var globalPlayerY = (this.gameWorld.y + this.player.y * this.gameWorld.scale.y) ;
 
-            var cameraPadding: number = 150;
-            var followCoef: number = 3;
+            var cameraPadding: number = 175 ;
+            var followCoef: number = 2 ; 
 
-            var maxCamX = this.game.width - cameraPadding;
-            var maxCamY = this.game.height - cameraPadding;
-            var minCamX = 0 + cameraPadding;
-            var minCamY = 0 + cameraPadding;
+            var maxCamX = (this.game.width - cameraPadding);
+            var maxCamY = (this.game.height - cameraPadding);
+            var minCamX = (0 + cameraPadding);
+            var minCamY = (0 + cameraPadding);
 
             if (this.player.state == PlayerState.FLYING) {
                 if (globalPlayerX > maxCamX) this.gameWorld.x -= (globalPlayerX - maxCamX) / followCoef;

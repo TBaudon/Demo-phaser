@@ -213,7 +213,7 @@ var Demo;
 (function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, start, checkPoint, end, orbit) {
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit) {
             if (typeof orbit === "undefined") { orbit = null; }
             _super.call(this, game, x, y, 'planets', element);
             // radius of the assets
@@ -224,6 +224,7 @@ var Demo;
 
             this.cameraX = cameraX;
             this.cameraY = cameraY;
+            this.cameraZ = cameraZ;
             this.orbit = orbit;
 
             this.anchor.set(0.5, 0.5);
@@ -244,6 +245,7 @@ var Demo;
         Planet.initFromLvl = function (game, planet) {
             var camX = 400;
             var camY = 240;
+            var camZ = 1;
             var elem = "planet_earth";
             var start = false;
             var checkPoint = false;
@@ -253,6 +255,8 @@ var Demo;
                 camX = planet.cameraX;
             if (planet.cameraY != undefined)
                 camY = planet.cameraY;
+            if (planet.cameraZ != undefined)
+                camZ = planet.cameraZ;
             if (planet.element != undefined)
                 elem = planet.element;
             if (planet.start)
@@ -262,7 +266,7 @@ var Demo;
             if (planet.end)
                 end = planet.end;
 
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, start, checkPoint, end, planet.orbit);
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit);
 
             return nPlanet;
         };
@@ -553,15 +557,6 @@ var Demo;
                 // add orbit if any
                 if (planet.orbit != null)
                     this.orbits.push(planet.orbit);
-
-                if (planet.x < this.worldMinX)
-                    this.worldMinX = planet.x - 1000;
-                if (planet.y < this.worldMinY)
-                    this.worldMinY = planet.y - 1000;
-                if (planet.x > this.worldMaxX)
-                    this.worldMaxX = planet.x + 1000;
-                if (planet.y > this.worldMaxY)
-                    this.worldMaxY = planet.y + 1000;
             }
 
             for (var i in this.level.asteroids) {
@@ -618,8 +613,12 @@ var Demo;
         GameState.prototype.whileLanded = function () {
             // Move the camera
             var planet = this.player.currentPlanet;
-            this.gameWorld.x += (planet.cameraX - planet.x - this.gameWorld.x) / 10;
-            this.gameWorld.y += (planet.cameraY - planet.y - this.gameWorld.y) / 10;
+
+            this.gameWorld.x += (planet.cameraX - planet.x * this.gameWorld.scale.x - this.gameWorld.x) / 10;
+            this.gameWorld.y += (planet.cameraY - planet.y * this.gameWorld.scale.y - this.gameWorld.y) / 10;
+
+            this.gameWorld.scale.x += (planet.cameraZ - this.gameWorld.scale.x) / 25;
+            this.gameWorld.scale.y += (planet.cameraZ - this.gameWorld.scale.y) / 25;
         };
 
         GameState.prototype.onLanding = function () {
@@ -645,7 +644,7 @@ var Demo;
                 planet.cameraY = this.game.height / 2;
                 this.player.canJump = false;
 
-                this.game.time.events.add(Phaser.Timer.SECOND * 2, this.gotoNextLevel, this);
+                this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
             }
         };
 
@@ -665,6 +664,18 @@ var Demo;
         };
 
         GameState.prototype.checkBounds = function () {
+            for (var i in this.planets) {
+                var planet = this.planets[i];
+                if (planet.x < this.worldMinX)
+                    this.worldMinX = planet.x - 1000;
+                if (planet.y < this.worldMinY)
+                    this.worldMinY = planet.y - 1000;
+                if (planet.x > this.worldMaxX)
+                    this.worldMaxX = planet.x + 1000;
+                if (planet.y > this.worldMaxY)
+                    this.worldMaxY = planet.y + 1000;
+            }
+
             if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
                 this.player.land(this.lastCheckpoint);
             }
@@ -684,17 +695,21 @@ var Demo;
                 this.arrows[i].destroy();
         };
 
+        GameState.prototype.render = function () {
+            this.game.debug.geom(new Phaser.Rectangle(0 + this.gameWorld.x + this.worldMinX, 0 + this.gameWorld.y + this.worldMinY, this.worldMaxX - this.worldMinX, this.worldMaxY - this.worldMinY), "0xffffff", false);
+        };
+
         GameState.prototype.updateCamera = function () {
-            var globalPlayerX = this.gameWorld.x + this.player.x;
-            var globalPlayerY = this.gameWorld.y + this.player.y;
+            var globalPlayerX = (this.gameWorld.x + this.player.x * this.gameWorld.scale.x);
+            var globalPlayerY = (this.gameWorld.y + this.player.y * this.gameWorld.scale.y);
 
-            var cameraPadding = 150;
-            var followCoef = 3;
+            var cameraPadding = 175;
+            var followCoef = 2;
 
-            var maxCamX = this.game.width - cameraPadding;
-            var maxCamY = this.game.height - cameraPadding;
-            var minCamX = 0 + cameraPadding;
-            var minCamY = 0 + cameraPadding;
+            var maxCamX = (this.game.width - cameraPadding);
+            var maxCamY = (this.game.height - cameraPadding);
+            var minCamX = (0 + cameraPadding);
+            var minCamY = (0 + cameraPadding);
 
             if (this.player.state == 0 /* FLYING */) {
                 if (globalPlayerX > maxCamX)

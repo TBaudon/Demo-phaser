@@ -3,8 +3,8 @@
     "description": "blablablablabghl&a",
 
     "gravity": {
-        "x": 1,
-        "y": 0
+        "x": 0,
+        "y": 1
     },
 
     "jumpStrength" : 20,
@@ -45,6 +45,7 @@
             "element": "planet_forest", 
             "cameraX": 10,
             "cameraY": 100,
+            "cameraZ": 0.1,
             "end": true
 		}
     },

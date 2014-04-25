@@ -24,6 +24,7 @@
     </Content>
     <Content Include="web\game\assets\levels\level_2.json" />
     <Content Include="web\game\assets\levels\list.json" />
+    <Content Include="web\game\assets\levels\vomis.json" />
     <None Include="web\game\assets\levels\LOL.json" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />

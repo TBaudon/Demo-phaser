@@ -5,6 +5,7 @@ module Demo {
         rotSpeed: number;
         cameraX: number;
         cameraY: number;
+        cameraZ: number;
         element: string;
         start: boolean;
         checkPoint: boolean;
@@ -23,6 +24,7 @@ module Demo {
 
             var camX: number = 400;
             var camY: number = 240;
+            var camZ: number = 1;
             var elem: string = "planet_earth";
             var start: boolean = false;
             var checkPoint: boolean = false;
@@ -30,6 +32,7 @@ module Demo {
 
             if (planet.cameraX != undefined) camX = planet.cameraX;
             if (planet.cameraY != undefined) camY = planet.cameraY;
+            if (planet.cameraZ != undefined) camZ = planet.cameraZ;
             if (planet.element != undefined) elem = planet.element;
             if (planet.start) start = planet.start;
             if (planet.checkPoint) checkPoint = planet.checkPoint;
@@ -39,7 +42,7 @@ module Demo {
                 planet.x, planet.y,
                 elem,
                 planet.radius, planet.rotSpeed,
-                camX, camY,
+                camX, camY, camZ,
                 start, checkPoint, end, planet.orbit);
 
             return nPlanet;
@@ -49,7 +52,7 @@ module Demo {
             x: number, y: number,
             element: string,
             radius: number, rotSpeed: number,
-            cameraX: number, cameraY: number,
+            cameraX: number, cameraY: number, cameraZ: number,
             start: boolean, checkPoint: boolean, end: boolean,
             orbit: Orbit = null) {
 
@@ -60,6 +63,7 @@ module Demo {
 
             this.cameraX = cameraX;
             this.cameraY = cameraY;
+            this.cameraZ = cameraZ;
             this.orbit = orbit;
             
             this.anchor.set(0.5, 0.5);

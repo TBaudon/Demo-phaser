@@ -1,0 +1,71 @@
+﻿{
+    "name": "First level!",
+    "description": "blablablablabghl&a",
+    "mustCheckAll": false,
+
+    "gravity": {
+        "x": 0,
+        "y": 1
+    },
+
+    "jumpStrength" : 25,
+
+    "planets": {
+        "Terre":{
+            "x": 175,
+			"y": 240,
+            "cameraZ": 0.5,
+            "rotSpeed": 0.025,
+            "radius": 100,
+            "start": true
+        },
+		"Lune":{
+			"x": 625,
+			"y": 75,
+            "rotSpeed": -0.025,
+            "radius": 75,
+            "element": "moon_ice", 
+            "orbit": {
+                "target": "Terre",
+                "width": 300,
+                "height": 300,
+                "angle": 0,
+                "speed": 0.01,
+                "x": 0,
+                "y": 0
+            }
+		},
+        "Noir":{
+			"x": 1200,
+			"y": 400,
+            "rotSpeed": -0.02,
+            "radius": 50,
+            "element": "moon_black", 
+            "checkPoint": true,
+            "orbit": {
+                "target": "Lune",
+                "width": 700,
+                "height": 700,
+                "angle": 0,
+                "speed": -0.01,
+                "x": 0,
+                "y": 0
+            }
+		},
+        "Dest":{
+			"x": -800,
+			"y": 480,
+            "rotSpeed": 0.01,
+            "radius": 100,
+            "element": "planet_forest", 
+            "end": true
+		}
+    },
+
+    "asteroids": {
+    },
+
+    "bonuses": {
+
+    }
+}
