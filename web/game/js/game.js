@@ -6,6 +6,64 @@
 };
 var Demo;
 (function (Demo) {
+    var Asteroid = (function (_super) {
+        __extends(Asteroid, _super);
+        function Asteroid(game, frame, x, y, radius, rotSpeed, orbit) {
+            if (typeof orbit === "undefined") { orbit = null; }
+            _super.call(this, game, x, y, 'planets', frame);
+            this.BASE_RADIUS = 50;
+
+            this.radius = radius;
+            this.rotSpeed = rotSpeed;
+            this.orbit = orbit;
+
+            this.anchor.set(0.5, 0.5);
+
+            var scale = radius / this.BASE_RADIUS;
+            this.scale.x = scale;
+            this.scale.y = scale;
+
+            this.orbitPos = 0;
+        }
+        Asteroid.initFromLvl = function (game, asteroid) {
+            var graph = asteroid.graph;
+            var x = asteroid.x;
+            var y = asteroid.y;
+            var radius = asteroid.radius;
+            var rotSpeed = asteroid.rotSpeed;
+            var orbit = asteroid.orbit;
+
+            return new Asteroid(game, graph, x, y, radius, rotSpeed, orbit);
+        };
+
+        Asteroid.prototype.update = function () {
+            this.rotation += this.rotSpeed;
+            this.updateOrbit();
+        };
+
+        Asteroid.prototype.updateOrbit = function () {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+
+                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
+                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+            }
+        };
+        return Asteroid;
+    })(Phaser.Sprite);
+    Demo.Asteroid = Asteroid;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Orbit = (function () {
+        function Orbit() {
+        }
+        return Orbit;
+    })();
+    Demo.Orbit = Orbit;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Beacon = (function (_super) {
         __extends(Beacon, _super);
         function Beacon(game, planet) {
@@ -54,6 +112,8 @@ var Demo;
             this.x = planet.x;
             this.y = planet.y;
 
+            this.planet = planet;
+
             this.circles = new Array();
 
             for (var i = 0; i < 5; ++i) {
@@ -68,6 +128,9 @@ var Demo;
         }
         CheckPoint.prototype.update = function () {
             var rotationSpeed = 0.03;
+
+            this.x = this.planet.x;
+            this.y = this.planet.y;
 
             for (var i = 0; i <= 4; i += 2)
                 this.circles[i].rotation -= rotationSpeed * (i + 1);
@@ -150,7 +213,8 @@ var Demo;
 (function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, start, checkPoint, end) {
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, start, checkPoint, end, orbit) {
+            if (typeof orbit === "undefined") { orbit = null; }
             _super.call(this, game, x, y, 'planets', element);
             // radius of the assets
             this.BASE_RADIUS = 180;
@@ -160,9 +224,10 @@ var Demo;
 
             this.cameraX = cameraX;
             this.cameraY = cameraY;
+            this.orbit = orbit;
 
             this.anchor.set(0.5, 0.5);
-            this.radius = this.BASE_RADIUS * (radius / this.BASE_RADIUS);
+            this.radius = radius;
             this.rotSpeed = rotSpeed;
 
             var scale = radius / this.BASE_RADIUS;
@@ -173,6 +238,7 @@ var Demo;
             this.checkPoint = checkPoint;
             this.end = end;
             this.checked = false;
+            this.orbitPos = 0;
         }
         // load a planet from json
         Planet.initFromLvl = function (game, planet) {
@@ -196,13 +262,23 @@ var Demo;
             if (planet.end)
                 end = planet.end;
 
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, start, checkPoint, end);
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, start, checkPoint, end, planet.orbit);
 
             return nPlanet;
         };
 
         Planet.prototype.update = function () {
             this.rotation += this.rotSpeed;
+            this.updateOrbit();
+        };
+
+        Planet.prototype.updateOrbit = function () {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+
+                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
+                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+            }
         };
         return Planet;
     })(Phaser.Sprite);
@@ -424,8 +500,10 @@ var Demo;
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array();
+            this.asteroids = new Array();
             this.arrows = new Array();
             this.checks = new Array();
+            this.orbits = new Array();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -445,6 +523,9 @@ var Demo;
 
             for (var i in this.level.planets) {
                 var planet = Demo.Planet.initFromLvl(this.game, this.level.planets[i]);
+                planet.name = i;
+
+                //console.log(planet.name);
                 this.planets.push(planet);
                 this.gameWorld.add(planet);
 
@@ -469,6 +550,10 @@ var Demo;
                     this.addArrow(planet);
                 }
 
+                // add orbit if any
+                if (planet.orbit != null)
+                    this.orbits.push(planet.orbit);
+
                 if (planet.x < this.worldMinX)
                     this.worldMinX = planet.x - 1000;
                 if (planet.y < this.worldMinY)
@@ -477,6 +562,28 @@ var Demo;
                     this.worldMaxX = planet.x + 1000;
                 if (planet.y > this.worldMaxY)
                     this.worldMaxY = planet.y + 1000;
+            }
+
+            for (var i in this.level.asteroids) {
+                var asteroid = Demo.Asteroid.initFromLvl(this.game, this.level.asteroids[i]);
+                this.asteroids.push(asteroid);
+                this.gameWorld.add(asteroid);
+
+                // add orbit if any
+                if (asteroid.orbit != null)
+                    this.orbits.push(asteroid.orbit);
+            }
+
+            for (var a = 0; a < this.orbits.length; ++a) {
+                var current = this.orbits[a];
+                for (var b = 0; b < this.planets.length; ++b) {
+                    var p = this.planets[b];
+                    if (p.name == current.target) {
+                        console.log(p.name);
+                        current.planet = p;
+                        break;
+                    }
+                }
             }
 
             // text
@@ -570,6 +677,7 @@ var Demo;
             this.game.state.restart();
         };
 
+        // Destroy screen when left
         GameState.prototype.shutdown = function () {
             this.gameWorld.destroy(true);
             for (var i in this.arrows)

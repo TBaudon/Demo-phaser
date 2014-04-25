@@ -3,6 +3,7 @@
     export class CheckPoint extends Phaser.Sprite {
 
         circles: Array<Phaser.Sprite>;
+        planet: Planet;
 
         BASE_RADIUS: number = 70;
 
@@ -16,6 +17,8 @@
 
             this.x = planet.x;
             this.y = planet.y;
+
+            this.planet = planet;
 
             this.circles = new Array<Phaser.Sprite>();
 
@@ -33,6 +36,9 @@
         update() {
 
             var rotationSpeed = 0.03;
+
+            this.x = this.planet.x;
+            this.y = this.planet.y;
 
             for (var i = 0; i <= 4; i += 2)
                 this.circles[i].rotation -= rotationSpeed * (i+1);

@@ -47,16 +47,18 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
-    <TypeScriptCompile Include="src\objects\Beacon.ts" />
-    <TypeScriptCompile Include="src\objects\CheckPoint.ts" />
-    <TypeScriptCompile Include="src\objects\CheckPointArrow.ts" />
-    <TypeScriptCompile Include="src\objects\Planet.ts" />
+    <TypeScriptCompile Include="src\objects\astre\Asteroid.ts" />
+    <TypeScriptCompile Include="src\objects\astre\Orbit.ts" />
+    <TypeScriptCompile Include="src\objects\level\Beacon.ts" />
+    <TypeScriptCompile Include="src\objects\level\CheckPoint.ts" />
+    <TypeScriptCompile Include="src\objects\level\CheckPointArrow.ts" />
+    <TypeScriptCompile Include="src\objects\astre\Planet.ts" />
     <TypeScriptCompile Include="src\objects\Player.ts" />
-    <TypeScriptCompile Include="src\objects\Vector2D.ts" />
+    <TypeScriptCompile Include="src\objects\math\Vector2D.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />
-    <TypeScriptCompile Include="src\objects\Level.ts" />
+    <TypeScriptCompile Include="src\objects\level\Level.ts" />
     <TypeScriptCompile Include="src\states\Menu.ts" />
     <TypeScriptCompile Include="src\states\Preloader.ts" />
   </ItemGroup>

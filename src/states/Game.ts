@@ -4,10 +4,12 @@ module Demo {
         player: Player;
         previousPlayerState: PlayerState;
         planets: Array<Planet>;
+        asteroids: Array<Asteroid>;
         gameWorld: Phaser.Group;
         level: Level;
         arrows: Array<DestArrow>;
         checks: Array<CheckPoint>;
+        orbits: Array<Orbit>;
 
         nbcheckPoint: number;
         nbcheckPointChecked: number;
@@ -27,8 +29,10 @@ module Demo {
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array<Planet>();
+            this.asteroids = new Array<Asteroid>();
             this.arrows = new Array<DestArrow>();
             this.checks = new Array<CheckPoint>();
+            this.orbits = new Array<Orbit>();
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -52,6 +56,8 @@ module Demo {
             // add planets
             for (var i in this.level.planets) {
                 var planet: Planet = Planet.initFromLvl(this.game, this.level.planets[i]);
+                planet.name = i;
+                //console.log(planet.name);
                 this.planets.push(planet);
                 this.gameWorld.add(planet);
 
@@ -75,10 +81,38 @@ module Demo {
                     this.addArrow(planet);
                 }
 
+                // add orbit if any
+                if (planet.orbit != null)
+                    this.orbits.push(planet.orbit);
+
                 if (planet.x < this.worldMinX) this.worldMinX = planet.x - 1000;
                 if (planet.y < this.worldMinY) this.worldMinY = planet.y - 1000;
                 if (planet.x > this.worldMaxX) this.worldMaxX = planet.x + 1000;
                 if (planet.y > this.worldMaxY) this.worldMaxY = planet.y + 1000;
+            }
+
+            // add asteroids
+            for (var i in this.level.asteroids) {
+                var asteroid: Asteroid = Asteroid.initFromLvl(this.game, this.level.asteroids[i]);
+                this.asteroids.push(asteroid);
+                this.gameWorld.add(asteroid);
+
+                // add orbit if any
+                if (asteroid.orbit != null)
+                    this.orbits.push(asteroid.orbit);
+            }
+
+            // init orbit
+            for (var a = 0; a < this.orbits.length; ++a) {
+                var current: Orbit = this.orbits[a];
+                for (var b = 0; b < this.planets.length; ++b) {
+                    var p: Planet = this.planets[b];
+                    if (p.name == current.target) {
+                        console.log(p.name);
+                        current.planet = p;
+                        break;
+                    }
+                }
             }
 
             // text
@@ -174,6 +208,7 @@ module Demo {
             this.game.state.restart();
         }
 
+        // Destroy screen when left
         shutdown() {
             this.gameWorld.destroy(true);
             for (var i in this.arrows)

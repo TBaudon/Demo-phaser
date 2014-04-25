@@ -11,6 +11,9 @@ module Demo {
         checked: boolean;
         end: boolean;
         beacon: Beacon;
+        name: string;
+        orbit: Orbit;
+        orbitPos: number;
 
         // radius of the assets
         BASE_RADIUS: number = 180;
@@ -37,7 +40,7 @@ module Demo {
                 elem,
                 planet.radius, planet.rotSpeed,
                 camX, camY,
-                start, checkPoint, end);
+                start, checkPoint, end, planet.orbit);
 
             return nPlanet;
         }
@@ -47,7 +50,8 @@ module Demo {
             element: string,
             radius: number, rotSpeed: number,
             cameraX: number, cameraY: number,
-            start: boolean, checkPoint: boolean, end: boolean) {
+            start: boolean, checkPoint: boolean, end: boolean,
+            orbit: Orbit = null) {
 
             super(game, x, y, 'planets', element);
 
@@ -56,9 +60,10 @@ module Demo {
 
             this.cameraX = cameraX;
             this.cameraY = cameraY;
+            this.orbit = orbit;
             
             this.anchor.set(0.5, 0.5);
-            this.radius = this.BASE_RADIUS * (radius / this.BASE_RADIUS);
+            this.radius = radius;
             this.rotSpeed = rotSpeed;
 
             var scale: number = radius / this.BASE_RADIUS;
@@ -69,10 +74,21 @@ module Demo {
             this.checkPoint = checkPoint;
             this.end = end;
             this.checked = false;
+            this.orbitPos = 0;
         }
 
         update() {
             this.rotation += this.rotSpeed;
+            this.updateOrbit();
+        }
+
+        updateOrbit() {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+
+                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
+                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+            }
         }
     }
 }
