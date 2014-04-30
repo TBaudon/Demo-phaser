@@ -86,6 +86,9 @@ module Demo {
                 // add orbit if any
                 if (planet.orbit != null)
                     this.orbits.push(planet.orbit);
+
+                this.gameWorld.alpha = 0;
+                this.game.add.tween(this.gameWorld).to({ alpha: 1 }, 500, Phaser.Easing.Cubic.Out, true);
             }
 
             // add asteroids
@@ -178,6 +181,7 @@ module Demo {
                 this.player.canJump = false;
 
                 this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
+                this.game.add.tween(this.gameWorld).to({ alpha: 0 }, 500, Phaser.Easing.Cubic.Out, true, 2700);
             }
         }
 
