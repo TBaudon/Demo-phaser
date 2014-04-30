@@ -6,7 +6,7 @@ module Demo {
 
         create() {
             this.music = this.add.audio('bgm', 1, true);
-            this.music.play();
+           // this.music.play();
 
             this.button = this.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPressed, this, 2, 1, 0);
             this.button.x -= this.button.width / 2;

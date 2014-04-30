@@ -90,8 +90,16 @@ module Demo {
             if (this.orbit != null) {
                 this.orbitPos += this.orbit.speed;
 
-                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
-                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+                var angle = (Math.PI * this.orbit.angle) / 180;
+
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
             }
         }
     }

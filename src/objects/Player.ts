@@ -110,9 +110,8 @@ module Demo {
                 var diffY: number = nextY - planet.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius)
+                if (diff <= planet.radius + this.height / 2)
                     this.land(planet);
-
             }
         }
 

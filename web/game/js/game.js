@@ -45,8 +45,16 @@ var Demo;
             if (this.orbit != null) {
                 this.orbitPos += this.orbit.speed;
 
-                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
-                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+                var angle = (Math.PI * this.orbit.angle) / 180;
+
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
             }
         };
         return Asteroid;
@@ -288,8 +296,16 @@ var Demo;
             if (this.orbit != null) {
                 this.orbitPos += this.orbit.speed;
 
-                this.x = Math.cos(this.orbitPos) * this.orbit.width + this.orbit.planet.x + this.orbit.x;
-                this.y = Math.sin(this.orbitPos) * this.orbit.height + this.orbit.planet.y + this.orbit.y;
+                var angle = (Math.PI * this.orbit.angle) / 180;
+
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
             }
         };
         return Planet;
@@ -388,7 +404,7 @@ var Demo;
                 var diffY = nextY - planet.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius)
+                if (diff <= planet.radius + this.height / 2)
                     this.land(planet);
             }
         };
@@ -566,9 +582,6 @@ var Demo;
                 // add orbit if any
                 if (planet.orbit != null)
                     this.orbits.push(planet.orbit);
-
-                this.gameWorld.alpha = 0;
-                this.game.add.tween(this.gameWorld).to({ alpha: 1 }, 500, Phaser.Easing.Cubic.Out, true);
             }
 
             for (var i in this.level.asteroids) {
@@ -660,7 +673,6 @@ var Demo;
                 this.player.canJump = false;
 
                 this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
-                this.game.add.tween(this.gameWorld).to({ alpha: 0 }, 500, Phaser.Easing.Cubic.Out, true, 2700);
             }
         };
 
@@ -687,7 +699,7 @@ var Demo;
                 var diffY = this.player.y - current.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius)
+                if (diff <= current.radius + this.player.height / 2)
                     this.player.land(this.lastCheckpoint);
             }
         };
@@ -771,8 +783,8 @@ var Demo;
         }
         Menu.prototype.create = function () {
             this.music = this.add.audio('bgm', 1, true);
-            this.music.play();
 
+            // this.music.play();
             this.button = this.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPressed, this, 2, 1, 0);
             this.button.x -= this.button.width / 2;
             this.button.y -= this.button.height / 2;

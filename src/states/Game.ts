@@ -28,6 +28,7 @@ module Demo {
         static max_lvl: number = 0;
 
         create() {
+
             this.add.sprite(0, 0, 'background');
 
             this.planets = new Array<Planet>();
@@ -86,9 +87,6 @@ module Demo {
                 // add orbit if any
                 if (planet.orbit != null)
                     this.orbits.push(planet.orbit);
-
-                this.gameWorld.alpha = 0;
-                this.game.add.tween(this.gameWorld).to({ alpha: 1 }, 500, Phaser.Easing.Cubic.Out, true);
             }
 
             // add asteroids
@@ -150,8 +148,8 @@ module Demo {
             // Move the camera
             var planet: Planet = this.player.currentPlanet;
 
-            this.gameWorld.x += (planet.cameraX - planet.x * this.gameWorld.scale.x - this.gameWorld.x) /10;
-            this.gameWorld.y += (planet.cameraY - planet.y * this.gameWorld.scale.y - this.gameWorld.y) /10;
+            this.gameWorld.x += (planet.cameraX - planet.x * this.gameWorld.scale.x - this.gameWorld.x) / 10;
+            this.gameWorld.y += (planet.cameraY - planet.y * this.gameWorld.scale.y - this.gameWorld.y) / 10;
 
             this.gameWorld.scale.x += (planet.cameraZ - this.gameWorld.scale.x) / 25;
             this.gameWorld.scale.y += (planet.cameraZ - this.gameWorld.scale.y) / 25;
@@ -181,7 +179,6 @@ module Demo {
                 this.player.canJump = false;
 
                 this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
-                this.game.add.tween(this.gameWorld).to({ alpha: 0 }, 500, Phaser.Easing.Cubic.Out, true, 2700);
             }
         }
 
@@ -208,7 +205,7 @@ module Demo {
                 var diffY : number = this.player.y - current.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius)
+                if (diff <= current.radius + this.player.height / 2)
                     this.player.land(this.lastCheckpoint);
             }
         }
