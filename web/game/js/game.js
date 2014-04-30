@@ -44,14 +44,15 @@ var Demo;
         Asteroid.prototype.updateOrbit = function () {
             if (this.orbit != null) {
                 this.orbitPos += this.orbit.speed;
+                var orbitOffset = (Math.PI * this.orbit.startAngle) / 180;
 
                 var angle = (Math.PI * this.orbit.angle) / 180;
 
                 var offsetX = this.orbit.planet.x + this.orbit.x;
                 var offsetY = this.orbit.planet.y + this.orbit.y;
 
-                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
-                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
+                var orbitX = Math.cos(this.orbitPos + orbitOffset) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos + orbitOffset) * this.orbit.height;
 
                 this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
                 this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
@@ -324,7 +325,9 @@ var Demo;
     var Player = (function (_super) {
         __extends(Player, _super);
         function Player(game, planets, gravity, jumpStrength) {
-            _super.call(this, game, 0, 0, 'robot_wait');
+            _super.call(this, game.game, 0, 0, 'robot_wait');
+
+            this.gameState = game;
 
             this.jumpStrength = jumpStrength;
             this.gravity = gravity;
@@ -334,7 +337,7 @@ var Demo;
             this.animations.add('idle');
             this.animations.play('idle', 60, true);
 
-            game.input.onDown.add(this.jump, this);
+            game.game.input.onDown.add(this.jump, this);
 
             this.planets = planets;
             this.vitX = 0;
@@ -346,6 +349,20 @@ var Demo;
             this.state = 0 /* FLYING */;
             this.canJump = true;
         }
+        Player.prototype.spawn = function () {
+            this.x = this.currentPlanet.x;
+            this.y = this.currentPlanet.y;
+            this.land(this.gameState.lastCheckpoint);
+            this.visible = true;
+            this.alpha = 0;
+            this.game.add.tween(this).to({ alpha: 1 }, 1000, null, true).onComplete.add(this.allowJump, this);
+            this.canJump = false;
+        };
+
+        Player.prototype.allowJump = function () {
+            this.canJump = true;
+        };
+
         Player.prototype.jump = function () {
             if (this.state == 1 /* LANDED */ && this.canJump) {
                 this.state = 0 /* FLYING */;
@@ -373,14 +390,20 @@ var Demo;
         };
 
         Player.prototype.land = function (planet) {
-            if (this.state == 0 /* FLYING */) {
+            if (this.state != 1 /* LANDED */) {
                 this.currentPlanet = planet;
                 this.rotation = Math.atan2(this.y - planet.y, this.x - planet.x) + Math.PI / 2;
                 this.state = 1 /* LANDED */;
                 this.loadTexture('robot_land', 0);
                 this.animations.add('land', Phaser.Animation.generateFrameNames('robot_anim_finale00', 73, 88));
                 this.animations.play('land', 60);
+                this.events.onAnimationComplete.add(this.onAnimationLandedEnd, this);
             }
+        };
+
+        Player.prototype.onAnimationLandedEnd = function () {
+            this.events.onAnimationComplete.remove(this.onAnimationLandedEnd, this);
+            this.animations.play('idle', 30);
         };
 
         Player.prototype.fly = function () {
@@ -409,6 +432,15 @@ var Demo;
             }
         };
 
+        Player.prototype.explode = function () {
+            if (this.state != 2 /* DEAD */) {
+                this.visible = false;
+                new Demo.RobotExplosion(this.gameState, this.x, this.y);
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, this.spawn, this);
+                this.state = 2 /* DEAD */;
+            }
+        };
+
         Player.prototype.updateOnPlanet = function () {
             this.rotation += this.currentPlanet.rotSpeed;
             var radius = this.currentPlanet.radius + (this.height / 2);
@@ -424,6 +456,8 @@ var Demo;
                 case 1 /* LANDED */:
                     this.updateOnPlanet();
                     break;
+                case 2 /* DEAD */:
+                    break;
             }
         };
         return Player;
@@ -438,6 +472,68 @@ var Demo;
         return Vector2D;
     })();
     Demo.Vector2D = Vector2D;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var RobotExplosion = (function () {
+        function RobotExplosion(game, x, y) {
+            this.game = game;
+
+            this.explosion = new Phaser.Sprite(game.game, x, y, 'robot_blow', 'explosion0001');
+            this.explosion.anchor.set(0.5, 0.5);
+            this.explosion.animations.add('explosion', Phaser.Animation.generateFrameNames('explosion00', 1, 22));
+            this.game.gameWorld.add(this.explosion);
+            this.explosion.animations.play('explosion', 60, false, true);
+
+            var robot_antenna = new Demo.RobotPart(game.game, x, y, 'robot_antenna');
+            this.game.gameWorld.add(robot_antenna);
+
+            var robot_foot = new Demo.RobotPart(game.game, x, y, 'robot_foot');
+            this.game.gameWorld.add(robot_foot);
+
+            var robot_head = new Demo.RobotPart(game.game, x, y, 'robot_head');
+            this.game.gameWorld.add(robot_head);
+
+            var robot_leg = new Demo.RobotPart(game.game, x, y, 'robot_leg');
+            this.game.gameWorld.add(robot_leg);
+
+            var robot_legB = new Demo.RobotPart(game.game, x, y, 'robot_leg');
+            this.game.gameWorld.add(robot_legB);
+
+            var robot_legC = new Demo.RobotPart(game.game, x, y, 'robot_leg');
+            this.game.gameWorld.add(robot_legC);
+        }
+        return RobotExplosion;
+    })();
+    Demo.RobotExplosion = RobotExplosion;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var RobotPart = (function (_super) {
+        __extends(RobotPart, _super);
+        function RobotPart(game, x, y, name) {
+            _super.call(this, game, x, y, 'robot_blow', name);
+
+            this.anchor.set(0.5, 0.5);
+            this.scale.x = 0.2;
+            this.scale.y = 0.2;
+
+            this.vitX = Math.random() * 20 - 10;
+            this.vitY = Math.random() * 20 - 10;
+
+            this.vitRot = Math.random() * 1 - 0.5;
+
+            this.game.add.tween(this).to({ alpha: 0 }, 1000, null, true).onComplete.add(this.destroy, this);
+        }
+        RobotPart.prototype.update = function () {
+            _super.prototype.update.call(this);
+            this.x += this.vitX;
+            this.y += this.vitY;
+            this.rotation += this.vitRot;
+        };
+        return RobotPart;
+    })(Phaser.Sprite);
+    Demo.RobotPart = RobotPart;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -545,7 +641,7 @@ var Demo;
             this.level = JSON.parse(levelString);
 
             // add player
-            this.player = new Demo.Player(this.game, this.planets, this.level.gravity, this.level.jumpStrength);
+            this.player = new Demo.Player(this, this.planets, this.level.gravity, this.level.jumpStrength);
             this.gameWorld.add(this.player);
 
             this.mustCheckAll = this.level.mustCheckAll;
@@ -699,8 +795,9 @@ var Demo;
                 var diffY = this.player.y - current.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius + this.player.height / 2)
-                    this.player.land(this.lastCheckpoint);
+                if (diff <= current.radius + this.player.height / 2) {
+                    this.player.explode();
+                }
             }
         };
 
@@ -718,7 +815,8 @@ var Demo;
             }
 
             if (this.player.x < this.worldMinX || this.player.x > this.worldMaxX || this.player.y < this.worldMinY || this.player.y > this.worldMaxY) {
-                this.player.land(this.lastCheckpoint);
+                //this.player.land(this.lastCheckpoint);
+                this.player.explode();
             }
         };
 
@@ -816,6 +914,7 @@ var Demo;
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
             this.load.atlasXML('beacon', 'game/assets/img/beacon.png', 'game/assets/img/beacon.xml');
             this.load.atlasXML('gui', 'game/assets/img/gui.png', 'game/assets/img/gui.xml');
+            this.load.atlasXML('robot_blow', 'game/assets/img/robot_blow.png', 'game/assets/img/robot_blow.xml');
 
             this.load.image('background', 'game/assets/img/fond.jpg');
 

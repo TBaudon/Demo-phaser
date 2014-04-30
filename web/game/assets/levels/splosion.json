@@ -12,8 +12,8 @@
 
     "planets": {
         "Terre":{
-            "x": 175,
-			"y": 240,
+            "x": 0,
+			"y": 0,
             "rotSpeed": 0.025,
             "radius": 75,
             "cameraX": 75,
@@ -67,15 +67,15 @@
             "radius": 20,
             "rotSpeed": 0.05,
             "graph":  "asteroid1",
-            "x" : 100,
-            "y" : 100,
+            "x" : 0,
+            "y" : -200,
             "orbit": {
-                "target": "Lune",
-                "width": 100,
-                "height": 100,
-                "angle": 45,
-                "startAngle" : -90,
-                "speed": 0.05,
+                "target": "Terre",
+                "width": 200,
+                "height": 200,
+                "angle": 0,
+                "startAngle" : 0,
+                "speed": 0.5,
                 "x": 0,
                 "y": 0
             }

@@ -15,6 +15,7 @@ module Demo {
             this.load.atlasXML('robot_land', 'game/assets/img/robot_landing.png', 'game/assets/img/robot_landing.xml');
             this.load.atlasXML('beacon', 'game/assets/img/beacon.png', 'game/assets/img/beacon.xml');
             this.load.atlasXML('gui', 'game/assets/img/gui.png', 'game/assets/img/gui.xml');
+            this.load.atlasXML('robot_blow', 'game/assets/img/robot_blow.png', 'game/assets/img/robot_blow.xml');
 
             this.load.image('background', 'game/assets/img/fond.jpg');
 

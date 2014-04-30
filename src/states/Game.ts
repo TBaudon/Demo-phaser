@@ -48,7 +48,7 @@ module Demo {
             this.level = JSON.parse(levelString);
 
             // add player
-            this.player = new Player(this.game,
+            this.player = new Player(this,
                 this.planets,
                 this.level.gravity,
                 this.level.jumpStrength);
@@ -205,8 +205,9 @@ module Demo {
                 var diffY : number = this.player.y - current.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius + this.player.height / 2)
-                    this.player.land(this.lastCheckpoint);
+                if (diff <= current.radius + this.player.height / 2) {
+                    this.player.explode();
+                }
             }
         }
 
@@ -229,7 +230,8 @@ module Demo {
                 this.player.x > this.worldMaxX ||
                 this.player.y < this.worldMinY ||
                 this.player.y > this.worldMaxY) {
-                this.player.land(this.lastCheckpoint);
+                //this.player.land(this.lastCheckpoint);
+                this.player.explode();
             }
         }
 

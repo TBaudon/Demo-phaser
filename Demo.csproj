@@ -25,6 +25,7 @@
     <Content Include="web\game\assets\levels\level_2.json" />
     <Content Include="web\game\assets\levels\list.json" />
     <Content Include="web\game\assets\levels\vomis.json" />
+    <Content Include="web\game\assets\levels\splosion.json" />
     <None Include="web\game\assets\levels\LOL.json" />
     <Content Include="web\game\css\app.css" />
     <Content Include="web\game\assets\img\button_sprite_sheet.png" />
@@ -54,8 +55,10 @@
     <TypeScriptCompile Include="src\objects\level\CheckPoint.ts" />
     <TypeScriptCompile Include="src\objects\level\CheckPointArrow.ts" />
     <TypeScriptCompile Include="src\objects\astre\Planet.ts" />
-    <TypeScriptCompile Include="src\objects\Player.ts" />
+    <TypeScriptCompile Include="src\objects\robot\Player.ts" />
     <TypeScriptCompile Include="src\objects\math\Vector2D.ts" />
+    <TypeScriptCompile Include="src\objects\robot\RobotExplosion.ts" />
+    <TypeScriptCompile Include="src\objects\robot\RobotPart.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />

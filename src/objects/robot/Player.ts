@@ -20,16 +20,20 @@ module Demo {
         planets: Array<Planet>;
         canJump: boolean;
 
+        gameState: GameState;
+
         previousPlanet: Planet;
         currentPlanet: Planet;
 
         state: PlayerState;
 
-        constructor(game: Phaser.Game,
+        constructor(game: GameState,
             planets: Array<Planet>,
             gravity: Vector2D,
             jumpStrength: number) {
-            super(game, 0, 0, 'robot_wait');
+            super(game.game, 0, 0, 'robot_wait');
+
+            this.gameState = game;
 
             this.jumpStrength = jumpStrength;
             this.gravity = gravity;
@@ -39,7 +43,7 @@ module Demo {
             this.animations.add('idle');
             this.animations.play('idle', 60, true);
 
-            game.input.onDown.add(this.jump, this);
+            game.game.input.onDown.add(this.jump, this);
 
             this.planets = planets;
             this.vitX = 0;
@@ -49,6 +53,20 @@ module Demo {
             this.currentPlanet = null;
             this.previousPlanet = null;
             this.state = PlayerState.FLYING;
+            this.canJump = true;
+        }
+
+        spawn() {
+            this.x = this.currentPlanet.x;
+            this.y = this.currentPlanet.y;
+            this.land(this.gameState.lastCheckpoint);
+            this.visible = true;
+            this.alpha = 0;
+            this.game.add.tween(this).to({ alpha: 1 }, 1000, null, true).onComplete.add(this.allowJump, this);
+            this.canJump = false;
+        }
+
+        allowJump() {
             this.canJump = true;
         }
 
@@ -79,14 +97,20 @@ module Demo {
         }
 
         land(planet: Planet) {
-            if (this.state == PlayerState.FLYING) {
+            if (this.state != PlayerState.LANDED) {
                 this.currentPlanet = planet;
                 this.rotation = Math.atan2(this.y - planet.y, this.x - planet.x) + Math.PI/2;
                 this.state = PlayerState.LANDED;
                 this.loadTexture('robot_land', 0);
                 this.animations.add('land', Phaser.Animation.generateFrameNames('robot_anim_finale00', 73, 88));
                 this.animations.play('land', 60);
+                this.events.onAnimationComplete.add(this.onAnimationLandedEnd, this);
             }
+        }
+
+        onAnimationLandedEnd() {
+            this.events.onAnimationComplete.remove(this.onAnimationLandedEnd, this);
+            this.animations.play('idle', 30);
         }
 
         fly() {
@@ -115,6 +139,15 @@ module Demo {
             }
         }
 
+        explode() {
+            if (this.state != PlayerState.DEAD) {
+                this.visible = false;
+                new RobotExplosion(this.gameState, this.x, this.y);
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, this.spawn, this);
+                this.state = PlayerState.DEAD;
+            }
+        }
+
         updateOnPlanet() {
             this.rotation += this.currentPlanet.rotSpeed;  
             var radius: number = this.currentPlanet.radius + (this.height/2);
@@ -129,6 +162,8 @@ module Demo {
                     break;
                 case PlayerState.LANDED:
                     this.updateOnPlanet();
+                    break;
+                case PlayerState.DEAD:
                     break;
             }
         }

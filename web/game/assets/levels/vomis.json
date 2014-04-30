@@ -30,6 +30,7 @@
                 "width": 300,
                 "height": 300,
                 "angle": 0,
+                "startAngle" : 0,
                 "speed": 0.01,
                 "x": 0,
                 "y": 0
@@ -47,6 +48,7 @@
                 "width": 700,
                 "height": 700,
                 "angle": 0,
+                "startAngle" : 180,
                 "speed": -0.01,
                 "x": 0,
                 "y": 0
@@ -74,6 +76,25 @@
                 "width": 500,
                 "height": 300,
                 "angle": 45,
+                "startAngle" : 0,
+                "speed": 0.02,
+                "x": 0,
+                "y": 0
+            }
+        },
+
+        "B" : {
+            "radius": 35,
+            "rotSpeed": 0.05,
+            "graph":  "asteroid1",
+            "x" : 100,
+            "y" : 100,
+            "orbit": {
+                "target": "Terre",
+                "width": 500,
+                "height": 300,
+                "angle": 135,
+                "startAngle" : -90,
                 "speed": 0.02,
                 "x": 0,
                 "y": 0

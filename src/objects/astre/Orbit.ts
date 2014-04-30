@@ -5,6 +5,7 @@
         width: number;
         height: number;
         angle: number;
+        startAngle: number;
         speed: number;
         x: number;
         y: number;
