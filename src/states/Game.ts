@@ -205,7 +205,7 @@ module Demo {
                 var diffY : number = this.player.y - current.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius + this.player.height / 2) {
+                if (diff <= current.radius + this.player.height / 4) {
                     this.player.explode();
                 }
             }

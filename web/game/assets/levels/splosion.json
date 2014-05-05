@@ -45,7 +45,7 @@
 			"y": -200,
             "rotSpeed": -0.02,
             "radius": 75,
-            "element": "moon_black", 
+            "element": "gas_1", 
             "cameraX": 625,
             "cameraY": 100,
             "checkPoint": true,

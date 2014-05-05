@@ -135,13 +135,11 @@ module Demo {
                 var diffY: number = nextY - planet.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius + this.height / 2) {
-                    if (!planet.bounce) {
+                if (diff <= planet.radius + this.height / 4) {
+                    if (!planet.bounce) 
                         this.land(planet);
-                        console.log(planet.bounce);
-                    } else {
+                    else if(diff <= planet.radius - 30 + this.height / 4) 
                         this.bounce(planet); 
-                    }
                 }
             }
         }
@@ -182,6 +180,11 @@ module Demo {
             var bounceVec: Vector2D = vit.reflect(axe);
             this.vitX = bounceVec.x;
             this.vitY = bounceVec.y;
+
+            for (var i = 0; i < 10; i++) {
+                var dust = new Dust(this.game, this.x, this.y);
+                this.gameState.gameWorld.add(dust);
+            }
         }
     }
 } 

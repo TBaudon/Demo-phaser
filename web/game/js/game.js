@@ -6,6 +6,28 @@
 };
 var Demo;
 (function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('Game', Demo.GameState, false);
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
+var Demo;
+(function (Demo) {
     var Asteroid = (function (_super) {
         __extends(Asteroid, _super);
         function Asteroid(game, frame, x, y, radius, rotSpeed, orbit) {
@@ -64,12 +86,165 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var Dust = (function (_super) {
+        __extends(Dust, _super);
+        function Dust(game, x, y) {
+            _super.call(this, game, x, y, 'planets', 'particle_smoke');
+
+            this.anchor.set(0.5, 0.5);
+            this.scale.set(0.5, 0.5);
+
+            var speedx = Math.random() * 4 - 2;
+            var speedy = Math.random() * 4 - 2;
+
+            this.vit = new Demo.Vector2D(speedx, speedy);
+            this.rotSpeed = Math.random() * 0.2 - 0.1;
+
+            game.add.tween(this).to({ alpha: 0 }, 1000, null, true).onComplete.add(this.end, this);
+        }
+        Dust.prototype.update = function () {
+            this.x += this.vit.x;
+            this.y += this.vit.y;
+            this.rotation += this.rotSpeed;
+        };
+
+        Dust.prototype.end = function () {
+            this.destroy();
+        };
+        return Dust;
+    })(Phaser.Sprite);
+    Demo.Dust = Dust;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Orbit = (function () {
         function Orbit() {
         }
         return Orbit;
     })();
     Demo.Orbit = Orbit;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Planet = (function (_super) {
+        __extends(Planet, _super);
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
+            if (typeof orbit === "undefined") { orbit = null; }
+            if (typeof bounce === "undefined") { bounce = false; }
+            _super.call(this, game, x, y, 'planets', element);
+            // radius of the assets
+            this.BASE_RADIUS = 180;
+
+            if (element == 'gas_1' || element == 'gas_2' || element == 'gas_3') {
+                var elementID = element.charAt(element.length - 1);
+                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                var p = new Phaser.Sprite(game, x, y, 'planets', element);
+
+                this.gas.anchor.set(0.5, 0.5);
+                this.gas2.anchor.set(0.5, 0.5);
+                p.anchor.set(0.5, 0.5);
+
+                this.gas.x = -0.5;
+                this.gas.y = -0.5;
+
+                this.gas2.x = -0.5;
+                this.gas2.y = -0.5;
+
+                p.x = -0.5;
+                p.y = -0.5;
+
+                this.addChild(this.gas);
+                this.addChild(this.gas2);
+                this.addChild(p);
+            }
+
+            if (radius == 0)
+                radius = this.BASE_RADIUS;
+
+            this.anchor.set(0.5, 0.5);
+            this.cameraX = cameraX;
+            this.cameraY = cameraY;
+            this.cameraZ = cameraZ;
+            this.orbit = orbit;
+            this.bounce = bounce;
+
+            this.radius = radius;
+            this.rotSpeed = rotSpeed;
+
+            var scale = radius / this.BASE_RADIUS;
+            this.scale.x = scale;
+            this.scale.y = scale;
+
+            this.start = start;
+            this.checkPoint = checkPoint;
+            this.end = end;
+            this.checked = false;
+            this.orbitPos = 0;
+        }
+        // load a planet from json
+        Planet.initFromLvl = function (game, planet) {
+            var camX = 400;
+            var camY = 240;
+            var camZ = 1;
+            var elem = "planet_earth";
+            var start = false;
+            var checkPoint = false;
+            var end = false;
+            var bounce = false;
+
+            if (planet.cameraX != undefined)
+                camX = planet.cameraX;
+            if (planet.cameraY != undefined)
+                camY = planet.cameraY;
+            if (planet.cameraZ != undefined)
+                camZ = planet.cameraZ;
+            if (planet.element != undefined)
+                elem = planet.element;
+            if (planet.start)
+                start = planet.start;
+            if (planet.checkPoint)
+                checkPoint = planet.checkPoint;
+            if (planet.end)
+                end = planet.end;
+            if (planet.bounce)
+                bounce = planet.bounce;
+
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
+
+            return nPlanet;
+        };
+
+        Planet.prototype.update = function () {
+            this.rotation += this.rotSpeed;
+
+            if (this.gas)
+                this.gas.rotation += this.rotSpeed;
+            if (this.gas2)
+                this.gas2.rotation -= 2 * this.rotSpeed;
+
+            this.updateOrbit();
+        };
+
+        Planet.prototype.updateOrbit = function () {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+
+                var angle = (Math.PI * this.orbit.angle) / 180;
+
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
+            }
+        };
+        return Planet;
+    })(Phaser.Sprite);
+    Demo.Planet = Planet;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -228,95 +403,43 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Planet = (function (_super) {
-        __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
-            if (typeof orbit === "undefined") { orbit = null; }
-            if (typeof bounce === "undefined") { bounce = false; }
-            _super.call(this, game, x, y, 'planets', element);
-            // radius of the assets
-            this.BASE_RADIUS = 180;
-
-            if (radius == 0)
-                radius = this.BASE_RADIUS;
-
-            this.cameraX = cameraX;
-            this.cameraY = cameraY;
-            this.cameraZ = cameraZ;
-            this.orbit = orbit;
-            this.bounce = bounce;
-
-            this.anchor.set(0.5, 0.5);
-            this.radius = radius;
-            this.rotSpeed = rotSpeed;
-
-            var scale = radius / this.BASE_RADIUS;
-            this.scale.x = scale;
-            this.scale.y = scale;
-
-            this.start = start;
-            this.checkPoint = checkPoint;
-            this.end = end;
-            this.checked = false;
-            this.orbitPos = 0;
+    var Level = (function () {
+        function Level() {
         }
-        // load a planet from json
-        Planet.initFromLvl = function (game, planet) {
-            var camX = 400;
-            var camY = 240;
-            var camZ = 1;
-            var elem = "planet_earth";
-            var start = false;
-            var checkPoint = false;
-            var end = false;
-            var bounce = false;
-
-            if (planet.cameraX != undefined)
-                camX = planet.cameraX;
-            if (planet.cameraY != undefined)
-                camY = planet.cameraY;
-            if (planet.cameraZ != undefined)
-                camZ = planet.cameraZ;
-            if (planet.element != undefined)
-                elem = planet.element;
-            if (planet.start)
-                start = planet.start;
-            if (planet.checkPoint)
-                checkPoint = planet.checkPoint;
-            if (planet.end)
-                end = planet.end;
-            if (planet.bounce)
-                bounce = planet.bounce;
-
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
-
-            return nPlanet;
+        return Level;
+    })();
+    Demo.Level = Level;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Vector2D = (function () {
+        function Vector2D(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Vector2D.prototype.normalize = function () {
+            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
         };
 
-        Planet.prototype.update = function () {
-            this.rotation += this.rotSpeed;
-            this.updateOrbit();
+        Vector2D.prototype.getNorm = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
         };
 
-        Planet.prototype.updateOrbit = function () {
-            if (this.orbit != null) {
-                this.orbitPos += this.orbit.speed;
-
-                var angle = (Math.PI * this.orbit.angle) / 180;
-
-                var offsetX = this.orbit.planet.x + this.orbit.x;
-                var offsetY = this.orbit.planet.y + this.orbit.y;
-
-                var orbitX = Math.cos(this.orbitPos) * this.orbit.width;
-                var orbitY = Math.sin(this.orbitPos) * this.orbit.height;
-
-                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
-                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
-            }
+        Vector2D.prototype.scal = function (vector) {
+            return vector.x * this.x + vector.y * this.y;
         };
-        return Planet;
-    })(Phaser.Sprite);
-    Demo.Planet = Planet;
+
+        Vector2D.prototype.reflect = function (vector) {
+            var n = vector.normalize();
+            var scal = this.scal(n);
+            var repX = this.x - 2 * scal * n.x;
+            var repY = this.y - 2 * scal * n.y;
+
+            return new Vector2D(repX, repY);
+        };
+        return Vector2D;
+    })();
+    Demo.Vector2D = Vector2D;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -432,13 +555,11 @@ var Demo;
                 var diffY = nextY - planet.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius + this.height / 2) {
-                    if (!planet.bounce) {
+                if (diff <= planet.radius + this.height / 4) {
+                    if (!planet.bounce)
                         this.land(planet);
-                        console.log(planet.bounce);
-                    } else {
+                    else if (diff <= planet.radius - 30 + this.height / 4)
                         this.bounce(planet);
-                    }
                 }
             }
         };
@@ -479,41 +600,15 @@ var Demo;
             var bounceVec = vit.reflect(axe);
             this.vitX = bounceVec.x;
             this.vitY = bounceVec.y;
+
+            for (var i = 0; i < 10; i++) {
+                var dust = new Demo.Dust(this.game, this.x, this.y);
+                this.gameState.gameWorld.add(dust);
+            }
         };
         return Player;
     })(Phaser.Sprite);
     Demo.Player = Player;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
-    var Vector2D = (function () {
-        function Vector2D(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        Vector2D.prototype.normalize = function () {
-            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
-        };
-
-        Vector2D.prototype.getNorm = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
-        };
-
-        Vector2D.prototype.scal = function (vector) {
-            return vector.x * this.x + vector.y * this.y;
-        };
-
-        Vector2D.prototype.reflect = function (vector) {
-            var n = vector.normalize();
-            var scal = this.scal(n);
-            var repX = this.x - 2 * scal * n.x;
-            var repY = this.y - 2 * scal * n.y;
-
-            return new Vector2D(repX, repY);
-        };
-        return Vector2D;
-    })();
-    Demo.Vector2D = Vector2D;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -629,28 +724,6 @@ var Demo;
     })(Phaser.State);
     Demo.Boot = Boot;
 })(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
-
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('Game', Demo.GameState, false);
-
-            this.state.start('Boot');
-        }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
-})(Demo || (Demo = {}));
-
-window.onload = function () {
-    var game = new Demo.Game();
-};
 var Demo;
 (function (Demo) {
     var GameState = (function (_super) {
@@ -837,7 +910,7 @@ var Demo;
                 var diffY = this.player.y - current.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= current.radius + this.player.height / 2) {
+                if (diff <= current.radius + this.player.height / 4) {
                     this.player.explode();
                 }
             }
@@ -904,15 +977,6 @@ var Demo;
         return GameState;
     })(Phaser.State);
     Demo.GameState = GameState;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
-    var Level = (function () {
-        function Level() {
-        }
-        return Level;
-    })();
-    Demo.Level = Level;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {

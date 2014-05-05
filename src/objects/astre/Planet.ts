@@ -16,6 +16,8 @@ module Demo {
         name: string;
         orbit: Orbit;
         orbitPos: number;
+        gas: Phaser.Sprite;
+        gas2: Phaser.Sprite;
 
         // radius of the assets
         BASE_RADIUS: number = 180;
@@ -61,16 +63,43 @@ module Demo {
 
             super(game, x, y, 'planets', element);
 
+            if (element == 'gas_1' ||
+                element == 'gas_2' ||
+                element == 'gas_3') {
+
+                var elementID: string = element.charAt(element.length - 1);
+                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                var p: Phaser.Sprite = new Phaser.Sprite(game, x, y, 'planets', element);
+
+                this.gas.anchor.set(0.5, 0.5);
+                this.gas2.anchor.set(0.5, 0.5);
+                p.anchor.set(0.5, 0.5);
+
+                this.gas.x = -0.5;
+                this.gas.y = -0.5;
+
+                this.gas2.x = -0.5;
+                this.gas2.y = -0.5;
+
+                p.x = -0.5;
+                p.y = -0.5;
+
+                this.addChild(this.gas);
+                this.addChild(this.gas2);
+                this.addChild(p);
+            }
+
             if (radius == 0)
                 radius = this.BASE_RADIUS;
 
+            this.anchor.set(0.5, 0.5);
             this.cameraX = cameraX;
             this.cameraY = cameraY;
             this.cameraZ = cameraZ;
             this.orbit = orbit;
             this.bounce = bounce;
             
-            this.anchor.set(0.5, 0.5);
             this.radius = radius;
             this.rotSpeed = rotSpeed;
 
@@ -85,8 +114,14 @@ module Demo {
             this.orbitPos = 0;
         }
 
-        update() {
+        update(){
             this.rotation += this.rotSpeed;
+
+            if (this.gas)
+                this.gas.rotation += this.rotSpeed;
+            if (this.gas2)
+                this.gas2.rotation -= 2 * this.rotSpeed;
+
             this.updateOrbit();
         }
 

@@ -50,6 +50,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="lib\phaser.d.ts" />
     <TypeScriptCompile Include="src\objects\astre\Asteroid.ts" />
+    <TypeScriptCompile Include="src\objects\astre\Dust.ts" />
     <TypeScriptCompile Include="src\objects\astre\Orbit.ts" />
     <TypeScriptCompile Include="src\objects\level\Beacon.ts" />
     <TypeScriptCompile Include="src\objects\level\CheckPoint.ts" />
