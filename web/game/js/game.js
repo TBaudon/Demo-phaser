@@ -230,8 +230,9 @@ var Demo;
 (function (Demo) {
     var Planet = (function (_super) {
         __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit) {
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
             if (typeof orbit === "undefined") { orbit = null; }
+            if (typeof bounce === "undefined") { bounce = false; }
             _super.call(this, game, x, y, 'planets', element);
             // radius of the assets
             this.BASE_RADIUS = 180;
@@ -243,6 +244,7 @@ var Demo;
             this.cameraY = cameraY;
             this.cameraZ = cameraZ;
             this.orbit = orbit;
+            this.bounce = bounce;
 
             this.anchor.set(0.5, 0.5);
             this.radius = radius;
@@ -267,6 +269,7 @@ var Demo;
             var start = false;
             var checkPoint = false;
             var end = false;
+            var bounce = false;
 
             if (planet.cameraX != undefined)
                 camX = planet.cameraX;
@@ -282,8 +285,10 @@ var Demo;
                 checkPoint = planet.checkPoint;
             if (planet.end)
                 end = planet.end;
+            if (planet.bounce)
+                bounce = planet.bounce;
 
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit);
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
 
             return nPlanet;
         };
@@ -427,8 +432,14 @@ var Demo;
                 var diffY = nextY - planet.y;
                 var diff = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius + this.height / 2)
-                    this.land(planet);
+                if (diff <= planet.radius + this.height / 2) {
+                    if (!planet.bounce) {
+                        this.land(planet);
+                        console.log(planet.bounce);
+                    } else {
+                        this.bounce(planet);
+                    }
+                }
             }
         };
 
@@ -460,6 +471,15 @@ var Demo;
                     break;
             }
         };
+
+        Player.prototype.bounce = function (planet) {
+            // get the axe for reflexion
+            var axe = new Demo.Vector2D(this.x - planet.x, this.y - planet.y);
+            var vit = new Demo.Vector2D(this.vitX, this.vitY);
+            var bounceVec = vit.reflect(axe);
+            this.vitX = bounceVec.x;
+            this.vitY = bounceVec.y;
+        };
         return Player;
     })(Phaser.Sprite);
     Demo.Player = Player;
@@ -467,8 +487,30 @@ var Demo;
 var Demo;
 (function (Demo) {
     var Vector2D = (function () {
-        function Vector2D() {
+        function Vector2D(x, y) {
+            this.x = x;
+            this.y = y;
         }
+        Vector2D.prototype.normalize = function () {
+            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
+        };
+
+        Vector2D.prototype.getNorm = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+
+        Vector2D.prototype.scal = function (vector) {
+            return vector.x * this.x + vector.y * this.y;
+        };
+
+        Vector2D.prototype.reflect = function (vector) {
+            var n = vector.normalize();
+            var scal = this.scal(n);
+            var repX = this.x - 2 * scal * n.x;
+            var repY = this.y - 2 * scal * n.y;
+
+            return new Vector2D(repX, repY);
+        };
         return Vector2D;
     })();
     Demo.Vector2D = Vector2D;

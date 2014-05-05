@@ -212,7 +212,6 @@ module Demo {
         }
 
         checkBounds() {
-
             for (var i in this.planets) {
                 var planet = this.planets[i];
                 if (planet.x < this.worldMinX + this.worldMargin)
@@ -224,7 +223,6 @@ module Demo {
                 if (planet.y > this.worldMaxY - this.worldMargin)
                     this.worldMaxY = planet.y + this.worldMargin;
             }
-
 
             if (this.player.x < this.worldMinX ||
                 this.player.x > this.worldMaxX ||

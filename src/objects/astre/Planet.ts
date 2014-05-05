@@ -11,6 +11,7 @@ module Demo {
         checkPoint: boolean;
         checked: boolean;
         end: boolean;
+        bounce: boolean;
         beacon: Beacon;
         name: string;
         orbit: Orbit;
@@ -29,6 +30,7 @@ module Demo {
             var start: boolean = false;
             var checkPoint: boolean = false;
             var end: boolean = false;
+            var bounce: boolean = false;
 
             if (planet.cameraX != undefined) camX = planet.cameraX;
             if (planet.cameraY != undefined) camY = planet.cameraY;
@@ -37,13 +39,14 @@ module Demo {
             if (planet.start) start = planet.start;
             if (planet.checkPoint) checkPoint = planet.checkPoint;
             if (planet.end) end = planet.end;
+            if (planet.bounce) bounce = planet.bounce; 
 
             var nPlanet: Planet = new Planet(game,
                 planet.x, planet.y,
                 elem,
                 planet.radius, planet.rotSpeed,
                 camX, camY, camZ,
-                start, checkPoint, end, planet.orbit);
+                start, checkPoint, end, planet.orbit, bounce);
 
             return nPlanet;
         }
@@ -54,7 +57,7 @@ module Demo {
             radius: number, rotSpeed: number,
             cameraX: number, cameraY: number, cameraZ: number,
             start: boolean, checkPoint: boolean, end: boolean,
-            orbit: Orbit = null) {
+            orbit: Orbit = null, bounce: boolean = false) {
 
             super(game, x, y, 'planets', element);
 
@@ -65,6 +68,7 @@ module Demo {
             this.cameraY = cameraY;
             this.cameraZ = cameraZ;
             this.orbit = orbit;
+            this.bounce = bounce;
             
             this.anchor.set(0.5, 0.5);
             this.radius = radius;

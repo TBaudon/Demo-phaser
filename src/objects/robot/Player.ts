@@ -128,14 +128,21 @@ module Demo {
 
             this.rotation = Math.atan2(this.vitY, this.vitX) + Math.PI / 2;
 
+            // Check collsion with planets
             for (var i = 0; i < this.planets.length; ++i) {
                 var planet: Planet = this.planets[i];
                 var diffX: number = nextX - planet.x;
                 var diffY: number = nextY - planet.y;
                 var diff: number = Math.sqrt(diffX * diffX + diffY * diffY);
 
-                if (diff <= planet.radius + this.height / 2)
-                    this.land(planet);
+                if (diff <= planet.radius + this.height / 2) {
+                    if (!planet.bounce) {
+                        this.land(planet);
+                        console.log(planet.bounce);
+                    } else {
+                        this.bounce(planet); 
+                    }
+                }
             }
         }
 
@@ -166,6 +173,15 @@ module Demo {
                 case PlayerState.DEAD:
                     break;
             }
+        }
+
+        bounce(planet: Planet) {
+            // get the axe for reflexion
+            var axe: Vector2D = new Vector2D(this.x - planet.x, this.y - planet.y);
+            var vit: Vector2D = new Vector2D(this.vitX, this.vitY);
+            var bounceVec: Vector2D = vit.reflect(axe);
+            this.vitX = bounceVec.x;
+            this.vitY = bounceVec.y;
         }
     }
 } 
