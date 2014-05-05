@@ -815,6 +815,14 @@ var Demo;
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text = new Phaser.Text(this.game, 5, 5, this.level.description, style);
             this.ui.add(text);
+
+            // Reset
+            var resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
+            resetKey.onDown.add(this.restart, this);
+        };
+
+        GameState.prototype.restart = function () {
+            this.game.state.restart();
         };
 
         GameState.prototype.addArrow = function (planet) {
