@@ -9,10 +9,10 @@
             super(game, x, y, 'planets', 'particle_smoke');
 
             this.anchor.set(0.5, 0.5);
-            this.scale.set(0.5, 0.5);
+            this.scale.set(0.4, 0.4);
 
-            var speedx: number = Math.random() * 4 - 2;
-            var speedy: number = Math.random() * 4 - 2;
+            var speedx: number = Math.random() * 3 - 1.5;
+            var speedy: number = Math.random() * 3 - 1.5;
 
             this.vit = new Vector2D(speedx, speedy);
             this.rotSpeed = Math.random() * 0.2 - 0.1;

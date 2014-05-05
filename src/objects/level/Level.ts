@@ -1,6 +1,7 @@
 ﻿module Demo {
     export class Level {
 
+        description: string;
         planets: Array<Planet>;
         asteroids: Array<Asteroid>;
         lvlName: string;

@@ -6,6 +6,7 @@ module Demo {
         planets: Array<Planet>;
         asteroids: Array<Asteroid>;
         gameWorld: Phaser.Group;
+        ui: Phaser.Group;
         level: Level;
         arrows: Array<DestArrow>;
         checks: Array<CheckPoint>;
@@ -42,6 +43,9 @@ module Demo {
 
             // world group for camera movement
             this.gameWorld = this.add.group(this, 'gameWorld', true);
+
+            // ui
+            this.ui = this.add.group(this, 'ui', true);
 
             // parse level
             var levelString: string = (String)(this.game.cache.getText("level_" + GameState.currentLevel));
@@ -115,7 +119,8 @@ module Demo {
 
             // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
-            var text: Phaser.Text = this.add.text(0, 0, 'Space Hop Demo Dev', style);
+            var text: Phaser.Text = new Phaser.Text(this.game, 5, 5, this.level.description, style);
+            this.ui.add(text);
         }
 
         addArrow(planet: Planet) {
@@ -228,7 +233,6 @@ module Demo {
                 this.player.x > this.worldMaxX ||
                 this.player.y < this.worldMinY ||
                 this.player.y > this.worldMaxY) {
-                //this.player.land(this.lastCheckpoint);
                 this.player.explode();
             }
         }
@@ -243,6 +247,7 @@ module Demo {
         // Destroy screen when left
         shutdown() {
             this.gameWorld.destroy(true);
+            this.ui.destroy(true);
             for (var i in this.arrows)
                 this.arrows[i].destroy();
         }
