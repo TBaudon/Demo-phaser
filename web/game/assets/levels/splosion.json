@@ -1,89 +1,62 @@
 ﻿{
-    "name": "First level!",
-    "description": "Hola",
-    "mustCheckAll": false,
+	"name": "level",
+	"description": "Level description goes here",
 
-    "gravity": {
-        "x": 0,
-        "y": 1
-    },
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
 
-    "jumpStrength" : 25,
+	"jumpStrength": 25,
 
-    "planets": {
-        "Terre":{
-            "x": 0,
-			"y": 0,
-            "rotSpeed": 0.025,
-            "radius": 75,
-            "cameraX": 75,
-            "cameraY": 380,
-            "start": true
-        },
+	"planets": {
+		"Dest":{
+			"x": 1266.9,
+			"y": 396.75,
+			"rotSpeed": 0.025,
+			"radius": 92.84,
+			"end": true,
+			"element": "planet_mars"
+		},
+		"Terre":{
+			"x": 170.95,
+			"y": 317.15,
+			"cameraX": 170.52369077306733,
+			"cameraY": 316.359102244389,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.025,
+			"radius": 59.246,
+			"start": true,
+			"element": "planet_earth"
+		},
 		"Lune":{
-			"x": 625,
-			"y": 75,
-            "rotSpeed": -0.025,
-            "radius": 50,
-            "element": "moon_ice", 
-            "cameraX": 100,
-            "cameraY": 100,
-            "checkPoint": true,
-            "orbit": {
-                "target": "Dest",
-                "width": 300,
-                "height": 300,
-                "angle": 0,
-                "startAngle" : -90,
-                "speed": 0.01,
-                "x": 0,
-                "y": 0
-            }
+			"x": 509.65,
+			"y": 408.5,
+			"rotSpeed": 0.025,
+			"radius": 31.218,
+			"checkPoint": true,
+			"orbit":{
+				"width":273.7,
+				"height":189.95,
+				"angle":15.203475952148438,
+				"startAngle":0,
+				"speed":0.025,
+				"x":103.10000000000002,
+				"y":25.900000000000034,
+				"target":"Terre"
+			},
+			"element": "moon_ice"
 		},
-        "Noir":{
-			"x": 350,
-			"y": -200,
-            "rotSpeed": -0.02,
-            "radius": 75,
-            "element": "gas_1", 
-            "cameraX": 625,
-            "cameraY": 100,
-            "checkPoint": true,
-            "bounce" : true
-		},
-        "Dest":{
-			"x": 600,
-			"y": 480,
-            "rotSpeed": 0.01,
-            "radius": 100,
-            "element": "planet_forest", 
-            "cameraX": 10,
-            "cameraY": 100,
-            "end": true
+		"Foret":{
+			"x": 689.35,
+			"y": 115.5,
+			"cameraX": 335.8066764774224,
+			"cameraY": 205.68507474246766,
+			"cameraZ": 0.6196266749283557,
+			"rotSpeed": 0.025,
+			"radius": 169.81799999999998,
+			"checkPoint": true,
+			"element": "planet_forest"
 		}
-    },
-
-    "asteroids": {
-        "A" : {
-            "radius": 20,
-            "rotSpeed": 0.005,
-            "graph":  "asteroid1",
-            "x" : 0,
-            "y" : -200,
-            "orbit": {
-                "target": "Terre",
-                "width": 200,
-                "height": 200,
-                "angle": 0,
-                "startAngle" : 0,
-                "speed": 0.005,
-                "x": 0,
-                "y": 0
-            }
-        }
-    },
-
-    "bonuses": {
-
-    }
+	}
 }
