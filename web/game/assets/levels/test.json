@@ -1,4 +1,4 @@
-﻿{
+{
 	"name": "level",
 	"description": "Level description goes here",
 
@@ -10,86 +10,82 @@
 	"jumpStrength": 25,
 
 	"planets": {
-		"Dest":{
-			"x": 1266.9,
-			"y": 396.75,
-			"rotSpeed": 0.025,
-			"radius": 92.84,
-			"end": true,
-			"element": "planet_mars"
-		},
 		"Terre":{
-			"x": 170.95,
-			"y": 317.15,
-			"cameraX": 170.52369077306733,
-			"cameraY": 316.359102244389,
-			"cameraZ": 0.9975062344139651,
-			"rotSpeed": 0.025,
-			"radius": 59.246,
+			"x": 400,
+			"y": 141,
+			"cameraX": 399.00249376558605,
+			"cameraY": 107.06566916043226,
+			"cameraZ": 0.6650041562759768,
+			"rotSpeed": 0.01,
+			"radius": 61.93,
 			"start": true,
 			"element": "planet_earth"
 		},
-		"Lune":{
-			"x": 509.65,
-			"y": 402.5,
-			"rotSpeed": 0.025,
-			"radius": 31.218,
-			"checkPoint": true,
-			"orbit":{
-				"width":248.5,
-				"height":129.3,
-				"angle":15.203475952148438,
-				"startAngle":0,
-				"speed":0.025,
-				"x":103.10000000000002,
-				"y":25.900000000000034,
-				"target":"Terre"
-			},
-			"element": "moon_ice"
+		"A":{
+			"x": 162.75,
+			"y": 259.15,
+			"rotSpeed": -0.025,
+			"radius": 72.116,
+			"bounce": true,
+			"element": "gas_1"
 		},
-		"Foret":{
-			"x": 689.35,
-			"y": 115.5,
-			"cameraX": 335.8066764774224,
-			"cameraY": 205.68507474246766,
-			"cameraZ": 0.6196266749283557,
+		"B":{
+			"x": 440.5,
+			"y": 387.6,
+			"rotSpeed": 0.01,
+			"radius": 88.88,
+			"bounce": true,
+			"element": "gas_2"
+		},
+		"C":{
+			"x": 734.95,
+			"y": 284.45,
+			"rotSpeed": -0.04,
+			"radius": 145.06799999999998,
+			"bounce": true,
+			"element": "gas_3"
+		},
+		"D":{
+			"x": 67.95,
+			"y": 607.9,
+			"rotSpeed": 0.04,
+			"radius": 158.532,
+			"bounce": true,
+			"element": "gas_3"
+		},
+		"F":{
+			"x": 826.8,
+			"y": 723.75,
+			"rotSpeed": -0.01,
+			"radius": 106.61200000000001,
+			"bounce": true,
+			"element": "gas_2"
+		},
+		"G":{
+			"x": 508.8,
+			"y": 792.45,
+			"rotSpeed": -0.08,
+			"radius": 84.744,
+			"bounce": true,
+			"element": "gas_3"
+		},
+		"H":{
+			"x": 332.3,
+			"y": 1109,
 			"rotSpeed": 0.025,
-			"radius": 169.81799999999998,
-			"checkPoint": true,
+			"radius": 194.458,
+			"end": true,
 			"element": "planet_forest"
+		},
+		"E":{
+			"x": 598.55,
+			"y": 568.7,
+			"rotSpeed": 0.025,
+			"radius": 76.494,
+			"bounce": true,
+			"element": "gas_1"
 		}
 	},
 	"asteroids":{
-		"C": { 
-			"radius":25.650000000000002,
-			"x":297.1,
-			"y":90.1,
-			"rotSpeed":0.1,
-			"graph":"asteroid3"
-		},
-		"A": { 
-			"radius":18.900000000000002,
-			"x":336.95,
-			"y":36.8,
-			"rotSpeed":-0.05,
-			"graph":"asteroid2"
-		},
-		"Boloss": { 
-			"radius":34.65,
-			"x":462.15,
-			"y":-86.5,
-			"rotSpeed":0.025,
-			"orbit":{
-				"width":380.15,
-				"height":263.35,
-				"angle":-1.2753448486328125,
-				"startAngle":0,
-				"speed":0.03,
-				"x":6.399999999999977,
-				"y":-3.450000000000003,
-				"target":"Foret"
-			},
-			"graph":"asteroid1"
-		}
 	}
 }

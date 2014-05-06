@@ -1,0 +1,25 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"Eau":{
+			"x": 200.95,
+			"y": 196.35,
+			"rotSpeed": 0.1,
+			"radius": 166.32,
+			"start": true,
+			"element": "planet_water"
+		}
+	},
+	"asteroids":{
+	}
+}

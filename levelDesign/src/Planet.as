@@ -20,7 +20,7 @@ package
 		[Inspectable(defaultValue="false")]
 		public var rebond : Boolean;
 		
-		[Inspectable(defaultValue="0.025", type="Number")]
+		[Inspectable(type="Number")]
 		public var rotSpeed : Number;
 		
 		public function Planet() 

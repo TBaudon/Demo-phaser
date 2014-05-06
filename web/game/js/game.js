@@ -819,6 +819,16 @@ var Demo;
             // Reset
             var resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
             resetKey.onDown.add(this.restart, this);
+
+            // Transition
+            this.blackTransition = this.game.add.graphics(0, 0);
+            this.blackTransition.beginFill(0x00000000, 1);
+            this.blackTransition.drawRect(0, 0, 800, 480);
+            this.blackTransition.endFill();
+
+            this.ui.add(this.blackTransition);
+
+            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 1000, null, true);
         };
 
         GameState.prototype.restart = function () {
@@ -887,6 +897,7 @@ var Demo;
                 this.player.canJump = false;
 
                 this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
+                this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 1000, null, true, 2000);
             }
         };
 

@@ -39,7 +39,11 @@
 			
 			json = "{\n";
 			json += "\t\"name\": \"level\",\n";
-			json += "\t\"description\": \"Level description goes here\",\n\n";
+			json += "\t\"description\": \"Level description goes here\",\n";
+			if(s_params.mustCheckAll)
+				json += '\t"mustCheckAll":' + s_params.mustCheckAll + ",\n\n";
+			else
+				json += '\n';
 			json += "\t\"gravity\": {\n";
 			json += "\t\t\"x\": 0,\n";
 			json += "\t\t\"y\": 1\n";
