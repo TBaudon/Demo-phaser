@@ -12,5 +12,15 @@
     "PLAY_BTN" : [
         "Play",
         "Jouer"
+    ],
+
+    "NEXT_BTN" : [
+        "Next",
+        "Suivant"
+    ],
+
+    "PREV_BTN" : [
+        "Previous",
+        "Precedent"
     ]
 }

@@ -1,9 +1,14 @@
 ﻿{
-    "1": "test.json",
-    "2": "splosion.json",
-    "3": "vomis.json",
-    "4": "LOL.json",
-    "5": "level_2.json",
-    "6": "level.json",
-    "7": "leveal.json"
+    "1": "c4_000_2.json",
+    "2": "c5_010_4.json",
+    "3": "c6_100_2.json",
+    "4": "c1_111_7.json",
+    "5": "c3_111_7.json",
+    "6": "leveal.json",
+    "7": "level.json",
+    "8": "level_2.json",
+    "9": "LOL.json",
+    "10": "splosion.json",
+    "11": "test.json",
+    "12": "vomis.json"
 }

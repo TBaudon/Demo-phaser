@@ -46,7 +46,6 @@
             for (var i = 1; i <= 4; i += 2)
                 this.circles[i].rotation += rotationSpeed * (i+1);
 
-
         }
 
     }

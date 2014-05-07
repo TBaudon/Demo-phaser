@@ -94,7 +94,7 @@
                 "width": 500,
                 "height": 300,
                 "angle": 135,
-                "startAngle" : -90,
+                "startAngle" : -180,
                 "speed": 0.02,
                 "x": 0,
                 "y": 0

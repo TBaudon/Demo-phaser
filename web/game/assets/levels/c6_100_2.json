@@ -1,0 +1,249 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"1":{
+			"x": 399.45,
+			"y": 250.25,
+			"cameraX": 400.33835222466587,
+			"cameraY": 239.52329931013742,
+			"cameraZ": 0.07518938325908382,
+			"rotSpeed": 0.024,
+			"radius": 167.2,
+			"end": true,
+			"element": "planet_earth"
+		},
+		"2":{
+			"x": 451.1,
+			"y": -262.9,
+			"cameraX": 397.94859196020025,
+			"cameraY": 240.46924423425358,
+			"cameraZ": 0.491355219113718,
+			"rotSpeed": -0.02,
+			"radius": 64.416,
+			"orbit":{
+				"width":504.35,
+				"height":504.35,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.001,
+				"x":7,
+				"y":-13.150000000000006,
+				"target":"1"
+			},
+			"element": "moon_white"
+		},
+		"3":{
+			"x": 1298.5,
+			"y": 256.95,
+			"cameraX": 392.4937390648049,
+			"cameraY": 223.23921918419154,
+			"cameraZ": 0.5489039075096915,
+			"rotSpeed": -0.03,
+			"radius": 166.76,
+			"orbit":{
+				"width":904.05,
+				"height":904.05,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.001,
+				"x":4.850000000000023,
+				"y":-15.300000000000011,
+				"target":"1"
+			},
+			"element": "planet_mars"
+		},
+		"4":{
+			"x": 1262.25,
+			"y": -61.7,
+			"cameraX": 403.4191402882128,
+			"cameraY": 239.20187215174283,
+			"cameraZ": 0.39413720901588867,
+			"rotSpeed": 0.03,
+			"radius": 60.104,
+			"orbit":{
+				"width":305.6,
+				"height":305.6,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.001,
+				"x":-4.349999999999909,
+				"y":-7.349999999999994,
+				"target":"3"
+			},
+			"element": "moon_black"
+		},
+		"6":{
+			"x": 1866.3,
+			"y": 854.45,
+			"cameraX": 399.5204293299332,
+			"cameraY": 245.15957143129012,
+			"cameraZ": 0.3044893143281253,
+			"rotSpeed": 0.035,
+			"radius": 126.962,
+			"orbit":{
+				"width":586.7,
+				"height":586.7,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.025,
+				"x":66.09999999999991,
+				"y":66.70000000000005,
+				"target":"5"
+			},
+			"element": "moon_ice"
+		},
+		"5":{
+			"x": 1815.45,
+			"y": 1438.05,
+			"cameraX": 389.8972558200026,
+			"cameraY": 259.6124333463389,
+			"cameraZ": 0.41617895695148915,
+			"rotSpeed": 0.03,
+			"radius": 313.764,
+			"checkPoint": true,
+			"orbit":{
+				"width":1871.95,
+				"height":1871.95,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.005,
+				"x":-2,
+				"y":-9.949999999999989,
+				"target":"1"
+			},
+			"element": "planet_forest"
+		},
+		"7":{
+			"x": -1337.05,
+			"y": 2340.9,
+			"cameraX": 418.85560675883255,
+			"cameraY": 238.120839733743,
+			"cameraZ": 0.2560163850486431,
+			"rotSpeed": -0.032,
+			"radius": 376.266,
+			"orbit":{
+				"width":2751.5,
+				"height":2751.5,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.01,
+				"x":-16.94999999999999,
+				"y":-10.5,
+				"target":"1"
+			},
+			"element": "planet_water"
+		},
+		"8":{
+			"x": 3107.05,
+			"y": 2788.5,
+			"cameraX": 397.8376937621297,
+			"cameraY": 238.26682325895197,
+			"cameraZ": 0.13327003006905053,
+			"rotSpeed": 0.02,
+			"radius": 385.154,
+			"start": true,
+			"orbit":{
+				"width":3720.25,
+				"height":3720.25,
+				"angle":0,
+				"startAngle":180,
+				"speed":-0.01,
+				"x":-16.94999999999999,
+				"y":-10.5,
+				"target":"1"
+			},
+			"element": "moon_black"
+		},
+		"11":{
+			"x": 862.9,
+			"y": -2374.55,
+			"cameraX": 407.06091992426775,
+			"cameraY": 236.52968036529674,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 172.63400000000001,
+			"element": "moon_white"
+		},
+		"10":{
+			"x": 3084.6,
+			"y": -1644,
+			"cameraX": 430.22608308274863,
+			"cameraY": 250.29513308831716,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 165,
+			"element": "moon_white"
+		},
+		"12":{
+			"x": -1733.8,
+			"y": -2314.5,
+			"cameraX": 413.9213720904332,
+			"cameraY": 232.09711549170288,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 245.10199999999998,
+			"element": "moon_white"
+		},
+		"13":{
+			"x": -1807.4,
+			"y": -37.75,
+			"cameraX": 381.1337565430448,
+			"cameraY": 252.25526227865018,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 172.41400000000002,
+			"element": "moon_white"
+		},
+		"15":{
+			"x": 358.75,
+			"y": 1716.1,
+			"cameraX": 409.1324200913242,
+			"cameraY": 254.59405278984298,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 140.382,
+			"element": "moon_white"
+		},
+		"14":{
+			"x": 1298.25,
+			"y": 2801.8,
+			"cameraX": 388.1946764673126,
+			"cameraY": 265.33021494598523,
+			"cameraZ": 0.44548390689386347,
+			"rotSpeed": 0.02,
+			"radius": 245.432,
+			"element": "moon_white"
+		},
+		"9":{
+			"x": 3133.3,
+			"y": 2083.75,
+			"cameraX": 488.219534399792,
+			"cameraY": 241.59188451033944,
+			"cameraZ": 0.41617895695148915,
+			"rotSpeed": 0.03,
+			"radius": 110.396,
+			"orbit":{
+				"width":693.5,
+				"height":693.5,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.025,
+				"x":-1.5,
+				"y":-25.5,
+				"target":"8"
+			},
+			"element": "planet_mars"
+		}
+	},
+	"asteroids":{
+	}
+}

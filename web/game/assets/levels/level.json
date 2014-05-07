@@ -1,7 +1,6 @@
 {
 	"name": "level",
 	"description": "Level description goes here",
-	"mustCheckAll":undefined,
 
 	"gravity": {
 		"x": 0,

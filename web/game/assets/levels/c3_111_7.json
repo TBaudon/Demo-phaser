@@ -1,0 +1,239 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"2":{
+			"x": 429.85,
+			"y": -11.4,
+			"rotSpeed": 0.02,
+			"radius": 49.456,
+			"bounce": true,
+			"element": "gas_1"
+		},
+		"5":{
+			"x": 192.85,
+			"y": 414.6,
+			"rotSpeed": 0.04,
+			"radius": 49.456,
+			"bounce": true,
+			"element": "gas_2"
+		},
+		"3":{
+			"x": 100.85,
+			"y": 42.6,
+			"rotSpeed": 0.035,
+			"radius": 49.72,
+			"bounce": true,
+			"element": "gas_3"
+		},
+		"14":{
+			"x": 1290.75,
+			"y": 233.45,
+			"rotSpeed": 0.01,
+			"radius": 166.76,
+			"end": true,
+			"element": "planet_mars"
+		},
+		"4":{
+			"x": 46.15,
+			"y": 265.65,
+			"cameraX": 587.281795511222,
+			"cameraY": 69.17705735660844,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.02,
+			"radius": 48.4,
+			"element": "moon_white"
+		},
+		"6":{
+			"x": -432.7,
+			"y": 437.3,
+			"cameraX": 243.4413965087282,
+			"cameraY": 342.39401496259353,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.04,
+			"radius": 86.724,
+			"checkPoint": true,
+			"element": "moon_ice"
+		},
+		"7":{
+			"x": -561.45,
+			"y": 163.2,
+			"cameraX": 116.359102244389,
+			"cameraY": 369.47630922693264,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.03,
+			"radius": 41.403999999999996,
+			"element": "planet_water"
+		},
+		"8":{
+			"x": -412.55,
+			"y": -31.05,
+			"rotSpeed": 0.02,
+			"radius": 29.48,
+			"orbit":{
+				"width":304,
+				"height":304,
+				"angle":0,
+				"startAngle":180,
+				"speed":0.03,
+				"x":-7.300000000000011,
+				"y":-0.5,
+				"target":"10"
+			},
+			"element": "moon_black"
+		},
+		"10":{
+			"x": -226.7,
+			"y": -392.45,
+			"cameraX": 287.5786097159498,
+			"cameraY": 241.25269066812984,
+			"cameraZ": 0.6753049423880471,
+			"rotSpeed": -0.01,
+			"radius": 174.218,
+			"element": "planet_earth"
+		},
+		"9":{
+			"x": -538.9,
+			"y": -440.1,
+			"rotSpeed": 0.01,
+			"radius": 27.676,
+			"orbit":{
+				"width":304,
+				"height":304,
+				"angle":0,
+				"startAngle":90,
+				"speed":0.025,
+				"x":-7.300000000000011,
+				"y":-0.5,
+				"target":"10"
+			},
+			"element": "moon_white"
+		},
+		"11":{
+			"x": 328.95,
+			"y": -571.65,
+			"cameraX": 135.71072319201994,
+			"cameraY": 177.60598503740655,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.07,
+			"radius": 44,
+			"checkPoint": true,
+			"element": "planet_mars"
+		},
+		"13":{
+			"x": 1015.9,
+			"y": -220.7,
+			"cameraX": 259.4014962593516,
+			"cameraY": 146.98254364089777,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.04,
+			"radius": 81.84,
+			"element": "planet_water"
+		},
+		"12":{
+			"x": 922.1,
+			"y": -577.25,
+			"cameraX": 384.01065956029316,
+			"cameraY": 128.409631674122,
+			"cameraZ": 0.7613971637955649,
+			"rotSpeed": 0.03,
+			"radius": 46.2,
+			"element": "moon_white"
+		},
+		"1":{
+			"x": 401.05,
+			"y": 236.85,
+			"cameraX": 400.0498753117207,
+			"cameraY": 236.25935162094763,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.03,
+			"radius": 99.396,
+			"start": true,
+			"element": "planet_forest"
+		}
+	},
+	"asteroids":{
+		"a5": { 
+			"radius":29.294999999999998,
+			"x":-212.15,
+			"y":219.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		},
+		"a6": { 
+			"radius":28.980000000000004,
+			"x":-203.15,
+			"y":432.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid2"
+		},
+		"a4": { 
+			"radius":29.857499999999998,
+			"x":-66.15,
+			"y":390.25,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"a7": { 
+			"radius":25.785,
+			"x":223.9,
+			"y":-405.2,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		},
+		"a9": { 
+			"radius":25.4925,
+			"x":790.9,
+			"y":-670.2,
+			"rotSpeed":0.001,
+			"orbit":{
+				"width":151.5,
+				"height":151.5,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.025,
+				"x":-0.14999999999997726,
+				"y":0.2999999999999545,
+				"target":"12"
+			},
+			"graph":"asteroid2"
+		},
+		"a8": { 
+			"radius":26.28,
+			"x":630.9,
+			"y":-464.2,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"a2": { 
+			"radius":26.28,
+			"x":800.85,
+			"y":3.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"a3": { 
+			"radius":26.28,
+			"x":752.9,
+			"y":273.95,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"a1": { 
+			"radius":25.785,
+			"x":1300.15,
+			"y":-92.2,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		}
+	}
+}

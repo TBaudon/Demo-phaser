@@ -1,0 +1,76 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"1":{
+			"x": 76.8,
+			"y": 236.2,
+			"cameraX": 173.66583541147133,
+			"cameraY": 229.57605985037407,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.03,
+			"radius": 71.632,
+			"start": true,
+			"element": "planet_forest"
+		},
+		"4":{
+			"x": 752.75,
+			"y": -243.95,
+			"cameraX": 407.77997264853366,
+			"cameraY": 225.7407688801094,
+			"cameraZ": 1.215620726333384,
+			"rotSpeed": 0.031,
+			"radius": 37.576,
+			"element": "moon_ice"
+		},
+		"3":{
+			"x": 237.3,
+			"y": -170.5,
+			"cameraX": 79.25847135693665,
+			"cameraY": 199.96960948184167,
+			"cameraZ": 1.215620726333384,
+			"rotSpeed": 0.025,
+			"radius": 35.596000000000004,
+			"element": "moon_black"
+		},
+		"2":{
+			"x": 539.9,
+			"y": -2.95,
+			"cameraX": 338.72074882995315,
+			"cameraY": 252.0228809152366,
+			"cameraZ": 0.8320332813312532,
+			"rotSpeed": 0.023,
+			"radius": 166.32,
+			"element": "planet_water"
+		},
+		"5":{
+			"x": 842.3,
+			"y": 208.7,
+			"cameraX": 300.24146257330113,
+			"cameraY": 251.9029550419685,
+			"cameraZ": 0.9198574220995746,
+			"rotSpeed": 0.03,
+			"radius": 35.728,
+			"element": "moon_white"
+		},
+		"6":{
+			"x": 1356.3,
+			"y": 168.6,
+			"rotSpeed": 0.01,
+			"radius": 166.76,
+			"end": true,
+			"element": "planet_mars"
+		}
+	},
+	"asteroids":{
+	}
+}

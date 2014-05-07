@@ -1,0 +1,227 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"1":{
+			"x": 176.75,
+			"y": 136.6,
+			"cameraX": 487.33153638814014,
+			"cameraY": 117.56513926325246,
+			"cameraZ": 0.8984725965858041,
+			"rotSpeed": 0.03,
+			"radius": 49.544,
+			"start": true,
+			"element": "moon_black"
+		},
+		"4":{
+			"x": -257.8,
+			"y": 386.4,
+			"cameraX": 398.55361596009976,
+			"cameraY": 118.25436408977552,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.024,
+			"radius": 53.812,
+			"element": "moon_black"
+		},
+		"2":{
+			"x": 340.8,
+			"y": 436.6,
+			"cameraX": 658.2543640897757,
+			"cameraY": 153.66583541147133,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.025,
+			"radius": 64.63600000000001,
+			"element": "moon_black"
+		},
+		"12":{
+			"x": 17.6,
+			"y": 1444.1,
+			"cameraX": 261.7131455176018,
+			"cameraY": 176.8064991210983,
+			"cameraZ": 0.7601311226186517,
+			"rotSpeed": 0.025,
+			"radius": 73.06200000000001,
+			"element": "moon_black"
+		},
+		"7":{
+			"x": -544.2,
+			"y": 819.6,
+			"cameraX": 117.75561097256853,
+			"cameraY": 87.88029925187035,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.01,
+			"radius": 49.544,
+			"element": "moon_black"
+		},
+		"6":{
+			"x": -314.1,
+			"y": 693.45,
+			"cameraX": 347.28179551122196,
+			"cameraY": 133.86533665835415,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.031,
+			"radius": 33.396,
+			"element": "moon_black"
+		},
+		"10":{
+			"x": -561.8,
+			"y": 1352.8,
+			"rotSpeed": 0.02,
+			"radius": 70.95,
+			"element": "moon_black"
+		},
+		"8":{
+			"x": -178.15,
+			"y": 907.75,
+			"cameraX": 653.7418021741086,
+			"cameraY": 134.97439583146166,
+			"cameraZ": 1.437427005659869,
+			"rotSpeed": 0.024,
+			"radius": 58.102000000000004,
+			"element": "moon_black"
+		},
+		"3":{
+			"x": 8.85,
+			"y": 602.85,
+			"cameraX": 649.8753117206983,
+			"cameraY": 260.8977556109726,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.032,
+			"radius": 94.99600000000001,
+			"element": "moon_white"
+		},
+		"13":{
+			"x": 371.15,
+			"y": 1323.05,
+			"cameraX": 108.28222494800275,
+			"cameraY": 242.16308463548606,
+			"cameraZ": 0.853287824649352,
+			"rotSpeed": -0.024,
+			"radius": 37.862,
+			"element": "moon_white"
+		},
+		"9":{
+			"x": -570.25,
+			"y": 1025.6,
+			"rotSpeed": 0.015,
+			"radius": 37.862,
+			"element": "moon_white"
+		},
+		"5":{
+			"x": -589.8,
+			"y": 436.4,
+			"cameraX": 64.93765586034915,
+			"cameraY": 165.68578553615959,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.031,
+			"radius": 37.862,
+			"element": "moon_white"
+		},
+		"15":{
+			"x": 970.5,
+			"y": 1362,
+			"cameraX": 404.11711375393315,
+			"cameraY": 262.85531438323284,
+			"cameraZ": 0.853287824649352,
+			"rotSpeed": 0.01,
+			"radius": 166.76,
+			"end": true,
+			"element": "planet_mars"
+		},
+		"11":{
+			"x": -247,
+			"y": 1190.6,
+			"cameraX": 411.9222828101011,
+			"cameraY": 122.14516385197719,
+			"cameraZ": 0.8470538408597597,
+			"rotSpeed": 0.018,
+			"radius": 69.938,
+			"checkPoint": true,
+			"element": "moon_white"
+		},
+		"14":{
+			"x": 372.4,
+			"y": 1762.35,
+			"cameraX": 498.74673350754625,
+			"cameraY": 426.8572342808384,
+			"cameraZ": 0.853287824649352,
+			"rotSpeed": 0.035,
+			"radius": 77.33,
+			"element": "moon_black"
+		}
+	},
+	"asteroids":{
+		"1": { 
+			"radius":27.315,
+			"x":212.35,
+			"y":885.55,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		},
+		"2": { 
+			"radius":27.045,
+			"x":323.65,
+			"y":930.05,
+			"rotSpeed":0.001,
+			"graph":"asteroid2"
+		},
+		"3": { 
+			"radius":27.855,
+			"x":435.9,
+			"y":884.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"4": { 
+			"radius":27.315,
+			"x":525.7,
+			"y":938.2,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		},
+		"5": { 
+			"radius":27.045,
+			"x":652.7,
+			"y":898.25,
+			"rotSpeed":0.001,
+			"graph":"asteroid2"
+		},
+		"6": { 
+			"radius":27.855,
+			"x":749.25,
+			"y":937.55,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"7": { 
+			"radius":27.855,
+			"x":864.5,
+			"y":875.55,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"8": { 
+			"radius":27.315,
+			"x":954.3,
+			"y":928.85,
+			"rotSpeed":0.001,
+			"graph":"asteroid1"
+		},
+		"9": { 
+			"radius":27.045,
+			"x":1081.3,
+			"y":888.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid2"
+		}
+	}
+}
