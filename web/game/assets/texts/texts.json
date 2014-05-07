@@ -1,0 +1,16 @@
+{
+    "langs" : [
+        "en",
+        "fr"
+    ],
+
+    "LOADING_TEXT" : [
+        "Loading",
+        "Chargement"
+    ],
+
+    "PLAY_BTN" : [
+        "Play",
+        "Jouer"
+    ]
+}

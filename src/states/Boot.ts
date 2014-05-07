@@ -1,9 +1,11 @@
 module Demo {
+
     export class Boot extends Phaser.State {
 
         // Load data needed for preloader screen.
         preload() {
             this.load.text('levelList', 'game/assets/levels/list.json');
+            this.load.text('texts', 'game/assets/texts/texts.json');
         }
 
         create() {
@@ -28,7 +30,7 @@ module Demo {
                 this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
                 this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOriontation, this);
             }
-
+            
             this.game.state.start('Preload', true, false);
         }
 

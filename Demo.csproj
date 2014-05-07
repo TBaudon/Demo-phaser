@@ -53,6 +53,8 @@
     <TypeScriptCompile Include="src\objects\astre\Asteroid.ts" />
     <TypeScriptCompile Include="src\objects\astre\Dust.ts" />
     <TypeScriptCompile Include="src\objects\astre\Orbit.ts" />
+    <TypeScriptCompile Include="src\objects\gui\LevelButton.ts" />
+    <TypeScriptCompile Include="src\objects\gui\SuperButton.ts" />
     <TypeScriptCompile Include="src\objects\level\Beacon.ts" />
     <TypeScriptCompile Include="src\objects\level\CheckPoint.ts" />
     <TypeScriptCompile Include="src\objects\level\CheckPointArrow.ts" />
@@ -65,8 +67,10 @@
     <TypeScriptCompile Include="src\Demo.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />
     <TypeScriptCompile Include="src\objects\level\Level.ts" />
+    <TypeScriptCompile Include="src\states\LevelSelect.ts" />
     <TypeScriptCompile Include="src\states\Menu.ts" />
     <TypeScriptCompile Include="src\states\Preloader.ts" />
+    <TypeScriptCompile Include="src\system\TextManager.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -79,7 +83,9 @@
     <Content Include="web\game\assets\music\musique.ogg" />
     <Content Include="web\game\js\phaser.map" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="web\game\assets\texts\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

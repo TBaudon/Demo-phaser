@@ -1,4 +1,5 @@
 module Demo {
+
     export class Preloader extends Phaser.State {
 
         loadingBar: Phaser.Graphics;
@@ -6,6 +7,7 @@ module Demo {
 
         // Content to load for the game
         preload() {
+
             // Data
             this.load.audio('bgm', 'game/assets/music/musique.ogg', true);
             this.load.spritesheet('button', 'game/assets/img/button_sprite_sheet.png', 193, 71);
@@ -18,11 +20,17 @@ module Demo {
             this.load.atlasXML('robot_blow', 'game/assets/img/robot_blow.png', 'game/assets/img/robot_blow.xml');
 
             this.load.image('background', 'game/assets/img/fond.jpg');
+            this.load.image('title', 'game/assets/img/titre.png');
+
+            // load dico
+            var dicoString: string = (String)(this.game.cache.getText('texts'));
+            var dico = JSON.parse(dicoString);
+            Game.dico.init(dico);
 
             // load levels
-
             var levelListString: string = (String)(this.game.cache.getText('levelList'));
             var list = JSON.parse(levelListString);
+            Game.levelList = list;
 
             for (var i in list) {
                 this.load.text('level_' + i, 'game/assets/levels/' + list[i]);
@@ -45,7 +53,7 @@ module Demo {
             this.loadingBar.endFill();
 
             var style = { font: "24px Arial", fill: "#ffffff" };
-            var loadText = this.add.text(this.world.centerX, this.world.centerY - 40, "Loading...", style);
+            var loadText = this.add.text(this.world.centerX, this.world.centerY - 40, Game.dico.getText('LOADING_TEXT'), style);
             loadText.x -= loadText.width / 2;
         }
 

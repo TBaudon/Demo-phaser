@@ -104,6 +104,91 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var LevelButton = (function (_super) {
+        __extends(LevelButton, _super);
+        function LevelButton(game, x, y, level, nbStars) {
+            _super.call(this, game, x, y);
+
+            this.circles = new Array();
+            this.stars = new Array();
+
+            for (var i = 1; i < 6; ++i) {
+                var circle = new Phaser.Sprite(this.game, 0, 0, 'gui', 'load' + i);
+                this.addChild(circle);
+                circle.anchor.set(0.5, 0.5);
+                circle.scale.set(0.5, 0.5);
+                circle.rotation = Math.random() * 360;
+                this.circles.push(circle);
+            }
+
+            var style = { font: 'italic bold 24px arial', fill: '#ffffff', align: 'center' };
+            var text = new Phaser.Text(this.game, 0, 5, level.toString(), style);
+            text.anchor.set(0.5, 0.5);
+            this.addChild(text);
+
+            for (var j = 0; j < 3; ++j) {
+                var star;
+                if (j < nbStars)
+                    star = new Phaser.Sprite(this.game, 0, 0, 'gui', 'star_on');
+                else
+                    star = new Phaser.Sprite(this.game, 0, 0, 'gui', 'star_off');
+                this.addChild(star);
+
+                star.anchor.set(0.5, 0.5);
+                star.x = Math.cos(j * Math.PI / 6 + Math.PI + 2 * Math.PI / 6) * 50 - 2;
+                star.y = -Math.sin(j * Math.PI / 6 + Math.PI + 2 * Math.PI / 6) * 50;
+            }
+        }
+        LevelButton.prototype.update = function () {
+            var rotationSpeed = 0.005;
+
+            for (var i = 0; i <= 4; i += 2)
+                this.circles[i].rotation -= rotationSpeed * (i + 1);
+
+            for (var i = 1; i <= 4; i += 2)
+                this.circles[i].rotation += rotationSpeed * (i + 1);
+        };
+        return LevelButton;
+    })(Phaser.Sprite);
+    Demo.LevelButton = LevelButton;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var SuperButton = (function (_super) {
+        __extends(SuperButton, _super);
+        function SuperButton(game, x, y, callback, ctx, text) {
+            if (typeof text === "undefined") { text = "button"; }
+            _super.call(this, game, x, y, 'gui', callback, ctx, 2, 1, 2);
+
+            this.onInputDown.addOnce(this.animate, this);
+            this.nbFrame = 12;
+
+            var style = { font: 'italic bold 24px arial', fill: '#ffffff', align: 'center' };
+            this.txt = new Phaser.Text(game, 0, 0, text, style);
+            this.addChild(this.txt);
+            this.txt.x = (this.width - this.txt.width) / 2;
+            this.txt.y = (this.height - this.txt.height) / 2;
+        }
+        SuperButton.prototype.animate = function () {
+            this.game.add.tween(this.txt).to({ alpha: 0 }, 300, null, true);
+            this.animating = true;
+        };
+
+        SuperButton.prototype.update = function () {
+            _super.prototype.update.call(this);
+
+            if (this.animating)
+                if (this.frame < this.nbFrame)
+                    this.frame++;
+                else
+                    this.kill();
+        };
+        return SuperButton;
+    })(Phaser.Button);
+    Demo.SuperButton = SuperButton;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Beacon = (function (_super) {
         __extends(Beacon, _super);
         function Beacon(game, planet) {
@@ -651,6 +736,7 @@ var Demo;
         // Load data needed for preloader screen.
         Boot.prototype.preload = function () {
             this.load.text('levelList', 'game/assets/levels/list.json');
+            this.load.text('texts', 'game/assets/texts/texts.json');
         };
 
         Boot.prototype.create = function () {
@@ -703,7 +789,10 @@ var Demo;
             this.state.add('Boot', Demo.Boot, false);
             this.state.add('Preload', Demo.Preloader, false);
             this.state.add('Menu', Demo.Menu, false);
+            this.state.add('LevelSelect', Demo.LevelSelect, false);
             this.state.add('Game', Demo.GameState, false);
+
+            Game.dico = new Demo.TextManager();
 
             this.state.start('Boot');
         }
@@ -828,7 +917,7 @@ var Demo;
 
             this.ui.add(this.blackTransition);
 
-            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 1000, null, true);
+            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
         };
 
         GameState.prototype.restart = function () {
@@ -1003,6 +1092,45 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var LevelSelect = (function (_super) {
+        __extends(LevelSelect, _super);
+        function LevelSelect() {
+            _super.apply(this, arguments);
+        }
+        LevelSelect.prototype.create = function () {
+            // draw background
+            this.game.add.image(0, 0, 'background');
+
+            var bx = 0;
+            var by = 0;
+            var nbRow = 5;
+            var marginX = 100;
+            var marginY = 100;
+            var w = 150;
+            var h = 150;
+
+            for (var i in Demo.Game.levelList) {
+                var index = i - 1;
+
+                bx = index % nbRow;
+                by = Math.floor(index / nbRow);
+
+                var btn = new Demo.LevelButton(this.game, bx * w + marginX, by * h + marginY, i, 0);
+                this.game.add.existing(btn);
+            }
+
+            this.blackTransition = this.game.add.graphics(0, 0), this.blackTransition.beginFill(0x000000, 1);
+            this.blackTransition.drawRect(0, 0, 800, 480);
+            this.blackTransition.endFill();
+
+            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
+        };
+        return LevelSelect;
+    })(Phaser.State);
+    Demo.LevelSelect = LevelSelect;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var Menu = (function (_super) {
         __extends(Menu, _super);
         function Menu() {
@@ -1010,16 +1138,34 @@ var Demo;
         }
         Menu.prototype.create = function () {
             this.music = this.add.audio('bgm', 1, true);
+            this.music.play();
 
-            // this.music.play();
-            this.button = this.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPressed, this, 2, 1, 0);
+            var background = this.game.add.image(0, 0, 'background');
+            var title = this.game.add.image(0, 100, 'title');
+
+            title.x = (800 - title.width) / 2;
+            var btnText = Demo.Game.dico.getText('PLAY_BTN');
+            this.button = new Demo.SuperButton(this.game, this.game.world.centerX, this.game.world.centerY, this.onButtonPressed, this, btnText);
+            this.game.add.existing(this.button);
             this.button.x -= this.button.width / 2;
-            this.button.y -= this.button.height / 2;
+            this.button.y += 50;
+
+            // Transition
+            this.blackTransition = this.game.add.graphics(0, 0);
+            this.blackTransition.beginFill(0x00000000, 1);
+            this.blackTransition.drawRect(0, 0, 800, 480);
+            this.blackTransition.endFill();
+
+            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
         };
 
         Menu.prototype.onButtonPressed = function () {
+            this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 300, null, true).onComplete.add(this.go, this);
+        };
+
+        Menu.prototype.go = function () {
             Demo.GameState.currentLevel = 1;
-            this.game.state.start('Game', true);
+            this.game.state.start('LevelSelect', true);
         };
         return Menu;
     })(Phaser.State);
@@ -1046,10 +1192,17 @@ var Demo;
             this.load.atlasXML('robot_blow', 'game/assets/img/robot_blow.png', 'game/assets/img/robot_blow.xml');
 
             this.load.image('background', 'game/assets/img/fond.jpg');
+            this.load.image('title', 'game/assets/img/titre.png');
+
+            // load dico
+            var dicoString = (String)(this.game.cache.getText('texts'));
+            var dico = JSON.parse(dicoString);
+            Demo.Game.dico.init(dico);
 
             // load levels
             var levelListString = (String)(this.game.cache.getText('levelList'));
             var list = JSON.parse(levelListString);
+            Demo.Game.levelList = list;
 
             for (var i in list) {
                 this.load.text('level_' + i, 'game/assets/levels/' + list[i]);
@@ -1072,7 +1225,7 @@ var Demo;
             this.loadingBar.endFill();
 
             var style = { font: "24px Arial", fill: "#ffffff" };
-            var loadText = this.add.text(this.world.centerX, this.world.centerY - 40, "Loading...", style);
+            var loadText = this.add.text(this.world.centerX, this.world.centerY - 40, Demo.Game.dico.getText('LOADING_TEXT'), style);
             loadText.x -= loadText.width / 2;
         };
 
@@ -1096,4 +1249,25 @@ var Demo;
         return Preloader;
     })(Phaser.State);
     Demo.Preloader = Preloader;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var TextManager = (function () {
+        function TextManager() {
+            var lang = window.navigator.userLanguage || window.navigator.language;
+            this.currentLang = lang;
+        }
+        TextManager.prototype.init = function (json) {
+            this.dico = json;
+            this.currentIndex = this.dico['langs'].indexOf(this.currentLang);
+            if (this.currentIndex == -1)
+                this.currentIndex = 0;
+        };
+
+        TextManager.prototype.getText = function (key) {
+            return this.dico[key][this.currentIndex];
+        };
+        return TextManager;
+    })();
+    Demo.TextManager = TextManager;
 })(Demo || (Demo = {}));

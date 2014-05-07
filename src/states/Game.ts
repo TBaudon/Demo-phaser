@@ -135,7 +135,7 @@ module Demo {
 
             this.ui.add(this.blackTransition);
 
-            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 1000, null, true);
+            this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
             
         }
 
