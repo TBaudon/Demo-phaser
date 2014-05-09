@@ -3,6 +3,8 @@
 	"description": "Level description goes here",
 	"mustCheckAll":true,
 
+    "bestJumpNb": 1,
+
 	"gravity": {
 		"x": 0,
 		"y": 1

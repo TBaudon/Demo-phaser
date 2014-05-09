@@ -10,6 +10,8 @@
 
 	"jumpStrength": 25,
 
+    "bestJumpNb": 2,
+
 	"planets": {
 		"1":{
 			"x": 76.8,

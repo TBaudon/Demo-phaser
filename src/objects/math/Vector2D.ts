@@ -29,5 +29,9 @@
 
             return new Vector2D(repX, repY);
         }
+
+        mult(coef: number): Vector2D {
+            return new Vector2D(this.x * coef, this.y * coef);
+        }
     }
 } 

@@ -27,6 +27,8 @@ module Demo {
 
         state: PlayerState;
 
+        nbJump: number;
+
         constructor(game: GameState,
             planets: Array<Planet>,
             gravity: Vector2D,
@@ -54,6 +56,7 @@ module Demo {
             this.previousPlanet = null;
             this.state = PlayerState.FLYING;
             this.canJump = true;
+            this.nbJump = 0;
         }
 
         spawn() {
@@ -77,6 +80,8 @@ module Demo {
                 this.loadTexture('robot_jump', 0);
                 this.animations.add('jump');
                 this.animations.play('jump', 60);
+
+                this.nbJump++;
 
                 var rot : number = this.rotation - Math.PI / 2;
 

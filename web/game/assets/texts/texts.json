@@ -22,5 +22,10 @@
     "PREV_BTN" : [
         "Previous",
         "Precedent"
+    ],
+
+    "LEVEL_SELECT_TXT" : [
+        "Choose a level",
+        "Choisis un niveau"
     ]
 }

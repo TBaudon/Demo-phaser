@@ -2,11 +2,13 @@
     export class DestArrow extends Phaser.Sprite{
 
         target: Planet;
+        player: Player;
         
-        constructor(game: Phaser.Game, target: Planet) {
+        constructor(game: Phaser.Game, target: Planet, player: Player) {
             super(game, 0, 0, 'gui', 'arrow');
 
             this.target = target;
+            this.player = player;
 
             this.anchor.x = 0.5;
             this.anchor.y = 0.5;
@@ -16,22 +18,19 @@
         }
 
         update() {
-            this.visible = false;
 
-            if (this.target.checked) return;
+            if (this.target.checked) this.visible = false;
 
-            var relativTargetX = this.target.parent.x + this.target.x;
-            var relativTargetY = this.target.parent.y + this.target.y;
-
-            var diffX = relativTargetX - this.x;
-            var diffY = relativTargetY - this.y;
-
-            this.rotation = Math.atan2(diffY, diffX) + Math.PI / 2;
-
+            var relativTargetX = (this.target.parent.x + this.target.x) ;
+            var relativTargetY = (this.target.parent.y + this.target.y) ;
+           
             var margin = 20;
 
+            var targetVisible = true;
+
+            /*
             if (relativTargetX >= this.game.width) {
-                this.visible = true;
+                targetVisible = false;
                 this.y = relativTargetY;
                 this.x = this.game.width - margin;
                 if (this.y >= this.game.height - margin)
@@ -41,7 +40,7 @@
             }
 
             if (relativTargetX <= 0) {
-                this.visible = true;
+                targetVisible = false;
                 this.y = relativTargetY;
                 this.x = margin;
                 if (this.y <= margin)
@@ -51,7 +50,7 @@
             }
 
             if (relativTargetY >= this.game.height) {
-                this.visible = true;
+                targetVisible = false;
                 this.x = relativTargetX;
                 this.y = this.game.height - margin;
                 if (this.x >= this.game.width - margin)
@@ -61,14 +60,30 @@
             }
 
             if (relativTargetY <= 0) {
-                this.visible = true;
+                targetVisible = false;
                 this.x = relativTargetX;
                 this.y = margin;
                 if (this.x <= margin)
                     this.x = margin;
                 if (this.x >= this.game.width - margin)
                     this.x = this.game.width - margin;
-            }
+            }*/
+
+            var vectorPT = new Vector2D(this.player.x - this.target.x, this.player.y - this.target.y);
+            vectorPT = vectorPT.normalize();
+            vectorPT = vectorPT.mult(50 / this.player.parent.scale.x);
+
+            this.x = this.player.x - vectorPT.x;
+            this.y = this.player.y - vectorPT.y;
+            this.scale.x = 0.5 / this.player.parent.scale.x;
+            this.scale.y = 0.5 / this.player.parent.scale.y;
+
+            this.bringToTop();
+
+            var diffX = this.target.x - this.x;
+            var diffY = this.target.y - this.y;
+
+            this.rotation = Math.atan2(diffY, diffX) + Math.PI / 2;
 
         }
     }

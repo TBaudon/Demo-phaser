@@ -9,12 +9,15 @@
 
         level: number;
 
+        score: number;
+
         constructor(game: Phaser.Game, x: number, y: number, level: number, nbStars: number) {
             super(game, x, y);
 
             this.circles = new Array<Phaser.Sprite>();
             this.stars = new Array<Phaser.Sprite>();
             this.level = level;
+            this.score = nbStars;
 
             for (var i = 1; i < 6; ++i) {
                 var circle = new Phaser.Sprite(this.game, 0, 0, 'gui', 'load' + i);

@@ -70,6 +70,7 @@
     <TypeScriptCompile Include="src\states\LevelSelect.ts" />
     <TypeScriptCompile Include="src\states\Menu.ts" />
     <TypeScriptCompile Include="src\states\Preloader.ts" />
+    <TypeScriptCompile Include="src\system\GameSave.ts" />
     <TypeScriptCompile Include="src\system\TextManager.ts" />
   </ItemGroup>
   <ItemGroup>

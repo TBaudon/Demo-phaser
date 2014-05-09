@@ -3,6 +3,7 @@
     export class Game extends Phaser.Game {
 
         static dico: TextManager;
+        static gameSave: GameSave;
         static levelList: Object;
 
         constructor() {
@@ -15,6 +16,7 @@
             this.state.add('Game', GameState, false);
 
             Game.dico = new TextManager();
+            Game.gameSave = new GameSave();
 
             this.state.start('Boot');
         }

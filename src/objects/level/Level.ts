@@ -9,6 +9,7 @@
         gravity: Vector2D;
         jumpStrength: number;
         mustCheckAll: boolean;
+        bestJumpNb: number;
 
     }
 } 

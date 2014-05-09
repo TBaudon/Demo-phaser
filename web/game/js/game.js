@@ -6,31 +6,6 @@
 };
 var Demo;
 (function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
-
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('LevelSelect', Demo.LevelSelect, false);
-            this.state.add('Game', Demo.GameState, false);
-
-            Game.dico = new Demo.TextManager();
-
-            this.state.start('Boot');
-        }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
-})(Demo || (Demo = {}));
-
-window.onload = function () {
-    var game = new Demo.Game();
-};
-var Demo;
-(function (Demo) {
     var Asteroid = (function (_super) {
         __extends(Asteroid, _super);
         function Asteroid(game, frame, x, y, radius, rotSpeed, orbit) {
@@ -129,129 +104,6 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Planet = (function (_super) {
-        __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
-            if (typeof orbit === "undefined") { orbit = null; }
-            if (typeof bounce === "undefined") { bounce = false; }
-            _super.call(this, game, x, y, 'planets', element);
-            // radius of the assets
-            this.BASE_RADIUS = 180;
-
-            if (element == 'gas_1' || element == 'gas_2' || element == 'gas_3') {
-                var elementID = element.charAt(element.length - 1);
-                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
-                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
-                var p = new Phaser.Sprite(game, x, y, 'planets', element);
-
-                this.gas.anchor.set(0.5, 0.5);
-                this.gas2.anchor.set(0.5, 0.5);
-                p.anchor.set(0.5, 0.5);
-
-                this.gas.x = -0.5;
-                this.gas.y = -0.5;
-
-                this.gas2.x = -0.5;
-                this.gas2.y = -0.5;
-
-                p.x = -0.5;
-                p.y = -0.5;
-
-                this.addChild(this.gas);
-                this.addChild(this.gas2);
-                this.addChild(p);
-            }
-
-            if (radius == 0)
-                radius = this.BASE_RADIUS;
-
-            this.anchor.set(0.5, 0.5);
-            this.cameraX = cameraX;
-            this.cameraY = cameraY;
-            this.cameraZ = cameraZ;
-            this.orbit = orbit;
-            this.bounce = bounce;
-
-            this.radius = radius;
-            this.rotSpeed = rotSpeed;
-
-            var scale = radius / this.BASE_RADIUS;
-            this.scale.x = scale;
-            this.scale.y = scale;
-
-            this.start = start;
-            this.checkPoint = checkPoint;
-            this.end = end;
-            this.checked = false;
-            this.orbitPos = 0;
-        }
-        // load a planet from json
-        Planet.initFromLvl = function (game, planet) {
-            var camX = 400;
-            var camY = 240;
-            var camZ = 1;
-            var elem = "planet_earth";
-            var start = false;
-            var checkPoint = false;
-            var end = false;
-            var bounce = false;
-
-            if (planet.cameraX != undefined)
-                camX = planet.cameraX;
-            if (planet.cameraY != undefined)
-                camY = planet.cameraY;
-            if (planet.cameraZ != undefined)
-                camZ = planet.cameraZ;
-            if (planet.element != undefined)
-                elem = planet.element;
-            if (planet.start)
-                start = planet.start;
-            if (planet.checkPoint)
-                checkPoint = planet.checkPoint;
-            if (planet.end)
-                end = planet.end;
-            if (planet.bounce)
-                bounce = planet.bounce;
-
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
-
-            return nPlanet;
-        };
-
-        Planet.prototype.update = function () {
-            this.rotation += this.rotSpeed;
-
-            if (this.gas)
-                this.gas.rotation += this.rotSpeed;
-            if (this.gas2)
-                this.gas2.rotation -= 2 * this.rotSpeed;
-
-            this.updateOrbit();
-        };
-
-        Planet.prototype.updateOrbit = function () {
-            if (this.orbit != null) {
-                this.orbitPos += this.orbit.speed;
-                var orbitOffset = (Math.PI * this.orbit.startAngle) / 180;
-
-                var angle = (Math.PI * this.orbit.angle) / 180;
-
-                var offsetX = this.orbit.planet.x + this.orbit.x;
-                var offsetY = this.orbit.planet.y + this.orbit.y;
-
-                var orbitX = Math.cos(this.orbitPos + orbitOffset) * this.orbit.width;
-                var orbitY = Math.sin(this.orbitPos + orbitOffset) * this.orbit.height;
-
-                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
-                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
-            }
-        };
-        return Planet;
-    })(Phaser.Sprite);
-    Demo.Planet = Planet;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
     var LevelButton = (function (_super) {
         __extends(LevelButton, _super);
         function LevelButton(game, x, y, level, nbStars) {
@@ -260,6 +112,7 @@ var Demo;
             this.circles = new Array();
             this.stars = new Array();
             this.level = level;
+            this.score = nbStars;
 
             for (var i = 1; i < 6; ++i) {
                 var circle = new Phaser.Sprite(this.game, 0, 0, 'gui', 'load' + i);
@@ -438,10 +291,11 @@ var Demo;
 (function (Demo) {
     var DestArrow = (function (_super) {
         __extends(DestArrow, _super);
-        function DestArrow(game, target) {
+        function DestArrow(game, target, player) {
             _super.call(this, game, 0, 0, 'gui', 'arrow');
 
             this.target = target;
+            this.player = player;
 
             this.anchor.x = 0.5;
             this.anchor.y = 0.5;
@@ -450,60 +304,71 @@ var Demo;
             this.scale.y = 0.5;
         }
         DestArrow.prototype.update = function () {
-            this.visible = false;
-
             if (this.target.checked)
-                return;
+                this.visible = false;
 
-            var relativTargetX = this.target.parent.x + this.target.x;
-            var relativTargetY = this.target.parent.y + this.target.y;
-
-            var diffX = relativTargetX - this.x;
-            var diffY = relativTargetY - this.y;
-
-            this.rotation = Math.atan2(diffY, diffX) + Math.PI / 2;
+            var relativTargetX = (this.target.parent.x + this.target.x);
+            var relativTargetY = (this.target.parent.y + this.target.y);
 
             var margin = 20;
 
+            var targetVisible = true;
+
+            /*
             if (relativTargetX >= this.game.width) {
-                this.visible = true;
-                this.y = relativTargetY;
-                this.x = this.game.width - margin;
-                if (this.y >= this.game.height - margin)
-                    this.y = this.game.height - margin;
-                if (this.y <= margin)
-                    this.y = margin;
+            targetVisible = false;
+            this.y = relativTargetY;
+            this.x = this.game.width - margin;
+            if (this.y >= this.game.height - margin)
+            this.y = this.game.height - margin;
+            if (this.y <= margin)
+            this.y = margin;
             }
-
+            
             if (relativTargetX <= 0) {
-                this.visible = true;
-                this.y = relativTargetY;
-                this.x = margin;
-                if (this.y <= margin)
-                    this.y = margin;
-                if (this.y >= this.game.height - margin)
-                    this.y = this.game.height - margin;
+            targetVisible = false;
+            this.y = relativTargetY;
+            this.x = margin;
+            if (this.y <= margin)
+            this.y = margin;
+            if (this.y >= this.game.height - margin)
+            this.y = this.game.height - margin;
             }
-
+            
             if (relativTargetY >= this.game.height) {
-                this.visible = true;
-                this.x = relativTargetX;
-                this.y = this.game.height - margin;
-                if (this.x >= this.game.width - margin)
-                    this.x = this.game.width - margin;
-                if (this.x <= margin)
-                    this.x = margin;
+            targetVisible = false;
+            this.x = relativTargetX;
+            this.y = this.game.height - margin;
+            if (this.x >= this.game.width - margin)
+            this.x = this.game.width - margin;
+            if (this.x <= margin)
+            this.x = margin;
             }
-
+            
             if (relativTargetY <= 0) {
-                this.visible = true;
-                this.x = relativTargetX;
-                this.y = margin;
-                if (this.x <= margin)
-                    this.x = margin;
-                if (this.x >= this.game.width - margin)
-                    this.x = this.game.width - margin;
-            }
+            targetVisible = false;
+            this.x = relativTargetX;
+            this.y = margin;
+            if (this.x <= margin)
+            this.x = margin;
+            if (this.x >= this.game.width - margin)
+            this.x = this.game.width - margin;
+            }*/
+            var vectorPT = new Demo.Vector2D(this.player.x - this.target.x, this.player.y - this.target.y);
+            vectorPT = vectorPT.normalize();
+            vectorPT = vectorPT.mult(50 / this.player.parent.scale.x);
+
+            this.x = this.player.x - vectorPT.x;
+            this.y = this.player.y - vectorPT.y;
+            this.scale.x = 0.5 / this.player.parent.scale.x;
+            this.scale.y = 0.5 / this.player.parent.scale.y;
+
+            this.bringToTop();
+
+            var diffX = this.target.x - this.x;
+            var diffY = this.target.y - this.y;
+
+            this.rotation = Math.atan2(diffY, diffX) + Math.PI / 2;
         };
         return DestArrow;
     })(Phaser.Sprite);
@@ -511,43 +376,126 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Level = (function () {
-        function Level() {
+    var Planet = (function (_super) {
+        __extends(Planet, _super);
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
+            if (typeof orbit === "undefined") { orbit = null; }
+            if (typeof bounce === "undefined") { bounce = false; }
+            _super.call(this, game, x, y, 'planets', element);
+            // radius of the assets
+            this.BASE_RADIUS = 180;
+
+            if (element == 'gas_1' || element == 'gas_2' || element == 'gas_3') {
+                var elementID = element.charAt(element.length - 1);
+                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                var p = new Phaser.Sprite(game, x, y, 'planets', element);
+
+                this.gas.anchor.set(0.5, 0.5);
+                this.gas2.anchor.set(0.5, 0.5);
+                p.anchor.set(0.5, 0.5);
+
+                this.gas.x = -0.5;
+                this.gas.y = -0.5;
+
+                this.gas2.x = -0.5;
+                this.gas2.y = -0.5;
+
+                p.x = -0.5;
+                p.y = -0.5;
+
+                this.addChild(this.gas);
+                this.addChild(this.gas2);
+                this.addChild(p);
+            }
+
+            if (radius == 0)
+                radius = this.BASE_RADIUS;
+
+            this.anchor.set(0.5, 0.5);
+            this.cameraX = cameraX;
+            this.cameraY = cameraY;
+            this.cameraZ = cameraZ;
+            this.orbit = orbit;
+            this.bounce = bounce;
+
+            this.radius = radius;
+            this.rotSpeed = rotSpeed;
+
+            var scale = radius / this.BASE_RADIUS;
+            this.scale.x = scale;
+            this.scale.y = scale;
+
+            this.start = start;
+            this.checkPoint = checkPoint;
+            this.end = end;
+            this.checked = false;
+            this.orbitPos = 0;
         }
-        return Level;
-    })();
-    Demo.Level = Level;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
-    var Vector2D = (function () {
-        function Vector2D(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        Vector2D.prototype.normalize = function () {
-            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
+        // load a planet from json
+        Planet.initFromLvl = function (game, planet) {
+            var camX = 400;
+            var camY = 240;
+            var camZ = 1;
+            var elem = "planet_earth";
+            var start = false;
+            var checkPoint = false;
+            var end = false;
+            var bounce = false;
+
+            if (planet.cameraX != undefined)
+                camX = planet.cameraX;
+            if (planet.cameraY != undefined)
+                camY = planet.cameraY;
+            if (planet.cameraZ != undefined)
+                camZ = planet.cameraZ;
+            if (planet.element != undefined)
+                elem = planet.element;
+            if (planet.start)
+                start = planet.start;
+            if (planet.checkPoint)
+                checkPoint = planet.checkPoint;
+            if (planet.end)
+                end = planet.end;
+            if (planet.bounce)
+                bounce = planet.bounce;
+
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
+
+            return nPlanet;
         };
 
-        Vector2D.prototype.getNorm = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
+        Planet.prototype.update = function () {
+            this.rotation += this.rotSpeed;
+
+            if (this.gas)
+                this.gas.rotation += this.rotSpeed;
+            if (this.gas2)
+                this.gas2.rotation -= 2 * this.rotSpeed;
+
+            this.updateOrbit();
         };
 
-        Vector2D.prototype.scal = function (vector) {
-            return vector.x * this.x + vector.y * this.y;
-        };
+        Planet.prototype.updateOrbit = function () {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+                var orbitOffset = (Math.PI * this.orbit.startAngle) / 180;
 
-        Vector2D.prototype.reflect = function (vector) {
-            var n = vector.normalize();
-            var scal = this.scal(n);
-            var repX = this.x - 2 * scal * n.x;
-            var repY = this.y - 2 * scal * n.y;
+                var angle = (Math.PI * this.orbit.angle) / 180;
 
-            return new Vector2D(repX, repY);
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos + orbitOffset) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos + orbitOffset) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
+            }
         };
-        return Vector2D;
-    })();
-    Demo.Vector2D = Vector2D;
+        return Planet;
+    })(Phaser.Sprite);
+    Demo.Planet = Planet;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -584,6 +532,7 @@ var Demo;
             this.previousPlanet = null;
             this.state = 0 /* FLYING */;
             this.canJump = true;
+            this.nbJump = 0;
         }
         Player.prototype.spawn = function () {
             this.x = this.currentPlanet.x;
@@ -606,6 +555,8 @@ var Demo;
                 this.loadTexture('robot_jump', 0);
                 this.animations.add('jump');
                 this.animations.play('jump', 60);
+
+                this.nbJump++;
 
                 var rot = this.rotation - Math.PI / 2;
 
@@ -717,6 +668,41 @@ var Demo;
         return Player;
     })(Phaser.Sprite);
     Demo.Player = Player;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Vector2D = (function () {
+        function Vector2D(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Vector2D.prototype.normalize = function () {
+            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
+        };
+
+        Vector2D.prototype.getNorm = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+
+        Vector2D.prototype.scal = function (vector) {
+            return vector.x * this.x + vector.y * this.y;
+        };
+
+        Vector2D.prototype.reflect = function (vector) {
+            var n = vector.normalize();
+            var scal = this.scal(n);
+            var repX = this.x - 2 * scal * n.x;
+            var repY = this.y - 2 * scal * n.y;
+
+            return new Vector2D(repX, repY);
+        };
+
+        Vector2D.prototype.mult = function (coef) {
+            return new Vector2D(this.x * coef, this.y * coef);
+        };
+        return Vector2D;
+    })();
+    Demo.Vector2D = Vector2D;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -833,6 +819,32 @@ var Demo;
     })(Phaser.State);
     Demo.Boot = Boot;
 })(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('LevelSelect', Demo.LevelSelect, false);
+            this.state.add('Game', Demo.GameState, false);
+
+            Game.dico = new Demo.TextManager();
+            Game.gameSave = new Demo.GameSave();
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
 var Demo;
 (function (Demo) {
     var GameState = (function (_super) {
@@ -954,8 +966,9 @@ var Demo;
         };
 
         GameState.prototype.addArrow = function (planet) {
-            var arrow = new Demo.DestArrow(this.game, planet);
+            var arrow = new Demo.DestArrow(this.game, planet, this.player);
             this.game.add.existing(arrow);
+            this.gameWorld.add(arrow);
             this.arrows.push(arrow);
         };
 
@@ -1013,6 +1026,21 @@ var Demo;
                 planet.cameraX = this.game.width / 2;
                 planet.cameraY = this.game.height / 2;
                 this.player.canJump = false;
+
+                var score = 0;
+                var nbJump = this.player.nbJump;
+                var bestJump = this.level.bestJumpNb;
+
+                if (nbJump <= bestJump)
+                    score = 3;
+                else if (nbJump > bestJump && nbJump < bestJump + 2)
+                    score = 2;
+                else if (nbJump > bestJump + 2 && nbJump < bestJump + 3)
+                    score = 1;
+                else
+                    score = 0;
+
+                Demo.Game.gameSave.saveScore(GameState.currentLevel, score);
 
                 this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
                 this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 1000, null, true, 2000);
@@ -1112,6 +1140,15 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var Level = (function () {
+        function Level() {
+        }
+        return Level;
+    })();
+    Demo.Level = Level;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var LevelSelect = (function (_super) {
         __extends(LevelSelect, _super);
         function LevelSelect() {
@@ -1129,7 +1166,10 @@ var Demo;
             var w = 150;
             var h = 120;
             var marginX = 175;
-            var marginY = 175;
+            var marginY = 160;
+
+            this.currentPage = 0;
+            this.maxPage = 0;
 
             this.lauchingLevel = false;
             this.moving = false;
@@ -1138,19 +1178,34 @@ var Demo;
 
             for (var i in Demo.Game.levelList) {
                 var index = i - 1;
+                var save = Demo.Game.gameSave.getScore(i);
+                var score = 0;
+                var enabled = false;
+                if (save && save['score'])
+                    score = save['score'];
 
                 bx = index % nbRow;
                 by = Math.floor(index / nbRow);
                 var page = Math.floor(by / nbLine);
+                if (page > this.maxPage)
+                    this.maxPage = page;
 
-                var btn = new Demo.LevelButton(this.game, bx * w + marginX + page * 800, (by - page * 2) * h + marginY, i, 0);
+                var btn = new Demo.LevelButton(this.game, bx * w + marginX + page * 800, (by - page * 2) * h + marginY, i, score);
                 this.game.add.existing(btn);
                 this.buttons.push(btn);
 
-                // This way of passing callback allow us to keep the context
+                // This way of passing callback allows us to keep the context
                 btn.callback = function (level) {
                     _this.lauchLevel(level);
                 };
+
+                if (index > 0 && this.buttons[index - 1].score > 0)
+                    enabled = true;
+
+                if (!enabled && index > 0) {
+                    btn.inputEnabled = false;
+                    btn.alpha = 0.5;
+                }
             }
 
             var nextBTN = new Demo.SuperButton(this.game, 410, 380, this.nextPage, this, Demo.Game.dico.getText('NEXT_BTN'));
@@ -1158,6 +1213,10 @@ var Demo;
 
             this.game.add.existing(nextBTN);
             this.game.add.existing(prevBTN);
+
+            var SelectText = new Phaser.Text(this.game, 0, 40, Demo.Game.dico.getText("LEVEL_SELECT_TXT"), { font: 'italic bold 32px arial', fill: '#ffffff' });
+            this.game.add.existing(SelectText);
+            SelectText.x = this.game.world.centerX - SelectText.width / 2;
 
             this.blackTransition = this.game.add.graphics(0, 0), this.blackTransition.beginFill(0x000000, 1);
             this.blackTransition.drawRect(0, 0, 800, 480);
@@ -1179,23 +1238,27 @@ var Demo;
         };
 
         LevelSelect.prototype.nextPage = function () {
-            if (!this.moving)
+            if (!this.moving && this.currentPage < this.maxPage) {
                 for (var i = 0; i < this.buttons.length; ++i) {
                     this.moving = true;
                     var currentBTN = this.buttons[i];
                     var destX = currentBTN.x - 800;
                     this.game.add.tween(currentBTN).to({ x: destX }, 500, Phaser.Easing.Cubic.Out, true).onComplete.add(this.stopMove, this);
                 }
+                this.currentPage++;
+            }
         };
 
         LevelSelect.prototype.prevPage = function () {
-            if (!this.moving)
+            if (!this.moving && this.currentPage > 0) {
                 for (var i = 0; i < this.buttons.length; ++i) {
                     this.moving = true;
                     var currentBTN = this.buttons[i];
                     var destX = currentBTN.x + 800;
                     this.game.add.tween(currentBTN).to({ x: destX }, 500, Phaser.Easing.Cubic.Out, true).onComplete.add(this.stopMove, this);
                 }
+                this.currentPage--;
+            }
         };
 
         LevelSelect.prototype.stopMove = function () {
@@ -1325,6 +1388,32 @@ var Demo;
         return Preloader;
     })(Phaser.State);
     Demo.Preloader = Preloader;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var GameSave = (function () {
+        function GameSave() {
+            this.key = "saveData";
+            var savedData = localStorage.getItem(this.key);
+            if (savedData == null) {
+                console.log("no save data found, creating save file...");
+                this.save = new Object();
+                localStorage.setItem(this.key, JSON.stringify(this.save));
+            } else {
+                this.save = JSON.parse(savedData);
+            }
+        }
+        GameSave.prototype.saveScore = function (level, score) {
+            this.save[level] = { "score": score };
+            localStorage.setItem(this.key, JSON.stringify(this.save));
+        };
+
+        GameSave.prototype.getScore = function (level) {
+            return this.save[level];
+        };
+        return GameSave;
+    })();
+    Demo.GameSave = GameSave;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {

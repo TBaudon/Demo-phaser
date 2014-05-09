@@ -9,6 +9,8 @@
 
     "jumpStrength" : 20,
 
+    "bestJumpNb": 5,
+
     "planets": {
         "Terre":{
             "x": 0,

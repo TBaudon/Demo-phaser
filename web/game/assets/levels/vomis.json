@@ -1,6 +1,6 @@
 ﻿{
     "name": "First level!",
-    "description": "blablablablabghl&a",
+    "description": "blablablablabghl",
     "mustCheckAll": false,
 
     "gravity": {
@@ -9,6 +9,8 @@
     },
 
     "jumpStrength" : 25,
+
+    "bestJumpNb": 5,
 
     "planets": {
         "Terre":{
