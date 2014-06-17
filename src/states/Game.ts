@@ -20,7 +20,8 @@ module Demo {
         worldMargin: number = 2500;
 
         worldMinX: number =   this.worldMargin;
-        worldMinY: number =   this.worldMargin;
+        worldMinY: number = this.worldMargin;
+
         worldMaxX: number = - this.worldMargin;
         worldMaxY: number = - this.worldMargin;
 
@@ -212,15 +213,17 @@ module Demo {
                     score = 3;
                 else if (nbJump > bestJump && nbJump < bestJump + 2)
                     score = 2;
-                else if (nbJump > bestJump + 2 && nbJump < bestJump + 3)
+                else if (nbJump > bestJump + 2 && nbJump < bestJump + 4)
                     score = 1;
                 else
                     score = 0;
 
                 Game.gameSave.saveScore(GameState.currentLevel, score);
 
-                this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
-                this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 1000, null, true, 2000);
+                new EndLevel(this, score, nbJump, bestJump);
+
+                //this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
+                //this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 1000, null, true, 2000);
             }
         }
 

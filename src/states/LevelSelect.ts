@@ -64,11 +64,14 @@
                 }
             }
 
-            var nextBTN = new SuperButton(this.game, 410, 380, this.nextPage, this, Game.dico.getText('NEXT_BTN'));
-            var prevBTN = new SuperButton(this.game, -40, 380, this.prevPage, this, Game.dico.getText('PREV_BTN'));
+            var nextBTN = new SuperButton(this.game, 430, 380, this.nextPage, this, Game.dico.getText('NEXT_BTN'));
+            var prevBTN = new SuperButton(this.game, -60, 380, this.prevPage, this, Game.dico.getText('PREV_BTN'));
+            var clearBTN = new SuperButton(this.game, 0, 380, this.clearData, this, Game.dico.getText('CLEAR'));
+            clearBTN.x = (800 - clearBTN.width) / 2;
 
             this.game.add.existing(nextBTN);
             this.game.add.existing(prevBTN);
+            this.game.add.existing(clearBTN);
 
             var SelectText = new Phaser.Text(this.game, 0, 40, Game.dico.getText("LEVEL_SELECT_TXT"), { font: 'italic bold 32px arial', fill:'#ffffff' });
             this.game.add.existing(SelectText);
@@ -116,6 +119,11 @@
                 }
                 this.currentPage--;
             }
+        }
+
+        clearData() {
+            Game.gameSave.deleteData();
+            this.game.state.restart();
         }
 
         stopMove() {

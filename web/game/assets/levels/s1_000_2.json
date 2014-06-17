@@ -1,0 +1,57 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+	
+	"bestJumpNb" : 2,
+
+	"planets": {
+		"start":{
+			"x": 237.15,
+			"y": 270.45,
+			"cameraX": 236.55860349127184,
+			"cameraY": 269.77556109725685,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.05,
+			"radius": 111.32000000000001,
+			"start": true,
+			"element": "planet_earth"
+		},
+		"moon_white":{
+			"x": 554.15,
+			"y": 140.75,
+			"cameraX": 259.82860023525456,
+			"cameraY": 274.88489329524447,
+			"cameraZ": 0.537724752142497,
+			"rotSpeed": 0.07,
+			"radius": 57.662000000000006,
+			"element": "moon_white"
+		},
+		"mars":{
+			"x": 1352.6,
+			"y": -165.2,
+			"rotSpeed": 0.06,
+			"radius": 103.95,
+			"end": true,
+			"element": "planet_mars"
+		},
+		"moon_black":{
+			"x": 1095.65,
+			"y": 255.3,
+			"cameraX": 551.0065535204168,
+			"cameraY": 336.4812636531675,
+			"cameraZ": 0.537724752142497,
+			"rotSpeed": 0.06,
+			"radius": 51.634,
+			"element": "moon_black"
+		}
+	},
+	"asteroids":{
+	}
+}

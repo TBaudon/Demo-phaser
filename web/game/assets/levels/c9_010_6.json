@@ -1,0 +1,205 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+
+	"planets": {
+		"1":{
+			"x": -164,
+			"y": 532.7,
+			"cameraX": 200.74812967581047,
+			"cameraY": 325.137157107232,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.029,
+			"radius": 83.42399999999999,
+			"start": true,
+			"element": "planet_mars"
+		},
+		"2":{
+			"x": 292.5,
+			"y": 334.3,
+			"cameraX": 361.04738154613466,
+			"cameraY": 391.5211970074813,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": -0.025,
+			"radius": 39.116,
+			"element": "moon_black"
+		},
+		"3":{
+			"x": 242,
+			"y": 100.4,
+			"cameraX": 310.67331670822944,
+			"cameraY": 158.2044887780549,
+			"cameraZ": 0.9975062344139651,
+			"rotSpeed": 0.03,
+			"radius": 39.424,
+			"element": "moon_ice"
+		},
+		"4":{
+			"x": -202.65,
+			"y": -302.2,
+			"rotSpeed": -0.001,
+			"radius": 169.81799999999998,
+			"end": true,
+			"element": "planet_forest"
+		},
+		"5":{
+			"x": 603.15,
+			"y": 72,
+			"cameraX": 402.99618748598334,
+			"cameraY": 249.72415339762279,
+			"cameraZ": 0.35882484862076697,
+			"rotSpeed": 0.028,
+			"radius": 49.72,
+			"element": "moon_white"
+		},
+		"8":{
+			"x": 1288.35,
+			"y": -37.55,
+			"cameraX": 611.1589589964426,
+			"cameraY": 325.8940273357049,
+			"cameraZ": 0.7489234225800412,
+			"rotSpeed": 0.02,
+			"radius": 127.974,
+			"checkPoint": true,
+			"element": "planet_water"
+		},
+		"9":{
+			"x": 834.45,
+			"y": 309.55,
+			"cameraX": 159.22111964051678,
+			"cameraY": 384.98408537727016,
+			"cameraZ": 0.7489234225800412,
+			"rotSpeed": 0.032,
+			"radius": 72.16,
+			"element": "planet_earth"
+		},
+		"7":{
+			"x": 586.2,
+			"y": -361.25,
+			"cameraX": 437.81094527363194,
+			"cameraY": 258.1659603218476,
+			"cameraZ": 0.9827406178981636,
+			"rotSpeed": -0.026,
+			"radius": 64.658,
+			"element": "moon_black"
+		},
+		"6":{
+			"x": 272.25,
+			"y": -557.3,
+			"cameraX": 704.9371680950628,
+			"cameraY": 58.93054314106951,
+			"cameraZ": 0.841263999158736,
+			"rotSpeed": 0.023,
+			"radius": 49.72,
+			"element": "moon_white"
+		},
+		"11":{
+			"x": 1110.9,
+			"y": -331.25,
+			"rotSpeed": 0.023,
+			"radius": 36.916000000000004,
+			"element": "moon_white"
+		}
+	},
+	"asteroids":{
+		"11": { 
+			"radius":22.2075,
+			"x":826.7,
+			"y":94.8,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"7": { 
+			"radius":21.555,
+			"x":404.6,
+			"y":645.4,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		},
+		"2": { 
+			"radius":21.7575,
+			"x":33.85,
+			"y":258.05,
+			"rotSpeed":0.01,
+			"graph":"asteroid1"
+		},
+		"10": { 
+			"radius":21.7575,
+			"x":1184.75,
+			"y":290.05,
+			"rotSpeed":0.01,
+			"graph":"asteroid1"
+		},
+		"5": { 
+			"radius":21.555,
+			"x":547.25,
+			"y":-122.75,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		},
+		"1": { 
+			"radius":21.7575,
+			"x":159.2,
+			"y":471.4,
+			"rotSpeed":0.01,
+			"graph":"asteroid1"
+		},
+		"4": { 
+			"radius":21.555,
+			"x":220.55,
+			"y":-189.5,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		},
+		"12": { 
+			"radius":22.2075,
+			"x":1002.75,
+			"y":-163.9,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"3": { 
+			"radius":22.2075,
+			"x":24.9,
+			"y":-21.15,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"9": { 
+			"radius":22.2075,
+			"x":1034.75,
+			"y":537.6,
+			"rotSpeed":0.001,
+			"graph":"asteroid3"
+		},
+		"8": { 
+			"radius":21.555,
+			"x":653.95,
+			"y":545.4,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		},
+		"6": { 
+			"radius":21.555,
+			"x":407.25,
+			"y":199.95,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		},
+		"13": { 
+			"radius":21.555,
+			"x":894.05,
+			"y":-418.9,
+			"rotSpeed":0.005,
+			"graph":"asteroid2"
+		}
+	}
+}

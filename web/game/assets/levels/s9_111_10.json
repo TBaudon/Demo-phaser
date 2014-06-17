@@ -1,0 +1,220 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+	
+	"bestJumpNb" : 10,
+
+	"planets": {
+		"start":{
+			"x": 387.6,
+			"y": 222.15,
+			"rotSpeed": 0.06,
+			"radius": 60.786,
+			"start": true,
+			"element": "planet_earth"
+		},
+		"black_moon":{
+			"x": 260.4,
+			"y": -9.55,
+			"cameraX": 401.3614502404735,
+			"cameraY": 240.85830558638548,
+			"cameraZ": 0.5919348871624122,
+			"rotSpeed": -0.07,
+			"radius": 26.201999999999998,
+			"orbit":{
+				"width":426.4,
+				"height":270.55,
+				"angle":-22.47991943359375,
+				"startAngle":180,
+				"speed":-0.015,
+				"x":0.3499999999999659,
+				"y":-0.20000000000001705,
+				"target":"start"
+			},
+			"element": "moon_black"
+		},
+		"gaz1":{
+			"x": -504.85,
+			"y": 628,
+			"rotSpeed": 0.03,
+			"radius": 162.8,
+			"bounce": true,
+			"element": "gas_1"
+		},
+		"forest":{
+			"x": -1459.35,
+			"y": 506.9,
+			"cameraX": 98.84910485933513,
+			"cameraY": 100.47953964194372,
+			"cameraZ": 0.639386189258312,
+			"rotSpeed": 0.06,
+			"radius": 97.68,
+			"checkPoint": true,
+			"element": "planet_forest"
+		},
+		"ice_moon":{
+			"x": -736.1,
+			"y": 982.55,
+			"cameraX": 189.54603580562656,
+			"cameraY": 293.35038363171356,
+			"cameraZ": 0.639386189258312,
+			"rotSpeed": -0.07,
+			"radius": 34.452,
+			"element": "moon_ice"
+		},
+		"white_moon":{
+			"x": -205.15,
+			"y": 960.95,
+			"cameraX": 412.18030690537086,
+			"cameraY": 417.64705882352945,
+			"cameraZ": 0.639386189258312,
+			"rotSpeed": -0.06,
+			"radius": 46.2,
+			"checkPoint": true,
+			"end": true,
+			"orbit":{
+				"width":416.2,
+				"height":198,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.015,
+				"x":-0.5,
+				"y":0,
+				"target":"gaz2"
+			},
+			"element": "moon_white"
+		},
+		"gaz2":{
+			"x": 207.7,
+			"y": 958.9,
+			"rotSpeed": 0.03,
+			"radius": 81.84,
+			"bounce": true,
+			"element": "gas_2"
+		},
+		"gaz3":{
+			"x": 914.25,
+			"y": 628,
+			"rotSpeed": 0.02,
+			"radius": 163.68,
+			"bounce": true,
+			"element": "gas_3"
+		},
+		"ice_moon2":{
+			"x": 1248.35,
+			"y": 960.5,
+			"cameraX": 606.2340153452685,
+			"cameraY": 279.2519181585678,
+			"cameraZ": 0.639386189258312,
+			"rotSpeed": -0.07,
+			"radius": 34.452,
+			"element": "moon_ice"
+		},
+		"forest2":{
+			"x": 1783.7,
+			"y": 558.85,
+			"cameraX": 691.2404092071611,
+			"cameraY": 105.97826086956522,
+			"cameraZ": 0.639386189258312,
+			"rotSpeed": -0.06,
+			"radius": 97.68,
+			"checkPoint": true,
+			"element": "planet_forest"
+		}
+	},
+	"asteroids":{
+		"a1": { 
+			"radius":13.5,
+			"x":200.25,
+			"y":-122.6,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":128.3,
+				"height":128.3,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.025,
+				"x":0.5500000000000114,
+				"y":-0.4499999999999993,
+				"target":"black_moon"
+			},
+			"graph":"asteroid2"
+		},
+		"a2": { 
+			"radius":13.5,
+			"x":-988,
+			"y":990.85,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":252.6,
+				"height":129.15,
+				"angle":-1.2386322021484375,
+				"startAngle":0,
+				"speed":-0.05,
+				"x":0.8500000000000227,
+				"y":-4.2999999999999545,
+				"target":"ice_moon"
+			},
+			"graph":"asteroid2"
+		},
+		"a3": { 
+			"radius":15.817499999999999,
+			"x":-739.05,
+			"y":729.45,
+			"rotSpeed":0.09,
+			"orbit":{
+				"width":252.6,
+				"height":129.15,
+				"angle":-91.23951721191406,
+				"startAngle":0,
+				"speed":0.05,
+				"x":0.8500000000000227,
+				"y":-4.2999999999999545,
+				"target":"ice_moon"
+			},
+			"graph":"asteroid1"
+		},
+		"a5": { 
+			"radius":13.5,
+			"x":996.45,
+			"y":968.8,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":252.6,
+				"height":129.15,
+				"angle":-1.2386322021484375,
+				"startAngle":0,
+				"speed":-0.05,
+				"x":0.8500000000001364,
+				"y":-4.2999999999999545,
+				"target":"ice_moon2"
+			},
+			"graph":"asteroid2"
+		},
+		"a4": { 
+			"radius":15.817499999999999,
+			"x":1245.4,
+			"y":707.4,
+			"rotSpeed":0.09,
+			"orbit":{
+				"width":252.6,
+				"height":129.15,
+				"angle":-91.23951721191406,
+				"startAngle":0,
+				"speed":0.05,
+				"x":0.8500000000001364,
+				"y":-4.2999999999999545,
+				"target":"ice_moon2"
+			},
+			"graph":"asteroid1"
+		}
+	}
+}

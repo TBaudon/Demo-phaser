@@ -1,0 +1,209 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+	
+	"bestJumpNb" : 8,
+
+	"planets": {
+		"start":{
+			"x": 392.5,
+			"y": 231.3,
+			"cameraX": 399.5860284605434,
+			"cameraY": 236.63648124191462,
+			"cameraZ": 0.517464424320828,
+			"rotSpeed": -0.06,
+			"radius": 122.518,
+			"start": true,
+			"element": "planet_mars"
+		},
+		"black_moon":{
+			"x": 794.4,
+			"y": 235.3,
+			"cameraX": 400.46571798188876,
+			"cameraY": 238.70633893919793,
+			"cameraZ": 0.517464424320828,
+			"rotSpeed": 0.07,
+			"radius": 54.098,
+			"checkPoint": true,
+			"orbit":{
+				"width":402.05,
+				"height":402.05,
+				"angle":0,
+				"startAngle":0,
+				"speed":0.025,
+				"x":-0.39999999999997726,
+				"y":-0.35000000000002274,
+				"target":"start"
+			},
+			"element": "moon_black"
+		},
+		"end":{
+			"x": 523.85,
+			"y": -958.05,
+			"cameraX": 400.75032341526526,
+			"cameraY": 145.12289780077623,
+			"cameraZ": 0.517464424320828,
+			"rotSpeed": 0.06,
+			"radius": 169.81799999999998,
+			"end": true,
+			"element": "planet_forest"
+		},
+		"earth":{
+			"x": -508.6,
+			"y": -392.25,
+			"cameraX": 380.51746442432085,
+			"cameraY": 205.89909443725742,
+			"cameraZ": 0.517464424320828,
+			"rotSpeed": 0.06,
+			"radius": 74.14,
+			"checkPoint": true,
+			"element": "planet_earth"
+		},
+		"ice_moon":{
+			"x": -285.85,
+			"y": -104.75,
+			"cameraX": 172.22455315935215,
+			"cameraY": 155.27397835025593,
+			"cameraZ": 0.6713098934295544,
+			"rotSpeed": 0.06,
+			"radius": 53.812,
+			"orbit":{
+				"width":762.8,
+				"height":366.6,
+				"angle":-25.47857666015625,
+				"startAngle":-70,
+				"speed":-0.025,
+				"x":0.5,
+				"y":-0.19999999999998863,
+				"target":"earth"
+			},
+			"element": "moon_ice"
+		},
+		"earth2":{
+			"x": 1477.95,
+			"y": -477.55,
+			"cameraX": 399.1720569210867,
+			"cameraY": 240.4398447606727,
+			"cameraZ": 0.517464424320828,
+			"rotSpeed": 0.06,
+			"radius": 74.14,
+			"checkPoint": true,
+			"element": "planet_earth"
+		},
+		"black_moon2":{
+			"x": 1478.55,
+			"y": -125,
+			"cameraX": 589.8800033565494,
+			"cameraY": 225.4929932029873,
+			"cameraZ": 0.6713098934295544,
+			"rotSpeed": 0.06,
+			"radius": 54.098,
+			"orbit":{
+				"width":737.5,
+				"height":350.55,
+				"angle":0,
+				"startAngle":120,
+				"speed":-0.025,
+				"x":0.4500000000000455,
+				"y":-0.19999999999998863,
+				"target":"earth2"
+			},
+			"element": "moon_black"
+		}
+	},
+	"asteroids":{
+		"asteroid1": { 
+			"radius":24.4125,
+			"x":634.25,
+			"y":230.15,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":163.6,
+				"height":163.6,
+				"angle":0,
+				"startAngle":90,
+				"speed":-0.05,
+				"x":-0.1999999999999318,
+				"y":-0.35000000000002274,
+				"target":"black_moon"
+			},
+			"graph":"asteroid3"
+		},
+		"asteroid3": { 
+			"radius":24.4125,
+			"x":-674.05,
+			"y":-399.95,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":171.7,
+				"height":171.7,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.06,
+				"x":0.5,
+				"y":-2.8999999999999773,
+				"target":"earth"
+			},
+			"graph":"asteroid3"
+		},
+		"asteroid2": { 
+			"radius":24.4125,
+			"x":-446,
+			"y":-109.9,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":163.6,
+				"height":163.6,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.05,
+				"x":-0.19999999999998863,
+				"y":-0.3499999999999943,
+				"target":"ice_moon"
+			},
+			"graph":"asteroid3"
+		},
+		"asteroid4": { 
+			"radius":24.4125,
+			"x":1318.4,
+			"y":-130.15,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":163.6,
+				"height":163.6,
+				"angle":0,
+				"startAngle":180,
+				"speed":-0.05,
+				"x":-0.20000000000004547,
+				"y":-0.3499999999999943,
+				"target":"black_moon2"
+			},
+			"graph":"asteroid3"
+		},
+		"asteroid5": { 
+			"radius":24.4125,
+			"x":1314.4,
+			"y":-484,
+			"rotSpeed":0.08,
+			"orbit":{
+				"width":171.7,
+				"height":171.7,
+				"angle":0,
+				"startAngle":0,
+				"speed":-0.06,
+				"x":-1.6000000000001364,
+				"y":-5.649999999999977,
+				"target":"earth2"
+			},
+			"graph":"asteroid3"
+		}
+	}
+}

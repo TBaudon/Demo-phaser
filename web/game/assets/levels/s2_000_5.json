@@ -1,0 +1,90 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+	
+	"bestJumpNb" : 5,
+
+	"planets": {
+		"start":{
+			"x": 141.15,
+			"y": 208.75,
+			"cameraX": 195.71961515806007,
+			"cameraY": 214.88317298252505,
+			"cameraZ": 0.785391714117416,
+			"rotSpeed": 0.06,
+			"radius": 120.71400000000001,
+			"start": true,
+			"element": "planet_forest"
+		},
+		"moon_white":{
+			"x": -101.8,
+			"y": 575.35,
+			"cameraX": 336.8294965375258,
+			"cameraY": 378.72356354108183,
+			"cameraZ": 0.5989144675276062,
+			"rotSpeed": 0.09,
+			"radius": 75.92200000000001,
+			"element": "moon_white"
+		},
+		"moon_ice":{
+			"x": -429.9,
+			"y": 348.15,
+			"cameraX": 199.01927755942359,
+			"cameraY": 254.62848586936178,
+			"cameraZ": 0.5989144675276062,
+			"rotSpeed": 0.08,
+			"radius": 64.24,
+			"checkPoint": true,
+			"element": "moon_ice"
+		},
+		"moon_black":{
+			"x": 420.6,
+			"y": -53.65,
+			"cameraX": 232.94718240722563,
+			"cameraY": 140.78146475554684,
+			"cameraZ": 0.785391714117416,
+			"rotSpeed": 0.08,
+			"radius": 57.53,
+			"checkPoint": true,
+			"element": "moon_black"
+		},
+		"earth":{
+			"x": 968.05,
+			"y": 247.6,
+			"cameraX": 475.6892427154005,
+			"cameraY": 307.87089689791753,
+			"cameraZ": 0.6274755872779324,
+			"rotSpeed": 0.05,
+			"radius": 88.154,
+			"element": "planet_earth"
+		},
+		"moonToTheEnd":{
+			"x": 1270.45,
+			"y": 22.55,
+			"cameraX": 408.4702532771813,
+			"cameraY": 287.15819443620614,
+			"cameraZ": 0.4745239931194021,
+			"rotSpeed": 0.07,
+			"radius": 47.938,
+			"element": "moon_white"
+		},
+		"end":{
+			"x": 1881.25,
+			"y": -295.95,
+			"rotSpeed": 0.07,
+			"radius": 156.13400000000001,
+			"end": true,
+			"element": "planet_mars"
+		}
+	},
+	"asteroids":{
+	}
+}

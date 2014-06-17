@@ -27,5 +27,25 @@
     "LEVEL_SELECT_TXT" : [
         "Choose a level",
         "Choisis un niveau"
+    ],
+
+    "LEVEL_COMPLETED" : [
+        "Level completed!",
+        "Niveau terminé!"
+    ],
+
+    "JUMP" : [
+        "jumps",
+        "sauts"
+    ],
+
+    "LEFT" : [
+        "lefts",
+        "restants"
+    ],
+
+    "CLEAR" : [
+        "Clear game",
+        "Effacer partie"
     ]
 }

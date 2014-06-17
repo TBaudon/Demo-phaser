@@ -65,6 +65,7 @@
     <TypeScriptCompile Include="src\objects\robot\RobotPart.ts" />
     <TypeScriptCompile Include="src\states\Boot.ts" />
     <TypeScriptCompile Include="src\Demo.ts" />
+    <TypeScriptCompile Include="src\states\EndLevel.ts" />
     <TypeScriptCompile Include="src\states\Game.ts" />
     <TypeScriptCompile Include="src\objects\level\Level.ts" />
     <TypeScriptCompile Include="src\states\LevelSelect.ts" />
@@ -104,7 +105,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50039</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49434/</IISUrl>
+          <IISUrl>http://localhost:50039/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
           <CustomServerUrl>http://ws.desk.telaxo.net/thomasb/RetD/html5/Demo/web/</CustomServerUrl>
@@ -115,9 +116,9 @@
   </ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>False</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
     <TypeScriptOutFile>web/game/js/game.js</TypeScriptOutFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

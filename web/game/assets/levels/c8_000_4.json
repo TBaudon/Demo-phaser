@@ -1,0 +1,103 @@
+{
+	"name": "level",
+	"description": "Level description goes here",
+	"mustCheckAll":true,
+
+	"gravity": {
+		"x": 0,
+		"y": 1
+	},
+
+	"jumpStrength": 25,
+	
+	"bestJumpNb": 4,
+
+	"planets": {
+		"4":{
+			"x": 237.95,
+			"y": 26.1,
+			"cameraX": 95.7855464971673,
+			"cameraY": 272.2122426419787,
+			"cameraZ": 1.1054304269725024,
+			"rotSpeed": 0.03,
+			"radius": 38.72,
+			"element": "moon_black"
+		},
+		"3":{
+			"x": -93.85,
+			"y": 130.8,
+			"cameraX": 108.19567979669633,
+			"cameraY": 331.82973316391355,
+			"cameraZ": 1.2706480304955527,
+			"rotSpeed": 0.03,
+			"radius": 38.522,
+			"element": "moon_ice"
+		},
+		"5":{
+			"x": 509,
+			"y": 158.9,
+			"cameraX": 512.5328174658007,
+			"cameraY": 76.60632858919443,
+			"cameraZ": 1.1054304269725024,
+			"rotSpeed": -0.03,
+			"radius": 38.522,
+			"element": "moon_white"
+		},
+		"1":{
+			"x": -505.95,
+			"y": 202.5,
+			"cameraX": 165.56543837357054,
+			"cameraY": 272.9987293519695,
+			"cameraZ": 1.2706480304955527,
+			"rotSpeed": 0.025,
+			"radius": 70.796,
+			"start": true,
+			"element": "planet_earth"
+		},
+		"6":{
+			"x": 711.45,
+			"y": -90.65,
+			"cameraX": 619.2068536686473,
+			"cameraY": 143.15324029293905,
+			"cameraZ": 1.1054304269725024,
+			"rotSpeed": -0.023,
+			"radius": 71.896,
+			"checkPoint": true,
+			"element": "planet_forest"
+		},
+		"7":{
+			"x": 991.35,
+			"y": 426.45,
+			"cameraX": 695.6634304207121,
+			"cameraY": 342.4811218985977,
+			"cameraZ": 0.43149946062567424,
+			"rotSpeed": 0.01,
+			"radius": 115.67599999999999,
+			"end": true,
+			"element": "planet_mars"
+		},
+		"2":{
+			"x": 178.15,
+			"y": 410.75,
+			"cameraX": 146.80116070194833,
+			"cameraY": 214.0666021832251,
+			"cameraZ": 1.1054304269725024,
+			"rotSpeed": -0.02,
+			"radius": 82.126,
+			"checkPoint": true,
+			"element": "planet_water"
+		},
+		"8":{
+			"x": 610.7,
+			"y": 428.4,
+			"cameraX": 115.02003592648894,
+			"cameraY": 238.109713969877,
+			"cameraZ": 1.1054304269725024,
+			"rotSpeed": 0.03,
+			"radius": 46.97,
+			"element": "moon_black"
+		}
+	},
+	"asteroids":{
+	}
+}
