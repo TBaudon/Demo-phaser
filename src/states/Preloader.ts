@@ -21,6 +21,7 @@ module Demo {
 
             this.load.image('background', 'game/assets/img/fond.jpg');
             this.load.image('title', 'game/assets/img/titre.png');
+            this.load.image('jeux.com', 'game/assets/img/logo2.png');
 
             // load dico
             var dicoString: string = (String)(this.game.cache.getText('texts'));

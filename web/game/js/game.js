@@ -182,6 +182,9 @@ var Demo;
             this.txt.y = (this.height - this.txt.height) / 2;
 
             this.input.useHandCursor = true;
+            this.input.pixelPerfectOver = true;
+            this.input.pixelPerfectClick = true;
+            this.input.pixelPerfectAlpha = 0.1;
         }
         SuperButton.prototype.animate = function () {
             if (!this.animating) {
@@ -786,9 +789,11 @@ var Demo;
             this.state.add('Menu', Demo.Menu, false);
             this.state.add('LevelSelect', Demo.LevelSelect, false);
             this.state.add('Game', Demo.GameState, false);
+            this.state.add('Trailer', Demo.Trailer, false);
 
             Game.dico = new Demo.TextManager();
             Game.gameSave = new Demo.GameSave();
+            Game.navigate = new Demo.Navigate('Space-Hop', '18-agilite');
 
             this.state.start('Boot');
         }
@@ -883,7 +888,6 @@ var Demo;
             this.game.add.tween(this.scoreBgGroup).to({ alpha: 1 }, 250, null, true, 1000);
         }
         EndLevel.prototype.addStar = function () {
-            console.log("hey");
             if (this.starsLit < this.starsToLight) {
                 this.stars[this.starsLit].loadTexture('gui', 'star_on');
                 this.starsLit++;
@@ -1330,10 +1334,23 @@ var Demo;
 
             title.x = (800 - title.width) / 2;
             var btnText = Demo.Game.dico.getText('PLAY_BTN');
-            this.button = new Demo.SuperButton(this.game, this.game.world.centerX, this.game.world.centerY, this.onButtonPressed, this, btnText);
+            this.button = new Demo.SuperButton(this.game, this.game.world.centerX - 150, this.game.world.centerY, this.onButtonPressed, this, btnText);
             this.game.add.existing(this.button);
             this.button.x -= this.button.width / 2;
             this.button.y += 50;
+
+            var moreText = Demo.Game.dico.getText('MORE_GAME');
+            this.moreGame = new Demo.SuperButton(this.game, this.game.world.centerX + 150, this.game.world.centerY, this.onMorePressed, this, moreText);
+            this.game.add.existing(this.moreGame);
+            this.moreGame.y += 50;
+            this.moreGame.x -= this.moreGame.width / 2;
+
+            this.logo = this.game.add.sprite(0, 0, 'jeux.com');
+            this.logo.inputEnabled = true;
+            this.logo.input.useHandCursor = true;
+            this.logo.events.onInputDown.add(this.gotoJDC, this);
+            this.logo.x = 800 - this.logo.width - 10;
+            this.logo.y = 10;
 
             this.blackTransition = this.game.add.graphics(0, 0);
             this.blackTransition.beginFill(0x00000000, 1);
@@ -1345,6 +1362,14 @@ var Demo;
 
         Menu.prototype.onButtonPressed = function () {
             this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 300, null, true).onComplete.add(this.go, this);
+        };
+
+        Menu.prototype.onMorePressed = function () {
+            Demo.Game.navigate.gotoMoreGame('Menu', 'Moregames');
+        };
+
+        Menu.prototype.gotoJDC = function () {
+            Demo.Game.navigate.gotoJDC('Menu', 'Logo');
         };
 
         Menu.prototype.go = function () {
@@ -1375,6 +1400,7 @@ var Demo;
 
             this.load.image('background', 'game/assets/img/fond.jpg');
             this.load.image('title', 'game/assets/img/titre.png');
+            this.load.image('jeux.com', 'game/assets/img/logo2.png');
 
             var dicoString = (String)(this.game.cache.getText('texts'));
             var dico = JSON.parse(dicoString);
@@ -1430,6 +1456,17 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
+    var Trailer = (function (_super) {
+        __extends(Trailer, _super);
+        function Trailer() {
+            _super.apply(this, arguments);
+        }
+        return Trailer;
+    })(Phaser.State);
+    Demo.Trailer = Trailer;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
     var GameSave = (function () {
         function GameSave() {
             this.key = "saveData";
@@ -1467,6 +1504,43 @@ var Demo;
         return GameSave;
     })();
     Demo.GameSave = GameSave;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Navigate = (function () {
+        function Navigate(campaign, categorie) {
+            Navigate.instance = this;
+            this.domain = window.location.host;
+            this.campaign = campaign;
+            this.categorie = categorie;
+            this.jdc = 'http://www.jeux.com/';
+        }
+        Navigate.prototype.gotoJDC = function (content, medium) {
+            this.navigate(this.makeUrl(content, medium));
+        };
+
+        Navigate.prototype.gotoMoreGame = function (content, medium) {
+            this.navigate(this.makeUrl(content, medium, true));
+        };
+
+        Navigate.prototype.makeUrl = function (content, medium, cat) {
+            if (typeof cat === "undefined") { cat = false; }
+            var url = this.jdc;
+            if (cat)
+                url += this.categorie + '/';
+            url += '?utm_source=' + this.domain;
+            url += '&utm_medium=' + medium;
+            url += '&utm_content=' + content;
+            url += '&utm_campaign=' + this.campaign;
+            return url;
+        };
+
+        Navigate.prototype.navigate = function (url) {
+            window.open(url, '_blank');
+        };
+        return Navigate;
+    })();
+    Demo.Navigate = Navigate;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {

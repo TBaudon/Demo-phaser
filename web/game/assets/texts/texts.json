@@ -14,6 +14,11 @@
         "Jouer"
     ],
 
+    "MORE_GAME" : [
+        "More game",
+        "Plus de jeux"
+    ],
+
     "NEXT_BTN" : [
         "Next",
         "Suivant"
@@ -21,7 +26,7 @@
 
     "PREV_BTN" : [
         "Previous",
-        "Precedent"
+        "Précédent"
     ],
 
     "LEVEL_SELECT_TXT" : [

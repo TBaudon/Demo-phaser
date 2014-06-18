@@ -100,7 +100,6 @@
         }
 
         addStar() {
-            console.log("hey");
             if (this.starsLit < this.starsToLight) {
 
                 this.stars[this.starsLit].loadTexture('gui', 'star_on');

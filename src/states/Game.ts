@@ -221,9 +221,6 @@ module Demo {
                 Game.gameSave.saveScore(GameState.currentLevel, score);
 
                 new EndLevel(this, score, nbJump, bestJump);
-
-                //this.game.time.events.add(Phaser.Timer.SECOND * 3, this.gotoNextLevel, this);
-                //this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 1000, null, true, 2000);
             }
         }
 

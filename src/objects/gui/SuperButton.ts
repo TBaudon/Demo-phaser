@@ -18,11 +18,13 @@
             this.txt.y = (this.height - this.txt.height) / 2;
 
             this.input.useHandCursor = true;
+            this.input.pixelPerfectOver = true;
+            this.input.pixelPerfectClick = true;
+            this.input.pixelPerfectAlpha = 0.1;
         }
 
         animate() {
             if (!this.animating) {
-                //this.game.add.tween(this.txt).to({ alpha: 0 }, 300, null, true);
                 this.animating = true;
                 this.txt.alpha = 0;
             }
