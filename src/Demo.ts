@@ -6,6 +6,7 @@
         static gameSave: GameSave;
         static levelList: Object;
         static navigate: Navigate;
+        static music: Phaser.Sound;
 
         constructor() {
             super(800, 480, Phaser.AUTO, 'content', null);

@@ -22,6 +22,7 @@ module Demo {
             this.load.image('background', 'game/assets/img/fond.jpg');
             this.load.image('title', 'game/assets/img/titre.png');
             this.load.image('jeux.com', 'game/assets/img/logo2.png');
+            this.load.binary('trailer', 'game/assets/trailer.mp4');
 
             // load dico
             var dicoString: string = (String)(this.game.cache.getText('texts'));
@@ -74,6 +75,7 @@ module Demo {
         }
 
         startMainMenu() {
+            //this.game.state.start('Trailer', true);
             this.game.state.start('Menu', true);
         }
 

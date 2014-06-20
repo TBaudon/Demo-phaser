@@ -6,6 +6,34 @@
 };
 var Demo;
 (function (Demo) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
+
+            this.state.add('Boot', Demo.Boot, false);
+            this.state.add('Preload', Demo.Preloader, false);
+            this.state.add('Menu', Demo.Menu, false);
+            this.state.add('LevelSelect', Demo.LevelSelect, false);
+            this.state.add('Game', Demo.GameState, false);
+            this.state.add('Trailer', Demo.Trailer, false);
+
+            Game.dico = new Demo.TextManager();
+            Game.gameSave = new Demo.GameSave();
+            Game.navigate = new Demo.Navigate('Space-Hop', '18-agilite');
+
+            this.state.start('Boot');
+        }
+        return Game;
+    })(Phaser.Game);
+    Demo.Game = Game;
+})(Demo || (Demo = {}));
+
+window.onload = function () {
+    var game = new Demo.Game();
+};
+var Demo;
+(function (Demo) {
     var Asteroid = (function (_super) {
         __extends(Asteroid, _super);
         function Asteroid(game, frame, x, y, radius, rotSpeed, orbit) {
@@ -101,6 +129,127 @@ var Demo;
         return Orbit;
     })();
     Demo.Orbit = Orbit;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Planet = (function (_super) {
+        __extends(Planet, _super);
+        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
+            if (typeof orbit === "undefined") { orbit = null; }
+            if (typeof bounce === "undefined") { bounce = false; }
+            _super.call(this, game, x, y, 'planets', element);
+            this.BASE_RADIUS = 180;
+
+            if (element == 'gas_1' || element == 'gas_2' || element == 'gas_3') {
+                var elementID = element.charAt(element.length - 1);
+                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
+                var p = new Phaser.Sprite(game, x, y, 'planets', element);
+
+                this.gas.anchor.set(0.5, 0.5);
+                this.gas2.anchor.set(0.5, 0.5);
+                p.anchor.set(0.5, 0.5);
+
+                this.gas.x = -0.5;
+                this.gas.y = -0.5;
+
+                this.gas2.x = -0.5;
+                this.gas2.y = -0.5;
+
+                p.x = -0.5;
+                p.y = -0.5;
+
+                this.addChild(this.gas);
+                this.addChild(this.gas2);
+                this.addChild(p);
+            }
+
+            if (radius == 0)
+                radius = this.BASE_RADIUS;
+
+            this.anchor.set(0.5, 0.5);
+            this.cameraX = cameraX;
+            this.cameraY = cameraY;
+            this.cameraZ = cameraZ;
+            this.orbit = orbit;
+            this.bounce = bounce;
+
+            this.radius = radius;
+            this.rotSpeed = rotSpeed;
+
+            var scale = radius / this.BASE_RADIUS;
+            this.scale.x = scale;
+            this.scale.y = scale;
+
+            this.start = start;
+            this.checkPoint = checkPoint;
+            this.end = end;
+            this.checked = false;
+            this.orbitPos = 0;
+        }
+        Planet.initFromLvl = function (game, planet) {
+            var camX = 400;
+            var camY = 240;
+            var camZ = 1;
+            var elem = "planet_earth";
+            var start = false;
+            var checkPoint = false;
+            var end = false;
+            var bounce = false;
+
+            if (planet.cameraX != undefined)
+                camX = planet.cameraX;
+            if (planet.cameraY != undefined)
+                camY = planet.cameraY;
+            if (planet.cameraZ != undefined)
+                camZ = planet.cameraZ;
+            if (planet.element != undefined)
+                elem = planet.element;
+            if (planet.start)
+                start = planet.start;
+            if (planet.checkPoint)
+                checkPoint = planet.checkPoint;
+            if (planet.end)
+                end = planet.end;
+            if (planet.bounce)
+                bounce = planet.bounce;
+
+            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
+
+            return nPlanet;
+        };
+
+        Planet.prototype.update = function () {
+            this.rotation += this.rotSpeed;
+
+            if (this.gas)
+                this.gas.rotation += this.rotSpeed;
+            if (this.gas2)
+                this.gas2.rotation -= 2 * this.rotSpeed;
+
+            this.updateOrbit();
+        };
+
+        Planet.prototype.updateOrbit = function () {
+            if (this.orbit != null) {
+                this.orbitPos += this.orbit.speed;
+                var orbitOffset = (Math.PI * this.orbit.startAngle) / 180;
+
+                var angle = (Math.PI * this.orbit.angle) / 180;
+
+                var offsetX = this.orbit.planet.x + this.orbit.x;
+                var offsetY = this.orbit.planet.y + this.orbit.y;
+
+                var orbitX = Math.cos(this.orbitPos + orbitOffset) * this.orbit.width;
+                var orbitY = Math.sin(this.orbitPos + orbitOffset) * this.orbit.height;
+
+                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
+                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
+            }
+        };
+        return Planet;
+    })(Phaser.Sprite);
+    Demo.Planet = Planet;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -338,124 +487,47 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Planet = (function (_super) {
-        __extends(Planet, _super);
-        function Planet(game, x, y, element, radius, rotSpeed, cameraX, cameraY, cameraZ, start, checkPoint, end, orbit, bounce) {
-            if (typeof orbit === "undefined") { orbit = null; }
-            if (typeof bounce === "undefined") { bounce = false; }
-            _super.call(this, game, x, y, 'planets', element);
-            this.BASE_RADIUS = 180;
-
-            if (element == 'gas_1' || element == 'gas_2' || element == 'gas_3') {
-                var elementID = element.charAt(element.length - 1);
-                this.gas = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
-                this.gas2 = new Phaser.Sprite(game, x, y, 'planets', 'gas_bg' + elementID);
-                var p = new Phaser.Sprite(game, x, y, 'planets', element);
-
-                this.gas.anchor.set(0.5, 0.5);
-                this.gas2.anchor.set(0.5, 0.5);
-                p.anchor.set(0.5, 0.5);
-
-                this.gas.x = -0.5;
-                this.gas.y = -0.5;
-
-                this.gas2.x = -0.5;
-                this.gas2.y = -0.5;
-
-                p.x = -0.5;
-                p.y = -0.5;
-
-                this.addChild(this.gas);
-                this.addChild(this.gas2);
-                this.addChild(p);
-            }
-
-            if (radius == 0)
-                radius = this.BASE_RADIUS;
-
-            this.anchor.set(0.5, 0.5);
-            this.cameraX = cameraX;
-            this.cameraY = cameraY;
-            this.cameraZ = cameraZ;
-            this.orbit = orbit;
-            this.bounce = bounce;
-
-            this.radius = radius;
-            this.rotSpeed = rotSpeed;
-
-            var scale = radius / this.BASE_RADIUS;
-            this.scale.x = scale;
-            this.scale.y = scale;
-
-            this.start = start;
-            this.checkPoint = checkPoint;
-            this.end = end;
-            this.checked = false;
-            this.orbitPos = 0;
+    var Level = (function () {
+        function Level() {
         }
-        Planet.initFromLvl = function (game, planet) {
-            var camX = 400;
-            var camY = 240;
-            var camZ = 1;
-            var elem = "planet_earth";
-            var start = false;
-            var checkPoint = false;
-            var end = false;
-            var bounce = false;
-
-            if (planet.cameraX != undefined)
-                camX = planet.cameraX;
-            if (planet.cameraY != undefined)
-                camY = planet.cameraY;
-            if (planet.cameraZ != undefined)
-                camZ = planet.cameraZ;
-            if (planet.element != undefined)
-                elem = planet.element;
-            if (planet.start)
-                start = planet.start;
-            if (planet.checkPoint)
-                checkPoint = planet.checkPoint;
-            if (planet.end)
-                end = planet.end;
-            if (planet.bounce)
-                bounce = planet.bounce;
-
-            var nPlanet = new Planet(game, planet.x, planet.y, elem, planet.radius, planet.rotSpeed, camX, camY, camZ, start, checkPoint, end, planet.orbit, bounce);
-
-            return nPlanet;
+        return Level;
+    })();
+    Demo.Level = Level;
+})(Demo || (Demo = {}));
+var Demo;
+(function (Demo) {
+    var Vector2D = (function () {
+        function Vector2D(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Vector2D.prototype.normalize = function () {
+            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
         };
 
-        Planet.prototype.update = function () {
-            this.rotation += this.rotSpeed;
-
-            if (this.gas)
-                this.gas.rotation += this.rotSpeed;
-            if (this.gas2)
-                this.gas2.rotation -= 2 * this.rotSpeed;
-
-            this.updateOrbit();
+        Vector2D.prototype.getNorm = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
         };
 
-        Planet.prototype.updateOrbit = function () {
-            if (this.orbit != null) {
-                this.orbitPos += this.orbit.speed;
-                var orbitOffset = (Math.PI * this.orbit.startAngle) / 180;
-
-                var angle = (Math.PI * this.orbit.angle) / 180;
-
-                var offsetX = this.orbit.planet.x + this.orbit.x;
-                var offsetY = this.orbit.planet.y + this.orbit.y;
-
-                var orbitX = Math.cos(this.orbitPos + orbitOffset) * this.orbit.width;
-                var orbitY = Math.sin(this.orbitPos + orbitOffset) * this.orbit.height;
-
-                this.x = orbitX * Math.cos(angle) - orbitY * Math.sin(angle) + offsetX;
-                this.y = orbitY * Math.cos(angle) + orbitX * Math.sin(angle) + offsetY;
-            }
+        Vector2D.prototype.scal = function (vector) {
+            return vector.x * this.x + vector.y * this.y;
         };
-        return Planet;
-    })(Phaser.Sprite);
-    Demo.Planet = Planet;
+
+        Vector2D.prototype.reflect = function (vector) {
+            var n = vector.normalize();
+            var scal = this.scal(n);
+            var repX = this.x - 2 * scal * n.x;
+            var repY = this.y - 2 * scal * n.y;
+
+            return new Vector2D(repX, repY);
+        };
+
+        Vector2D.prototype.mult = function (coef) {
+            return new Vector2D(this.x * coef, this.y * coef);
+        };
+        return Vector2D;
+    })();
+    Demo.Vector2D = Vector2D;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
@@ -480,8 +552,6 @@ var Demo;
 
             this.animations.add('idle');
             this.animations.play('idle', 60, true);
-
-            game.game.input.onDown.add(this.jump, this);
 
             this.planets = planets;
             this.vitX = 0;
@@ -630,41 +700,6 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Vector2D = (function () {
-        function Vector2D(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        Vector2D.prototype.normalize = function () {
-            return new Vector2D(this.x / this.getNorm(), this.y / this.getNorm());
-        };
-
-        Vector2D.prototype.getNorm = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
-        };
-
-        Vector2D.prototype.scal = function (vector) {
-            return vector.x * this.x + vector.y * this.y;
-        };
-
-        Vector2D.prototype.reflect = function (vector) {
-            var n = vector.normalize();
-            var scal = this.scal(n);
-            var repX = this.x - 2 * scal * n.x;
-            var repY = this.y - 2 * scal * n.y;
-
-            return new Vector2D(repX, repY);
-        };
-
-        Vector2D.prototype.mult = function (coef) {
-            return new Vector2D(this.x * coef, this.y * coef);
-        };
-        return Vector2D;
-    })();
-    Demo.Vector2D = Vector2D;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
     var RobotExplosion = (function () {
         function RobotExplosion(game, x, y) {
             this.game = game;
@@ -779,34 +814,6 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, 800, 480, Phaser.AUTO, 'content', null);
-
-            this.state.add('Boot', Demo.Boot, false);
-            this.state.add('Preload', Demo.Preloader, false);
-            this.state.add('Menu', Demo.Menu, false);
-            this.state.add('LevelSelect', Demo.LevelSelect, false);
-            this.state.add('Game', Demo.GameState, false);
-            this.state.add('Trailer', Demo.Trailer, false);
-
-            Game.dico = new Demo.TextManager();
-            Game.gameSave = new Demo.GameSave();
-            Game.navigate = new Demo.Navigate('Space-Hop', '18-agilite');
-
-            this.state.start('Boot');
-        }
-        return Game;
-    })(Phaser.Game);
-    Demo.Game = Game;
-})(Demo || (Demo = {}));
-
-window.onload = function () {
-    var game = new Demo.Game();
-};
-var Demo;
-(function (Demo) {
     var EndLevel = (function () {
         function EndLevel(gameState, score, nbJump, bestJump) {
             this.gameState = gameState;
@@ -836,7 +843,7 @@ var Demo;
                 star.scale.y = 3;
 
                 star.x = (800 - 2 * (star.width + 10)) / 2 + (star.width + 10) * i;
-                star.y = (480 - star.height) / 2 + 30;
+                star.y = (480 - star.height) / 2 - 10;
 
                 if (i == 1) {
                     star.scale.x = 4;
@@ -858,31 +865,42 @@ var Demo;
             var jumpLefts = (bestJump + 4) - nbJump;
             if (jumpLefts < 0)
                 jumpLefts = 0;
-            var jumStr = jumpLefts + " " + jumpWord + " " + leftWord;
+            var jumStr = nbJump + " " + jumpWord;
             var jumpText = new Phaser.Text(this.game, 0, 0, jumStr, style2);
             this.scoreBgGroup.add(jumpText);
             jumpText.x = (800 - jumpText.width) / 2;
-            jumpText.y = (480 - jumpText.height) / 3 - 25;
+            jumpText.y = (480 - jumpText.height) / 3 - 50;
 
-            var levelBTN = new Demo.SuperButton(this.game, 0, 380, this.gotoLevelSelect, this, "TMPLevels");
-            levelBTN.x = -60;
-            var restartBTN = new Demo.SuperButton(this.game, 0, 380, this.restart, this, "TMPRestart");
-            restartBTN.x = (800 - restartBTN.width) / 2;
-            var nextBTN = new Demo.SuperButton(this.game, 0, 380, this.gotoNext, this, 'TMPNextlevel');
-            nextBTN.x = 430;
+            var levelBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.gotoLevelSelect, this, 'icon_list', 'icon_list', 'icon_list', 'icon_list');
+            levelBTN.input.useHandCursor = true;
+            var restartBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.restart, this, 'icon_restart', 'icon_restart', 'icon_restart', 'icon_restart');
+            restartBTN.input.useHandCursor = true;
+            var nextBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.gotoNext, this, 'icon_arrow', 'icon_arrow', 'icon_arrow', 'icon_arrow');
+            nextBTN.input.useHandCursor = true;
+
+            levelBTN.x = (800 - (levelBTN.width + restartBTN.width + nextBTN.width + 60)) / 2;
+            levelBTN.y = 310;
+
+            restartBTN.x = levelBTN.x + levelBTN.width + 30;
+            restartBTN.y = levelBTN.y;
+
+            nextBTN.x = restartBTN.x + restartBTN.width + 30;
+            nextBTN.y = restartBTN.y;
 
             this.scoreBgGroup.add(levelBTN);
             this.scoreBgGroup.add(restartBTN);
-
-            if (score > 0) {
-                this.scoreBgGroup.add(nextBTN);
-            }
+            this.scoreBgGroup.add(nextBTN);
 
             for (var i = 0; i < score; ++i) {
                 var timer = this.game.time.create(true);
                 timer.add(2000 + i * 750, this.addStar, this);
                 timer.start();
             }
+
+            var moreGameBtn = new Demo.SuperButton(this.game, 0, 380, this.onMoreGame, this, Demo.Game.dico.getText('MORE_GAME'));
+            moreGameBtn.x = (800 - moreGameBtn.width) / 2;
+
+            this.scoreBgGroup.add(moreGameBtn);
 
             this.game.add.tween(gameState.blackTransition).to({ alpha: 0.3 }, 250, null, true, 1000);
             this.game.add.tween(this.scoreBgGroup).to({ alpha: 1 }, 250, null, true, 1000);
@@ -908,6 +926,10 @@ var Demo;
         EndLevel.prototype.gotoNext = function () {
             this.gameState.gotoNextLevel();
         };
+
+        EndLevel.prototype.onMoreGame = function () {
+            Demo.Game.navigate.gotoMoreGame('Interlevel', 'Moregames');
+        };
         return EndLevel;
     })();
     Demo.EndLevel = EndLevel;
@@ -932,6 +954,8 @@ var Demo;
             this.arrows = new Array();
             this.checks = new Array();
             this.orbits = new Array();
+
+            this.interlevel = false;
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -1000,7 +1024,6 @@ var Demo;
 
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text = new Phaser.Text(this.game, 5, 5, this.level.description, style);
-            this.ui.add(text);
 
             var resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
             resetKey.onDown.add(this.restart, this);
@@ -1013,6 +1036,44 @@ var Demo;
             this.ui.add(this.blackTransition);
 
             this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
+
+            var bmp = new Phaser.BitmapData(this.game, 'clickZone', 800, 480);
+            this.clickZone = new Phaser.Sprite(this.game, 0, 0, bmp);
+            this.ui.add(this.clickZone);
+            this.clickZone.inputEnabled = true;
+            this.clickZone.events.onInputDown.add(this.jump, this);
+
+            this.logo = new Phaser.Sprite(this.game, 0, 0, 'jeux.com');
+            this.logo.inputEnabled = true;
+            this.logo.input.useHandCursor = true;
+
+            this.logo.events.onInputDown.add(this.gotoJDC, this);
+            this.logo.scale.set(0.8, 0.8);
+            this.logo.x = 800 - this.logo.width - 10;
+            this.logo.y = 480 - this.logo.height - 10;
+            this.ui.add(this.logo);
+
+            this.muteBtn = this.game.add.button(10, 10, 'gui', this.mute, this, 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', this.ui);
+            if (Demo.Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            this.muteBtn.scale.set(0.75, 0.75);
+            this.muteBtn.input.useHandCursor = true;
+
+            var restartBTN = this.game.add.button(this.muteBtn.x + this.muteBtn.width + 10, 10, 'gui', this.restart, this, 'icon_restart', 'icon_restart', 'icon_restart', 'icon_restart', this.ui);
+            restartBTN.scale.set(0.75, 0.75);
+            restartBTN.input.useHandCursor = true;
+        };
+
+        GameState.prototype.jump = function () {
+            this.player.jump();
+        };
+
+        GameState.prototype.mute = function () {
+            Demo.Game.music.mute = !Demo.Game.music.mute;
+            if (Demo.Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            else
+                this.muteBtn.setFrames('icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
         };
 
         GameState.prototype.restart = function () {
@@ -1024,6 +1085,13 @@ var Demo;
             this.game.add.existing(arrow);
             this.gameWorld.add(arrow);
             this.arrows.push(arrow);
+        };
+
+        GameState.prototype.gotoJDC = function () {
+            if (!this.interlevel)
+                Demo.Game.navigate.gotoJDC('Ingame', 'Logo');
+            else
+                Demo.Game.navigate.gotoJDC('Interlevel', 'Logo');
         };
 
         GameState.prototype.update = function () {
@@ -1084,11 +1152,12 @@ var Demo;
                 else if (nbJump > bestJump + 2 && nbJump < bestJump + 4)
                     score = 1;
                 else
-                    score = 0;
+                    score = 1;
 
                 Demo.Game.gameSave.saveScore(GameState.currentLevel, score);
 
                 new Demo.EndLevel(this, score, nbJump, bestJump);
+                this.interlevel = true;
             }
         };
 
@@ -1184,15 +1253,6 @@ var Demo;
 })(Demo || (Demo = {}));
 var Demo;
 (function (Demo) {
-    var Level = (function () {
-        function Level() {
-        }
-        return Level;
-    })();
-    Demo.Level = Level;
-})(Demo || (Demo = {}));
-var Demo;
-(function (Demo) {
     var LevelSelect = (function (_super) {
         __extends(LevelSelect, _super);
         function LevelSelect() {
@@ -1250,13 +1310,26 @@ var Demo;
                 }
             }
 
+            this.popupDelete = false;
+
             var nextBTN = new Demo.SuperButton(this.game, 430, 380, this.nextPage, this, Demo.Game.dico.getText('NEXT_BTN'));
             var prevBTN = new Demo.SuperButton(this.game, -60, 380, this.prevPage, this, Demo.Game.dico.getText('PREV_BTN'));
-            var clearBTN = new Demo.SuperButton(this.game, 0, 380, this.clearData, this, Demo.Game.dico.getText('CLEAR'));
-            clearBTN.x = (800 - clearBTN.width) / 2;
+            var moreBTN = new Demo.SuperButton(this.game, 0, 380, this.onMorePressed, this, Demo.Game.dico.getText('MORE_GAME'));
+            moreBTN.x = (800 - moreBTN.width) / 2;
+
+            this.muteBtn = this.game.add.button(10, 10, 'gui', this.mute, this, 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
+            if (Demo.Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            this.muteBtn.scale.set(0.75, 0.75);
+            this.muteBtn.input.useHandCursor = true;
+
+            var clearBTN = new Phaser.Button(this.game, this.muteBtn.x + this.muteBtn.width + 10, 10, 'gui', this.confirmDelete, this, 'icon_trash', 'icon_trash', 'icon_trash', 'icon_trash');
+            clearBTN.scale.set(0.75, 0.75);
+            clearBTN.input.useHandCursor = true;
 
             this.game.add.existing(nextBTN);
             this.game.add.existing(prevBTN);
+            this.game.add.existing(moreBTN);
             this.game.add.existing(clearBTN);
 
             var SelectText = new Phaser.Text(this.game, 0, 40, Demo.Game.dico.getText("LEVEL_SELECT_TXT"), { font: 'italic bold 32px arial', fill: '#ffffff' });
@@ -1268,10 +1341,26 @@ var Demo;
             this.blackTransition.endFill();
 
             this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
+
+            this.logo = this.game.add.sprite(0, 0, 'jeux.com');
+            this.logo.inputEnabled = true;
+            this.logo.input.useHandCursor = true;
+            this.logo.events.onInputDown.add(this.gotoJDC, this);
+            this.logo.scale.set(0.8, 0.8);
+            this.logo.x = 800 - this.logo.width - 10;
+            this.logo.y = 10;
+        };
+
+        LevelSelect.prototype.mute = function () {
+            Demo.Game.music.mute = !Demo.Game.music.mute;
+            if (Demo.Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            else
+                this.muteBtn.setFrames('icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
         };
 
         LevelSelect.prototype.lauchLevel = function (level) {
-            if (!this.lauchingLevel) {
+            if (!this.lauchingLevel && !this.popupDelete) {
                 Demo.GameState.currentLevel = level;
                 this.lauchingLevel = true;
                 this.game.add.tween(this.blackTransition).to({ alpha: 1 }, 300, null, true).onComplete.add(this.gotoGame, this);
@@ -1283,7 +1372,7 @@ var Demo;
         };
 
         LevelSelect.prototype.nextPage = function () {
-            if (!this.moving && this.currentPage < this.maxPage) {
+            if (!this.moving && this.currentPage < this.maxPage && !this.popupDelete) {
                 for (var i = 0; i < this.buttons.length; ++i) {
                     this.moving = true;
                     var currentBTN = this.buttons[i];
@@ -1295,7 +1384,7 @@ var Demo;
         };
 
         LevelSelect.prototype.prevPage = function () {
-            if (!this.moving && this.currentPage > 0) {
+            if (!this.moving && this.currentPage > 0 && !this.popupDelete) {
                 for (var i = 0; i < this.buttons.length; ++i) {
                     this.moving = true;
                     var currentBTN = this.buttons[i];
@@ -1314,6 +1403,46 @@ var Demo;
         LevelSelect.prototype.stopMove = function () {
             this.moving = false;
         };
+
+        LevelSelect.prototype.onMorePressed = function () {
+            Demo.Game.navigate.gotoMoreGame('Levels', 'Moregames');
+        };
+
+        LevelSelect.prototype.gotoJDC = function () {
+            Demo.Game.navigate.gotoJDC('Levels', 'Logo');
+        };
+
+        LevelSelect.prototype.confirmDelete = function () {
+            if (!this.popupDelete) {
+                this.popupDelete = true;
+                var style = { font: 'italic bold 24px arial', fill: '#ffffff' };
+                var text = new Phaser.Text(this.game, this.game.world.centerX, 100, Demo.Game.dico.getText('CONFIRM_DELETE'), style);
+
+                var popup = this.game.add.graphics((800 - text.width * 1.2) / 2, (480 - 120) / 2);
+
+                popup.beginFill(0x000000, 0.5);
+                popup.drawRect(0, 0, text.width * 1.2, 140);
+                popup.endFill();
+
+                this.game.add.existing(text);
+                text.x = (800 - text.width) / 2;
+                text.y = (480 - 120) / 2 + 10;
+
+                var yesBTN = new Demo.SuperButton(this.game, 0, 0, this.clearData, this, Demo.Game.dico.getText('YES'));
+                var noBTN = new Demo.SuperButton(this.game, 0, 0, this.cancelClear, this, Demo.Game.dico.getText('NO'));
+                this.game.add.existing(yesBTN);
+                this.game.add.existing(noBTN);
+
+                noBTN.x = text.x - noBTN.width / 2 + 80;
+                noBTN.y = text.y + 50;
+                yesBTN.x = text.x + text.width - yesBTN.width / 2 - 80;
+                yesBTN.y = text.y + 50;
+            }
+        };
+
+        LevelSelect.prototype.cancelClear = function () {
+            this.game.state.restart();
+        };
         return LevelSelect;
     })(Phaser.State);
     Demo.LevelSelect = LevelSelect;
@@ -1328,6 +1457,7 @@ var Demo;
         Menu.prototype.create = function () {
             this.music = this.add.audio('bgm', 1, true);
             this.music.play();
+            Demo.Game.music = this.music;
 
             var background = this.game.add.image(0, 0, 'background');
             var title = this.game.add.image(0, 100, 'title');
@@ -1337,18 +1467,19 @@ var Demo;
             this.button = new Demo.SuperButton(this.game, this.game.world.centerX - 150, this.game.world.centerY, this.onButtonPressed, this, btnText);
             this.game.add.existing(this.button);
             this.button.x -= this.button.width / 2;
-            this.button.y += 50;
+            this.button.y += 75;
 
             var moreText = Demo.Game.dico.getText('MORE_GAME');
             this.moreGame = new Demo.SuperButton(this.game, this.game.world.centerX + 150, this.game.world.centerY, this.onMorePressed, this, moreText);
             this.game.add.existing(this.moreGame);
-            this.moreGame.y += 50;
+            this.moreGame.y += 75;
             this.moreGame.x -= this.moreGame.width / 2;
 
             this.logo = this.game.add.sprite(0, 0, 'jeux.com');
             this.logo.inputEnabled = true;
             this.logo.input.useHandCursor = true;
             this.logo.events.onInputDown.add(this.gotoJDC, this);
+            this.logo.scale.set(0.8, 0.8);
             this.logo.x = 800 - this.logo.width - 10;
             this.logo.y = 10;
 
@@ -1358,6 +1489,18 @@ var Demo;
             this.blackTransition.endFill();
 
             this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
+
+            this.muteBtn = this.game.add.button(10, 10, 'gui', this.mute, this, 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
+            this.muteBtn.scale.set(0.75, 0.75);
+            this.muteBtn.input.useHandCursor = true;
+        };
+
+        Menu.prototype.mute = function () {
+            this.music.mute = !this.music.mute;
+            if (this.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            else
+                this.muteBtn.setFrames('icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
         };
 
         Menu.prototype.onButtonPressed = function () {
@@ -1401,6 +1544,7 @@ var Demo;
             this.load.image('background', 'game/assets/img/fond.jpg');
             this.load.image('title', 'game/assets/img/titre.png');
             this.load.image('jeux.com', 'game/assets/img/logo2.png');
+            this.load.binary('trailer', 'game/assets/trailer.mp4');
 
             var dicoString = (String)(this.game.cache.getText('texts'));
             var dico = JSON.parse(dicoString);
@@ -1461,6 +1605,34 @@ var Demo;
         function Trailer() {
             _super.apply(this, arguments);
         }
+        Trailer.prototype.create = function () {
+            var _this = this;
+            this.videoElem = document.createElement("video");
+
+            this.videoElem.setAttribute('autoplay', 'true');
+            this.videoElem.setAttribute('style', 'position:fixed; top:50%; left:50%; width:800px; height:480px; margin-left:-400px; margin-top:-240px; cursor: pointer; cursor: hand;');
+            var mp4Src = document.createElement('source');
+            mp4Src.setAttribute('src', 'game/assets/trailer.mp4');
+            mp4Src.setAttribute('type', 'video/mp4');
+
+            this.videoElem.appendChild(mp4Src);
+
+            this.container = document.getElementById('content');
+            this.container.appendChild(this.videoElem);
+
+            this.videoElem.onended = function () {
+                _this.gotoMenu();
+            };
+
+            this.videoElem.onclick = function () {
+                Demo.Game.navigate.gotoJDC('Trailer', 'Traier');
+            };
+        };
+
+        Trailer.prototype.gotoMenu = function () {
+            this.container.removeChild(this.videoElem);
+            this.game.state.start('Menu', true);
+        };
         return Trailer;
     })(Phaser.State);
     Demo.Trailer = Trailer;

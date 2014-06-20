@@ -43,7 +43,7 @@
                 star.scale.y = 3;
 
                 star.x = (800 - 2 * (star.width + 10)) / 2 + (star.width + 10) * i;
-                star.y = (480 - star.height) / 2 + 30;
+                star.y = (480 - star.height) / 2 - 10;
 
                 if (i == 1) {
                     star.scale.x = 4;
@@ -67,33 +67,46 @@
             var jumpLefts = (bestJump + 4) - nbJump;
             if (jumpLefts < 0)
                 jumpLefts = 0;
-            var jumStr = jumpLefts + " " + jumpWord + " " + leftWord;
+            var jumStr = nbJump + " " + jumpWord;
             var jumpText = new Phaser.Text(this.game, 0, 0, jumStr, style2);
             this.scoreBgGroup.add(jumpText);
             jumpText.x = (800 - jumpText.width) / 2;
-            jumpText.y = (480 - jumpText.height) / 3 - 25;
+            jumpText.y = (480 - jumpText.height) / 3 - 50;
 
             // buttons
-            var levelBTN = new SuperButton(this.game, 0, 380, this.gotoLevelSelect, this, "TMPLevels");
-            levelBTN.x = - 60;
-            var restartBTN = new SuperButton(this.game, 0, 380, this.restart, this, "TMPRestart");
-            restartBTN.x = (800 - restartBTN.width) / 2;
-            var nextBTN = new SuperButton(this.game, 0, 380, this.gotoNext, this, 'TMPNextlevel');
-            nextBTN.x = 430;
+
+            var levelBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.gotoLevelSelect, this, 'icon_list', 'icon_list', 'icon_list', 'icon_list');
+            levelBTN.input.useHandCursor = true;
+            var restartBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.restart, this, 'icon_restart', 'icon_restart', 'icon_restart', 'icon_restart');
+            restartBTN.input.useHandCursor = true;
+            var nextBTN = new Phaser.Button(this.game, 0, 0, 'gui', this.gotoNext, this, 'icon_arrow', 'icon_arrow', 'icon_arrow', 'icon_arrow');
+            nextBTN.input.useHandCursor = true;
+
+            levelBTN.x = (800 - (levelBTN.width + restartBTN.width + nextBTN.width + 60)) / 2;
+            levelBTN.y = 310;
+
+            restartBTN.x = levelBTN.x + levelBTN.width + 30;
+            restartBTN.y = levelBTN.y;
+
+            nextBTN.x = restartBTN.x + restartBTN.width + 30;
+            nextBTN.y = restartBTN.y;
 
             this.scoreBgGroup.add(levelBTN);
             this.scoreBgGroup.add(restartBTN);
-
-            if (score > 0) {
-                this.scoreBgGroup.add(nextBTN);
-            } 
+            this.scoreBgGroup.add(nextBTN);
 
             for(var i = 0; i < score; ++i){
                 var timer = this.game.time.create(true);
                 timer.add(2000 + i * 750, this.addStar, this);
                 timer.start();
             }
-    
+
+            // more game
+            var moreGameBtn = new SuperButton(this.game, 0, 380, this.onMoreGame, this, Game.dico.getText('MORE_GAME'));
+            moreGameBtn.x = (800 - moreGameBtn.width) / 2;
+
+            this.scoreBgGroup.add(moreGameBtn);
+
             // fade in
             this.game.add.tween(gameState.blackTransition).to({ alpha: 0.3 }, 250, null, true, 1000);
             this.game.add.tween(this.scoreBgGroup).to({ alpha: 1 }, 250, null, true, 1000);
@@ -123,6 +136,9 @@
             this.gameState.gotoNextLevel();
         }
 
+        onMoreGame() {
+            Game.navigate.gotoMoreGame('Interlevel', 'Moregames');
+        }
     }
 
 } 

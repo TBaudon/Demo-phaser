@@ -52,5 +52,20 @@
     "CLEAR" : [
         "Clear game",
         "Effacer partie"
+    ],
+
+    "CONFIRM_DELETE" : [
+        "Do you really want to clear save data?",
+        "Voulez-vous vraiment effacer la partie?"
+    ],
+
+    "YES" : [
+        "Yes",
+        "Oui"
+    ],
+
+    "NO" : [
+        "No",
+        "Non"
     ]
 }

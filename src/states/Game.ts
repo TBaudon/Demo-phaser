@@ -13,13 +13,19 @@ module Demo {
         checks: Array<CheckPoint>;
         orbits: Array<Orbit>;
 
+        interlevel: boolean;
+
+        logo: Phaser.Sprite;
+
+        clickZone: Phaser.Sprite;
+
         nbcheckPoint: number;
         nbcheckPointChecked: number;
         mustCheckAll: boolean;
 
         worldMargin: number = 2500;
 
-        worldMinX: number =   this.worldMargin;
+        worldMinX: number = this.worldMargin;
         worldMinY: number = this.worldMargin;
 
         worldMaxX: number = - this.worldMargin;
@@ -30,6 +36,10 @@ module Demo {
         static currentLevel: number;
         static max_lvl: number = 0;
 
+        muteBtn: Phaser.Button;
+
+        canJump: boolean;
+
         create() {
 
             this.add.sprite(0, 0, 'background');
@@ -39,6 +49,8 @@ module Demo {
             this.arrows = new Array<DestArrow>();
             this.checks = new Array<CheckPoint>();
             this.orbits = new Array<Orbit>();
+
+            this.interlevel = false;
 
             this.nbcheckPoint = 0;
             this.nbcheckPointChecked = 0;
@@ -122,7 +134,7 @@ module Demo {
             // text
             var style = { font: '10px Lucida Console', fill: '#ffffff' };
             var text: Phaser.Text = new Phaser.Text(this.game, 5, 5, this.level.description, style);
-            this.ui.add(text);
+            //this.ui.add(text);
 
             // Reset
             var resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
@@ -137,7 +149,48 @@ module Demo {
             this.ui.add(this.blackTransition);
 
             this.game.add.tween(this.blackTransition).to({ alpha: 0 }, 300, null, true);
-            
+
+            // clickZone
+            var bmp = new Phaser.BitmapData(this.game, 'clickZone', 800, 480);
+            this.clickZone = new Phaser.Sprite(this.game, 0, 0, bmp);
+            this.ui.add(this.clickZone);
+            this.clickZone.inputEnabled = true;
+            this.clickZone.events.onInputDown.add(this.jump, this);
+
+            // logo
+            this.logo = new Phaser.Sprite(this.game, 0, 0, 'jeux.com');
+            this.logo.inputEnabled = true;
+            this.logo.input.useHandCursor = true;
+
+            this.logo.events.onInputDown.add(this.gotoJDC, this);
+            this.logo.scale.set(0.8, 0.8);
+            this.logo.x = 800 - this.logo.width - 10;
+            this.logo.y = 480 - this.logo.height - 10;
+            this.ui.add(this.logo);
+
+            // mute
+            this.muteBtn = this.game.add.button(10, 10, 'gui', this.mute, this, 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on', this.ui);
+            if (Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            this.muteBtn.scale.set(0.75, 0.75);
+            this.muteBtn.input.useHandCursor = true;
+
+            // restart
+            var restartBTN = this.game.add.button(this.muteBtn.x + this.muteBtn.width + 10, 10, 'gui', this.restart, this, 'icon_restart', 'icon_restart', 'icon_restart', 'icon_restart', this.ui);
+            restartBTN.scale.set(0.75, 0.75);
+            restartBTN.input.useHandCursor = true;
+        }
+
+        jump() {
+            this.player.jump();
+        }
+
+        mute() {
+            Game.music.mute = !Game.music.mute;
+            if (Game.music.mute)
+                this.muteBtn.setFrames('icon_sound_off', 'icon_sound_off', 'icon_sound_off', 'icon_sound_off');
+            else
+                this.muteBtn.setFrames('icon_sound_on', 'icon_sound_on', 'icon_sound_on', 'icon_sound_on');
         }
 
         restart() {
@@ -149,6 +202,13 @@ module Demo {
             this.game.add.existing(arrow);
             this.gameWorld.add(arrow);
             this.arrows.push(arrow);
+        }
+
+        gotoJDC() {
+            if(!this.interlevel)
+                Game.navigate.gotoJDC('Ingame', 'Logo');
+            else   
+                Game.navigate.gotoJDC('Interlevel', 'Logo');   
         }
 
         update() {
@@ -216,11 +276,12 @@ module Demo {
                 else if (nbJump > bestJump + 2 && nbJump < bestJump + 4)
                     score = 1;
                 else
-                    score = 0;
+                    score = 1;
 
                 Game.gameSave.saveScore(GameState.currentLevel, score);
 
                 new EndLevel(this, score, nbJump, bestJump);
+                this.interlevel = true;
             }
         }
 

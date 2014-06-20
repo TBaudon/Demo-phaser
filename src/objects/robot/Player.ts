@@ -45,7 +45,7 @@ module Demo {
             this.animations.add('idle');
             this.animations.play('idle', 60, true);
 
-            game.game.input.onDown.add(this.jump, this);
+            //game.game.input.onDown.add(this.jump, this);
 
             this.planets = planets;
             this.vitX = 0;
