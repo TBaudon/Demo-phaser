@@ -179,6 +179,11 @@ module Demo {
             var restartBTN = this.game.add.button(this.muteBtn.x + this.muteBtn.width + 10, 10, 'gui', this.restart, this, 'icon_restart', 'icon_restart', 'icon_restart', 'icon_restart', this.ui);
             restartBTN.scale.set(0.75, 0.75);
             restartBTN.input.useHandCursor = true;
+
+            // level
+            var levelBTN = this.game.add.button(restartBTN.x + restartBTN.width + 10, 10, 'gui', this.gotoLevelList, this, 'icon_list', 'icon_list', 'icon_list', 'icon_list', this.ui);
+            levelBTN.scale.set(0.75, 0.75);
+            levelBTN.input.useHandCursor = true;
         }
 
         jump() {
@@ -195,6 +200,10 @@ module Demo {
 
         restart() {
             this.game.state.restart();
+        }
+
+        gotoLevelList() {
+            this.game.state.start('LevelSelect', true);
         }
 
         addArrow(planet: Planet) {

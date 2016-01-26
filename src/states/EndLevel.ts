@@ -35,19 +35,21 @@
             this.stars = new Array<Phaser.Sprite>();
 
             for (var i = 0; i < 3; ++i) {
-                var star = new Phaser.Sprite(this.game, 0, 0, 'gui', 'star_off');
-                star.anchor.set(0.65, 0.5);
+                var star = new Phaser.Sprite(this.game, 0, 0, 'gui', 'star_large');
+                star.anchor.set(0.5, 0.5);
                 this.stars[i] = star;
                 this.scoreBgGroup.add(star);
-                star.scale.x = 3;
-                star.scale.y = 3;
+                //star.scale.x = 3;
+                //star.scale.y = 3;
+
+                star.alpha = 0.5;
 
                 star.x = (800 - 2 * (star.width + 10)) / 2 + (star.width + 10) * i;
-                star.y = (480 - star.height) / 2 - 10;
+                star.y = (480 - star.height) / 2;
 
                 if (i == 1) {
-                    star.scale.x = 4;
-                    star.scale.y = 4;
+                    star.scale.x = 1.2;
+                    star.scale.y = 1.2;
                     star.y += 30;
                     star.x = 400;
                 }
@@ -115,7 +117,7 @@
         addStar() {
             if (this.starsLit < this.starsToLight) {
 
-                this.stars[this.starsLit].loadTexture('gui', 'star_on');
+                this.stars[this.starsLit].alpha = 1;
                 this.starsLit++;
 
                 if (this.starsLit > 2)

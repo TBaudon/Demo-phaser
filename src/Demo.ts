@@ -16,7 +16,6 @@
             this.state.add('Menu', Menu, false);
             this.state.add('LevelSelect', LevelSelect, false);
             this.state.add('Game', GameState, false);
-            this.state.add('Trailer', Trailer, false);
 
             Game.dico = new TextManager();
             Game.gameSave = new GameSave();
